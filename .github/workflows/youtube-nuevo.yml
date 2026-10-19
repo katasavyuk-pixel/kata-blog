@@ -1,0 +1,132 @@
+# Auto-post for new YouTube videos.
+#
+# Every 6h: read the channel's public RSS, compare against youtubeId values
+# already present in content/posts/**, and for each new video have Claude
+# draft a companion post (draft: true — the author's notes are the value).
+#
+# Inactive until the repo variable YOUTUBE_CHANNEL_ID is set
+# (YouTube Studio → Settings → Advanced → Channel ID).
+# Required repo secret: CLAUDE_CODE_OAUTH_TOKEN.
+name: YouTube — post por vídeo nuevo
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  detect:
+    # GitHub-hosted since 14 Oct 2026 (it ran on Kata's laptop; see ci.yml).
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: vars.YOUTUBE_CHANNEL_ID != ''
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Detect new videos
+        env:
+          YOUTUBE_CHANNEL_ID: ${{ vars.YOUTUBE_CHANNEL_ID }}
+        run: node scripts/radar/youtube.mjs
+
+      # A draft that is already waiting for review is not written again. Until
+      # 14 Oct 2026 every good run re-drafted the same videos and force-pushed
+      # the open draft's branch: a Claude run spent on work already done, and
+      # whatever the author had added to that branch gone.
+      - name: Check for new videos
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          count=$(node -p 'JSON.parse(require("fs").readFileSync("scratch/youtube-new.json","utf8")).videos.length')
+          first=$(node -p 'JSON.parse(require("fs").readFileSync("scratch/youtube-new.json","utf8")).videos[0]?.videoId ?? ""')
+          abierto=$(gh pr list --state open --limit 100 --json number,headRefName \
+            --jq '[.[] | select(.headRefName | startswith("video/"))][0].number // empty')
+          if [ "$count" != "0" ] && [ -n "$abierto" ]; then
+            echo "::notice title=YouTube::$count vídeo(s) sin post, pero ya hay un borrador esperando revisión (#$abierto): no se vuelve a escribir."
+            count=0
+          fi
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "first=$first" >> "$GITHUB_OUTPUT"
+
+      - name: Draft post(s) with Claude
+        if: steps.check.outputs.count != '0'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Without it the action can skip itself and report the step as passed
+          # (seen in noticias-diarias.yml, 13 Oct 2026).
+          github_token: ${{ github.token }}
+          prompt: |
+            Draft companion blog posts for new YouTube videos on a
+            Spanish-language personal AI blog.
+
+            HARD RULES:
+            1. Read scratch/youtube-new.json. Create ONE post per video in it.
+            2. Use the video's real videoId in the frontmatter `youtubeId`
+               field — copy it verbatim, never invent one.
+            3. Base the post ONLY on the video's title and description from
+               the JSON. Do not invent claims about what the video shows.
+
+            EDITORIAL RULES:
+            - File: content/posts/<slug>.mdx where <slug> is a short Spanish
+              kebab-case slug derived from the video title.
+            - Look at an existing post in content/posts/ (e.g. the most recent
+              one) to match frontmatter shape and tone. Frontmatter must set
+              `draft: true` (the author reviews and adds his notes before
+              publishing), tags must include `youtube`, and `youtubeId` must
+              be the real ID.
+            - Body: brief intro in Spanish (2-3 paragraphs) framing what the
+              video covers, a <YouTubeEmbed id="<videoId>" title="<title>"/>,
+              and a short section the author can expand with his notes.
+              No hype, no invented details.
+
+            Write ONLY the new .mdx file(s). Do not touch anything else.
+          # Path-scoped rules: a bare Read/Write rule reaches the whole disk
+          # (probed on the runner for the news pipeline). Writing is governed by
+          # Edit rules, and only new posts may be written.
+          #
+          # Model and settings pinned as in noticias-diarias.yml: the result must
+          # not depend on whatever the runner's defaults are.
+          claude_args: |
+            --model claude-opus-5-5
+            --setting-sources project
+            --max-turns 25
+            --allowedTools "Read(scratch/**),Read(content/**),Edit(content/posts/**)"
+            --disallowedTools "Bash,WebFetch,WebSearch"
+
+      # The rule above lets Claude edit any post; the job only wants new ones.
+      - name: Only new posts, nothing else
+        if: steps.check.outputs.count != '0'
+        run: |
+          otros=$(git status --porcelain | grep -v '^?? content/posts/[^/]*\.mdx$' || true)
+          if [ -n "$otros" ]; then
+            echo "::error title=YouTube::Claude cambió algo más que posts nuevos:"
+            echo "$otros"
+            exit 1
+          fi
+
+      - name: Open PR
+        if: steps.check.outputs.count != '0'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: video/${{ steps.check.outputs.first }}
+          add-paths: content/posts/
+          commit-message: "feat(youtube): borrador de post para vídeo nuevo"
+          title: "Borrador: post para vídeo nuevo de YouTube"
+          body: |
+            Post(s) en borrador para vídeo(s) nuevo(s) del canal. El post queda
+            en `draft: true` — añade tus notas, quita el draft y haz merge.
+
+            🤖 Generated with [Claude Code](https://claude.com/claude-code)

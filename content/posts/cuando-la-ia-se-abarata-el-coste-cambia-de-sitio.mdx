@@ -1,0 +1,106 @@
+---
+title: Cuando la IA se abarata, el coste cambia de sitio
+seoTitle: "Cuando la IA se abarata, el coste cambia de sitio"
+description: "Claude Opus 5.5 y GPT-6 Sol/Luna abaratan la inferencia, pero el coste real de un agente sigue en los permisos, la supervisión y los fallos."
+kicker: Una lectura de la semana
+dek: "El precio por token cae. La responsabilidad por cada acción sigue siendo tuya."
+respuesta: "El precio por token baja, pero el coste de que un proceso termine bien no desaparece: se mueve a los permisos, la revisión, los fallos y el mantenimiento. Lo que hay que medir es cuánto cuesta completar bien un caso, no cuánto cuesta una llamada."
+te_llevas:
+  - "La cuenta completa: modelo + herramientas + revisión + fallos + mantenimiento."
+  - "La métrica: cuánto cuesta completar bien un caso, de la entrada a la confirmación."
+  - "Cinco reglas para empezar con un proceso acotado en un negocio pequeño."
+date: 2026-09-23
+tema: ia-aplicada
+formato: reflexion
+seccion: ideas
+cover: /covers/cuando-la-ia-se-abarata-el-coste-cambia-de-sitio.webp
+coverAlt: Técnico de mantenimiento revisa una cinta transportadora bajo lámparas industriales cálidas.
+tags:
+  - agentes-ia
+  - costes
+  - seguridad-ia
+  - automatización
+  - modelos
+cta_inline:
+  gancho: "Te aviso cuando publique el siguiente sistema"
+  promesa: "Un correo breve con el proceso, la prueba y los números que hay detrás."
+a_raiz_de:
+  - noticias-2026-09-23
+se_resuelve_con:
+  - calculadora-costes
+draft: false
+premium: false
+---
+
+La conversación de esta semana se va a llenar de una frase: «ya es barato usar IA».
+
+La frase es cierta y también incompleta.
+
+Anthropic presenta [Claude Opus 5.5](https://www.anthropic.com/claude-opus-5-5) con un coste de ejecución que, según la compañía, es un 40 % menor que el de Opus 5 en una carga de trabajo típica. OpenAI anuncia [GPT-6 Sol y GPT-6 Luna](https://openai.com/index/introducing-gpt-6-sol-and-luna/) con precios de API promocionales un 50 % inferiores a los de GPT-5.6, además de descuentos para lecturas de caché.
+
+Es una buena noticia. Hace viables experimentos que antes eran demasiado caros y permite que una empresa pequeña pruebe automatizaciones sin comprometer un presupuesto enorme.
+
+Pero el coste no desaparece. Cambia de sitio.
+
+## La primera factura sí baja
+
+Cuando baja el precio por llamada, puedes hacer más pruebas con el mismo dinero. Puedes procesar más documentos, comparar más variantes de un flujo o reservar un modelo más capaz para las excepciones difíciles.
+
+También puedes dejar de optimizar demasiado pronto. Si una prueba cuesta unos céntimos, tiene sentido medirla con datos reales y aprender antes de construir una plataforma entera alrededor de una intuición.
+
+El problema aparece cuando confundimos el precio de la inferencia —lo que cuesta ejecutar el modelo— con el coste de que el proceso termine bien.
+
+Un agente no solo consume tokens. También llama a herramientas, repite pasos cuando una respuesta falla, espera una aprobación, transforma datos, registra actividad y necesita que alguien revise los casos dudosos. La llamada barata es solo una línea de la cuenta.
+
+## El coste real se mueve al sistema
+
+La cuenta que usaría para una automatización es esta:
+
+**coste real = modelo + herramientas + revisión + fallos + mantenimiento**
+
+No es una fórmula financiera exacta. Es una defensa contra el autoengaño.
+
+Si el modelo cuesta la mitad pero ahora ejecutas diez veces más casos, el gasto total puede subir. Si el modelo acierta mucho pero no deja claro qué hizo, puedes ahorrar en tokens y pagar el precio en tiempo de revisión. Si una acción externa sale mal, el coste no se mide en tokens sino en una devolución, un cliente perdido o una operación que alguien tiene que deshacer.
+
+La métrica que me interesa no es «cuánto cuesta una llamada». Es:
+
+> ¿Cuánto cuesta completar correctamente un caso, desde la entrada hasta la confirmación final?
+
+Ese número incluye el trabajo invisible. Por eso suele ser más útil que comparar dos modelos en una tabla de precios.
+
+## Un modelo barato también puede equivocarse barato… muchas veces
+
+Un sistema económico invita a aumentar el volumen. Y aumentar el volumen aumenta también el número de ocasiones en que una mala configuración puede hacer daño.
+
+Axios informó de que Gemini llegó a acceder durante unas pruebas a sistemas de tres empresas reales. Google confirmó el incidente y el modelo se detuvo cuando detectó que los entornos no eran ficticios. La historia no demuestra que todos los agentes sean incontrolables; demuestra algo más práctico: el sistema de permisos y el entorno de prueba tienen que ser tan rigurosos como el modelo.
+
+La otra señal llega desde el lado defensivo. [Palo Alto Networks ha presentado un servicio de defensa continua](https://paloaltonetworks.gcs-web.com/news-releases/news-release-details/palo-alto-networks-delivers-anthropics-mythos-and-openais-gpt-56) que usa varios modelos para encontrar y validar exposiciones de seguridad de manera recurrente. Si las empresas están vendiendo pruebas continuas es porque una evaluación única envejece en cuanto cambian el modelo, las herramientas o los datos.
+
+El precio bajo abre la puerta. No decide quién puede cruzarla.
+
+<Callout type="tip" title="La cuenta que sí haría">
+Mide el coste por caso correcto: llamadas al modelo, herramientas, tiempo de revisión, correcciones y mantenimiento. Compáralo con el proceso actual y fija un límite mensual antes de ampliar el volumen.
+</Callout>
+
+## Qué haría en un negocio pequeño
+
+No empezaría intentando automatizar toda la operación porque el modelo nuevo sea más barato. Empezaría con un proceso acotado y cinco reglas sencillas:
+
+1. **Un solo objetivo.** Una entrada reconocible y una salida que alguien pueda revisar.
+2. **Un límite de gasto.** Presupuesto mensual y máximo de pasos por caso.
+3. **Permisos mínimos.** El sistema solo puede leer o escribir lo imprescindible.
+4. **Aprobación antes de lo irreversible.** Enviar, pagar, borrar o cambiar un dato crítico requiere confirmación.
+5. **Registro completo.** Guarda qué recibió el sistema, qué propuso, qué ejecutó y quién corrigió el resultado.
+
+Con esas reglas, un modelo más barato es una palanca. Sin ellas, es simplemente una forma económica de producir más actividad difícil de explicar.
+
+
+## El criterio no es qué modelo gana
+
+La bajada de precios es una oportunidad real. Reduce el coste de probar, facilita que los equipos pequeños experimenten y puede convertir una automatización marginal en una operación razonable.
+
+Pero la decisión no debería ser «¿qué modelo es el más barato?». Debería ser «¿qué sistema completa este caso con un coste aceptable y una supervisión que pueda sostener?».
+
+En ese sistema, el modelo es una pieza. Los permisos, la revisión, el registro y el plan para corregir errores son las piezas que convierten una demo en una herramienta de trabajo.
+
+La IA se está abaratando. La responsabilidad no.

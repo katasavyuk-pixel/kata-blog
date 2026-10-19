@@ -1,0 +1,92 @@
+---
+title: Pregunté a una IA qué agente recomienda para restaurantes — y MaitreAI no salió
+seoTitle: "Por qué la IA no recomienda tu negocio, y qué hice yo"
+description: "Pregunté a una IA qué agente recomienda para las llamadas y el WhatsApp de un restaurante, y no salió el mío. Lo que hice y lo que un archivo no arregla."
+kicker: Construcción pública
+dek: "MaitreAI ya atiende un restaurante de verdad. La IA seguía sin saberlo. Aquí está el arreglo — y el límite honesto de lo que arregla."
+respuesta: "Añadí un archivo que le explica a la IA qué es MaitreAI y di la bienvenida a sus rastreadores sin abrir las rutas con datos de clientes. Eso no cambia nada en el mismo segundo, porque indexar puede tardar semanas, y lo que convence no es el archivo: es que el producto ya funciona con un cliente real."
+te_llevas:
+  - "Antes del código, la prueba: no tiene sentido optimizar para que una IA recomiende algo que no funciona."
+  - "En robots.txt, un bot con grupo propio ignora el grupo «*»: repite en cada grupo nombrado las rutas que proteges."
+  - "Las nueve comprobaciones van en orden: las tres primeras antes que el resto, porque si la página no responde o no se deja leer, lo demás no cuenta."
+date: 2026-08-20
+updated: 2026-10-07
+tema: captacion
+formato: sistema
+seccion: ideas
+cover: /covers/maitreai-geo.webp
+coverAlt: Una anfitriona observa la entrada de un restaurante lleno durante el servicio.
+nbiRelacionado: true
+tags:
+  - geo
+  - visibilidad-ia
+  - construccion-publica
+youtubeId: 9OB_O0w-8GI
+recurso: maitreai-geo
+cta_inline:
+  gancho: "El prompt de auditoría, para lo que tú vendas"
+  promesa: "El prompt generalizado más las 9 comprobaciones que hago antes de dar un sitio por listo, cada una con su comando. Te llega al confirmar, y te quedas en la newsletter."
+draft: false
+premium: false
+---
+
+El vídeo de este episodio enseña algo incómodo: le pregunté a una IA qué agente recomienda para atender llamadas y WhatsApp de un restaurante. Me dio dos nombres — Bookline, eGrow — y ninguno era MaitreAI. Y eso que ya tiene un cliente real usándolo. Lo que no cabía en el montaje es qué es exactamente lo que arreglé, por qué no basta con eso, y qué es lo que un archivo de texto no puede prometer.
+
+## El problema no es que la IA no me conozca — es que no me recomienda
+
+Según el [2026 AI Brand Visibility Report de Similarweb](https://www.similarweb.com/blog/marketing/geo/gen-ai-stats/), un 35% de la gente ya usa una IA en la fase de descubrimiento de lo que busca. Y [Gartner predijo](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots-and-other-virtual-agents) que la búsqueda tradicional caería un 25% este mismo año, precisamente por los chatbots. Esto tiene nombre técnico: **GEO**, optimización para motores generativos.
+
+La diferencia con la primera versión de este experimento (que iba sobre mi propia identidad) es esta: a un negocio no le importa tanto que una IA "sepa quién eres" — le importa que te recomiende cuando alguien está listo para comprar. Si vendes algo real y la IA no te menciona, ese cliente se va con el que sí aparece.
+
+<Callout type="info" title="Un matiz honesto">
+Esto no significa que Google esté muerto — en volumen bruto sigue procesando muchas más búsquedas al día que cualquier IA. El punto no es "Google ha muerto", es que la tendencia es real y prepararse cuesta una tarde.
+</Callout>
+
+## Antes de tocar código: la prueba de que merece ser recomendado
+
+No tiene sentido optimizar para que una IA recomiende algo que no funciona. Por eso el vídeo se detiene antes de la parte técnica para probarlo en directo: mando un WhatsApp real al [número de demo pública de MaitreAI](https://wa.me/17655488364?text=Hola%2C%20quiero%20reservar) — el mismo botón "Probar WhatsApp Demo" que cualquiera puede pulsar en `maitreai.es` — y dejo que el bot conteste sin guion, sobre un restaurante de demo (`maitreai.es/r/demo-trattoria`, sin datos de ningún cliente real).
+
+Y después subo la apuesta: esto no es solo una demo pública, hay un restaurante real de Irun usándolo hoy para gestionar sus reservas de verdad, con voz por IA y WhatsApp activos. Es un piloto, no cientos de clientes ni una cifra de satisfacción — lo digo así de claro porque es lo verificable, no porque suene menos impresionante.
+
+La parte de GEO, en comparación, es la pieza pequeña que cierra el episodio — no el episodio entero.
+
+## Qué construí, en concreto
+
+Dos piezas, no tres — porque `maitreai.es` ya tenía más hecho de lo que esperaba:
+
+1. **`llms.txt`** — un archivo de texto plano que describe el producto en el formato que un LLM lee mejor. Antes de este episodio, `maitreai.es/llms.txt` daba 404.
+2. **`robots.txt` editado** (no creado desde cero — ya existía) para nombrar explícitamente a los rastreadores de IA conocidos (GPTBot, ClaudeBot, PerplexityBot...) y decirles que son bienvenidos.
+
+Lo que **no** tuve que construir: datos estructurados a nivel de sitio. `maitreai.es` ya tenía `Organization`, `WebSite`, `SoftwareApplication` y `Offer` enlazados en JSON-LD — bien hecho, de antes de este episodio.
+
+<Callout type="tip" title="El detalle que casi se me escapa">
+Al editar `robots.txt`, hay una trampa real: un bot que encuentra un grupo con su propio nombre ignora el grupo genérico `*` por completo. Si le doy a `GPTBot` un grupo con solo `Allow: /`, ese bot deja de respetar el `Disallow` que protege `/dashboard` y `/api` — rutas con datos reales de clientes. La solución: cada grupo nombrado repite la misma protección, desde una única constante en el código, para que no haya forma de relajar una sin que se note en las demás.
+</Callout>
+
+## El límite honesto — y por qué es el tema del próximo episodio
+
+Esto no cambia nada en el mismo segundo. Un asistente de IA no relee internet cada minuto — indexar contenido nuevo tarda, a veces semanas. Y aunque apareciera mañana mismo, lo que de verdad convence no es el archivo — es que el producto ya funciona, con un cliente real, hoy. El archivo solo se asegura de que la IA se entere. (La historia completa de cómo se construyó MaitreAI y qué significa exactamente "beta" está en [Cómo hice MaitreAI](/blog/como-hice-maitreai).)
+
+Eso es exactamente lo que abre el episodio 2: cómo saber si esto de verdad cambió algo, y no es solo un archivo más que ninguna IA lee.
+
+## El código — y el seguimiento semanal
+
+Voy a comprobar esto cada lunes, con fecha, hasta que se resuelva en el episodio 2. El día que MaitreAI aparezca en esa respuesta (o si no aparece nunca), lo vas a saber por la newsletter antes que por YouTube — un vídeo tarda semanas en editarse, un email tarda diez minutos.
+
+El prompt completo que usé para generar `llms.txt` y editar `robots.txt` no se queda en MaitreAI: está generalizado para que lo apliques a lo que tú vendas, sea lo que sea. Y va con **las 9 comprobaciones que hago antes de decir que un sitio está listo para una IA** — en el vídeo solo cupieron dos —, cada una con el comando para hacerla tú y lo que salió en mi caso, incluidos los dos diagnósticos que me equivoqué.
+
+Aquí van las nueve en el orden en que las paso, para que marques las que ya has comprobado en tu sitio:
+
+<Pieza
+  titulo="Las 9 comprobaciones"
+  formula="Siguiente = la primera pendiente, en este orden. Las tres primeras van antes que el resto: si una página no responde o no se deja leer, lo demás no llega a contar."
+  supuestos="el orden es el mío, el del ZIP. El ejemplo es un sitio inventado que solo ha mirado su robots.txt y sus H1. Marcar las nueve no hace que una IA te recomiende: hace que pueda hacerlo."
+>
+  <Puntuador modelo="comprobaciones-geo" modo="lista" />
+</Pieza>
+
+El comando de cada una, qué buscar en lo que devuelve y lo que salió en mi caso no caben en una lista: van en el ZIP, junto con el prompt. Te lo mando aquí mismo.
+
+<SuscripcionInline />
+
+Si tienes un restaurante, una peluquería, una clínica o cualquier negocio local y te falta gente para contestar el teléfono o el WhatsApp: esto es exactamente lo que hace [MaitreAI](https://maitreai.es). No es una promesa — ya funciona.

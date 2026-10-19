@@ -1,0 +1,75 @@
+name: CI
+
+# Este repo llevaba Supabase con RLS, tabla de suscriptores (RGPD) y envío de
+# emails a producción sin un solo test ni typecheck, y con deploy automático en
+# cada push a main. Era el mayor desajuste riesgo/verificación del conjunto.
+#
+# `npm run verify` = typecheck (152 ficheros, strict) + eslint + tests.
+# El build va aparte porque velite --strict caza MDX roto, que es el fallo real
+# al escribir contenido y no lo ve ninguna de las tres cosas anteriores.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    # GitHub-hosted since 14 Oct 2026. It used to run on a self-hosted runner on
+    # Kata's laptop to save minutes on a private repo: with the laptop asleep CI
+    # simply did not run, and the same runner was behind 15 of the 29 failed
+    # news runs between 5 Sep and 13 Oct.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 22.6+ por --experimental-strip-types, que es lo que permite tener
+          # tests en TypeScript sin bundler ni runner extra.
+          node-version: '22'
+          # En un runner alojado la caché es solo la de este proyecto, se
+          # restaura por el hash del lockfile y ahorra la mitad del `npm ci`.
+          # (En el portátil estaba quitada: re-empacaba 11 GB de ~/.npm.)
+          cache: npm
+
+      - run: npm ci
+
+      # Velite first, and not as a nicety: `#site/content` is generated code.
+      # Without it `tsc` cannot resolve the module, every post and email becomes
+      # `any`, and `noImplicitAny` fails nineteen times across six files. That
+      # is why this workflow had never once been green — it passed locally only
+      # because .velite/ was already sitting there from a previous build.
+      #
+      # It also means the link-integrity test in tests/email-template.test.ts
+      # has the compiled emails to read, which is the whole point of that test:
+      # the bug it guards against lives in Velite's output, not in the markdown.
+      - name: build content (genera #site/content)
+        run: npm run build:content
+
+      - name: typecheck + lint + tests
+        run: npm run verify
+
+      - name: build (velite --strict caza el MDX roto)
+        run: npm run build
+        env:
+          # El build no debe necesitar secretos reales. Si algún día falla aquí
+          # por falta de una variable, el fallo es del build, no del CI: nada
+          # que se ejecute en un runner público puede depender de un secreto.
+          NEXT_TELEMETRY_DISABLED: '1'
+
+      # SEO brief of 17-oct-2026: what only shows in the served HTML (lastmod,
+      # og:title, og:image, og:url, JSON-LD, links to redirecting routes). Same
+      # build, no second one. scripts/seo/check.mjs is an identical copy of
+      # NBI-WEB's; the tech-auditor agent compares the two hashes.
+      - name: SEO over the served HTML (check.mjs)
+        shell: bash
+        run: |
+          npx next start -p 3001 &
+          for i in $(seq 1 30); do curl -sf http://localhost:3001/ -o /dev/null && break; sleep 1; done
+          node scripts/seo/check.mjs --local http://localhost:3001 --site https://kata.ianexora.com

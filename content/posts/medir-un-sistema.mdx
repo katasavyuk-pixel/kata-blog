@@ -1,0 +1,63 @@
+---
+title: Cómo sabes que un sistema funciona (evals, sin humo)
+seoTitle: "Cómo saber si un sistema con IA funciona: evals sin humo"
+description: "¿Cómo mides si una automatización con IA hace bien su trabajo? Aquí mueves el umbral y lo ves con números, no con vibes."
+kicker: Medir
+dek: "La pregunta que nadie responde antes de lanzar: ¿cómo sabes que un sistema con IA hace bien su trabajo? Mueve el umbral y compruébalo con datos."
+respuesta: "Lo sabes con un eval: una lista corta de casos de tu tarea, un criterio claro y un número. El mando que decide es el umbral de aprobado, que se fija según lo que cueste fallar; sin ese número no hay sistema, hay una corazonada."
+te_llevas:
+  - "Un umbral bajo aprueba errores y uno alto descarta respuestas buenas. Elegir ese número es el trabajo real de un sistema."
+  - "Fíjalo por lo que cueste fallar: para responder a un cliente puede valer un 80 %; para firmar un documento, quizá un 95 %."
+  - "Un eval mide si la IA hace tu tarea con tu criterio, no si es «buena»: cambia la tarea o el criterio y un sistema que parecía bueno puede dejar de serlo."
+date: 2026-08-23
+updated: 2026-10-11
+tema: economia
+formato: leccion
+seccion: practica
+cover: /covers/medir-un-sistema.webp
+coverAlt: Relojero examina un mecanismo diminuto con una lupa y unas pinzas.
+tags:
+  - fundamentos
+  - medicion
+  - interactivo
+cta_inline:
+  gancho: "Esto es lo que separa un sistema de un experimento"
+  promesa: "Te aviso cuando publique el siguiente sistema con su banco de pruebas, y te llegan los números de verdad."
+draft: false
+premium: false
+---
+
+Montar una automatización con <Term id="hallucination">IA</Term> es fácil. Lo difícil es responder con datos a una pregunta incómoda: **¿funciona de verdad?** La respuesta no es «me parece que sí»; es un *eval*.
+
+Un eval es una lista corta de casos con un criterio claro y un número. El mando que se te escapa siempre es el **umbral**: cuánta puntuación exiges para decir «aprobado».
+
+<EvalBench />
+
+## Lo que enseña este mando
+
+- **Un umbral bajo aprueba todo** — y entonces el sistema no te está ahorrando trabajo, te está regalando errores.
+- **Un umbral alto descarta de más** — y el sistema se vuelve tan fino que no sirve para nada.
+- **El número que elijas depende de lo que cueste fallar.** Para responder a un cliente, puedes permitirte un 80 %; para firmar un documento, quizá un 95 %.
+
+<Callout type="tip" title="La regla mnemotécnica">
+Un eval no mide si la IA es «buena»; mide si hace *tu* tarea según *tu* criterio. Cambia la tarea o el criterio, y un sistema que parecía bueno deja de serlo.
+</Callout>
+
+
+## Compruébalo
+
+<Quiz
+  id="eval-umbral"
+  question="¿Qué te dice el umbral de un eval?"
+  options={[
+    { text: "El mínimo que exiges para considerar que una respuesta es aceptable en tu tarea", correct: true, explain: "Exacto: es tu criterio, y depende de cuánto cuesta fallar en esa tarea concreta." },
+    { text: "Cuánta inteligencia tiene el modelo", explain: "No: mide si hace tu tarea según tu criterio, no lo «inteligente» que es el modelo en abstracto." },
+    { text: "La velocidad a la que responde el sistema", explain: "A eso se le llama latencia; el umbral habla de calidad aceptable, no de velocidad." },
+  ]}
+/>
+
+Cuando alguien te diga «la IA ya me lo hace bien», pregunta la única pregunta que importa: **¿con qué umbral?** Si no hay número detrás, no hay sistema — hay una corazonada.
+
+Y cuando montes el tuyo, haz lo que hago aquí: [los números van en la biblioteca](/sistemas), con el banco de pruebas al lado.
+
+Y si quieres llevarlo a una automatización de tu empresa, la guía [cómo medir si una automatización funciona](https://ianexora.com/guias/como-medir-si-una-automatizacion-funciona?utm_source=blog&utm_medium=article&utm_campaign=medir-un-sistema) lo baja a horas, errores y esperas.

@@ -1,0 +1,95 @@
+# IndexNow — notifica a los motores que usan el protocolo (Bing, Yandex, Seznam,
+# Naver…) las URLs cuyo contenido cambió en cada push a main.
+#
+# Por qué este sitio se molesta: el browsing de ChatGPT se apoya en el índice de
+# Bing, y el Radar publica una edición por CI cada semana. Sin esto, Bing puede
+# tardar días en descubrir una edición nueva; con esto, la re-consulta llega en
+# minutos. Google NO usa IndexNow — esto no es una jugada para Google.
+#
+# El flujo: push a main → Vercel despliega → este workflow espera a que el
+# despliegue de ese commit termine (lo que Vercel dice de él en GitHub) →
+# pingea solo las URLs de contenido público que cambiaron (posts no-draft y
+# ediciones con sent: true; la lógica vive en el script, no aquí, para que el
+# filtro sea el mismo en CI y en local). Si el despliegue falla, no se avisa a
+# nadie de una página que no ha cambiado.
+#
+# La clave está en public/indexnow-<key>.txt — pública POR DISEÑO (prueba
+# propiedad del dominio), no es un secreto y no va a Doppler.
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  statuses: read
+
+jobs:
+  notify:
+    # GitHub-hosted since 14 Oct 2026 (it ran on Kata's laptop; see ci.yml).
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Necesita el commit "before" del push, que puede quedar más de un
+          # commit atrás cuando se apilan pushes. El repo es pequeño.
+          fetch-depth: 0
+
+      # El script no tiene dependencias: basta con Node, sin npm ci.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Lo que decide es si hay alguna URL que anunciar, no si cambió content/:
+      # la edición diaria de noticias cambia content/ cada día y nunca se anuncia
+      # (va en noindex). Esperar por ella eran minutos pagados para nada.
+      - name: ¿Hay contenido público cambiado?
+        id: changed
+        run: |
+          BEFORE='${{ github.event.before }}'
+          # Push nuevo de rama o forzado: 'before' son ceros o no existe.
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
+             || ! git cat-file -e "$BEFORE" 2>/dev/null; then
+            BEFORE="HEAD~1"
+          fi
+          echo "rev=$BEFORE" >> "$GITHUB_OUTPUT"
+          urls=$(node scripts/seo/indexnow.mjs --diff="$BEFORE" --listar)
+          if [ -n "$urls" ]; then
+            echo "Se anunciarán:"; echo "$urls"
+            echo "has_content=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Nada público que anunciar en este push."
+            echo "has_content=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Antes era un `sleep 300`: cinco minutos facturados en cada push con
+      # contenido, y sin saber si el despliegue había salido bien.
+      - name: Espera al deploy de Vercel
+        id: deploy
+        if: steps.changed.outputs.has_content == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 30); do
+            estado=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/status" \
+              --jq '[.statuses[] | select(.context == "Vercel")][0].state // "pending"')
+            case "$estado" in
+              success) echo "listo=true" >> "$GITHUB_OUTPUT"; echo "Vercel: desplegado"; exit 0 ;;
+              failure|error) echo "::warning title=IndexNow::El despliegue de Vercel falló; no se avisa a ningún buscador."; exit 0 ;;
+            esac
+            sleep 20
+          done
+          echo "::warning title=IndexNow::Vercel no terminó en 10 minutos; no se avisa a ningún buscador."
+
+      # continue-on-error: IndexNow es una optimización. Un 4xx de la API no
+      # debe pintar de rojo el push — se ve en el log y se olvida.
+      - name: Notificar URLs cambiadas
+        if: steps.deploy.outputs.listo == 'true'
+        continue-on-error: true
+        run: node scripts/seo/indexnow.mjs --diff="${{ steps.changed.outputs.rev }}"

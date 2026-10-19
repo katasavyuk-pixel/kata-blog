@@ -1,0 +1,114 @@
+---
+title: Cloudflare acaba de sacar un escáner para webs que quieren ser entendidas por agentes
+seoTitle: "Agent Readiness de Cloudflare: qué revisa de tu web"
+description: "He probado Agent Readiness de Cloudflare: pegas una URL, ves qué no entiende un agente de tu web y te da un prompt para que un agente de código lo corrija."
+kicker: Construcción pública
+dek: "Yo estaba hablando de GEO. Cloudflare acaba de ponerle una lupa a otra parte del problema: si un agente puede descubrir, leer y utilizar tu web."
+respuesta: "El escáner de Cloudflare te dice qué le falta a tu web para que un agente la descubra, la lea y la use, y te da un prompt para que un agente de código lo corrija. Es una lista de obstáculos, no una promesa: pasarlo es entrar en la conversación, no ganar la recomendación."
+te_llevas:
+  - "El flujo: escanea, abre un fallo concreto, pasa su prompt a tu agente de código, revisa el cambio y vuelve a escanear."
+  - "Guarda el resultado antes de tocar nada y copia solo el prompt de la comprobación que entiendas."
+  - "Un prompt generado no conoce tu proyecto: en robots.txt, una regla para un bot concreto puede abrir rutas que estaban protegidas."
+date: 2026-08-24
+tema: ia-aplicada
+formato: herramienta
+seccion: practica
+cover: /covers/cloudflare-agent-readiness.webp
+coverAlt: Dueña de un pequeño comercio limpia el cristal del escaparate al amanecer.
+tags:
+  - geo
+  - agent-readiness
+  - cloudflare
+  - visibilidad-ia
+  - construccion-publica
+cta_inline:
+  gancho: "Te cuento lo que pruebo antes de dar una web por preparada"
+  promesa: "Decisiones, fallos y herramientas de IA aplicadas a webs y negocios reales. Sin humo y con las comprobaciones delante."
+draft: false
+premium: false
+---
+
+Yo estaba preparando otro vídeo sobre GEO cuando Cloudflare sacó una herramienta que me hizo cambiar el enfoque.
+
+Puedes pegar la URL de una web en [Is Your Site Agent-Ready?](https://isitagentready.com/) y ver qué señales puede leer un agente: si puede descubrir el sitio, acceder a su contenido, entender sus capacidades y encontrar los puntos de entrada que necesita para interactuar con él.
+
+Y hay una parte especialmente buena: cuando una comprobación falla, Cloudflare te genera un prompt para dárselo a un agente de código y pedirle que implemente la corrección.
+
+No es que Cloudflare arregle tu web por ti. Es que convierte una auditoría técnica en una tarea que otro agente puede ejecutar.
+
+## GEO no es una sola cosa
+
+En mi [primer experimento sobre GEO](/blog/maitreai-geo) la pregunta era distinta: ¿por qué una IA no recomendaba un producto que ya existía y funcionaba?
+
+Ahí miré señales como `llms.txt`, datos estructurados y `robots.txt`.
+
+La nueva herramienta de Cloudflare mira una capa más amplia: si una web está preparada para un internet en el que no solo entran personas con un navegador, sino también agentes que buscan información, comparan opciones y, cada vez más, intentan hacer cosas.
+
+La diferencia importa porque una web puede verse perfecta para una persona y seguir siendo difícil de interpretar para una máquina.
+
+Tú ves un menú, un titular y una explicación. Un agente tiene que encontrar el contenido, saber qué parte es importante, entender quién está detrás de la web y descubrir si existe una forma estructurada de interactuar con el servicio.
+
+## Qué comprueba
+
+Cloudflare lo presenta como un informe de **Agent Readiness**. Entre las señales que revisa están:
+
+- **Descubribilidad:** cómo encuentra un agente la web, sus recursos y sus instrucciones.
+- **Contenido legible:** si puede recibir una versión clara del contenido, también mediante negociación en Markdown.
+- **Acceso de bots:** qué rastreadores pueden entrar y qué reglas les aplican.
+- **Capacidades:** si la web expone señales como Agent Skills, un catálogo de API, descubrimiento OAuth, una ficha MCP o WebMCP.
+- **Comercio para agentes:** estándares emergentes para que un agente pueda completar determinadas acciones de compra o pago.
+
+No necesitas implementar todo eso para tener una web útil. De hecho, muchas webs todavía no lo tienen. La utilidad del escáner está en enseñarte qué existe, qué falta y qué tiene sentido priorizar.
+
+La explicación oficial está en [el artículo de Cloudflare sobre Agent Readiness](https://blog.cloudflare.com/agent-readiness/), y el informe también aparece en su [URL Scanner](https://developers.cloudflare.com/changelog/post/2026-05-12-url-scanner-report-agent-readiness/).
+
+## Cómo lo probaría
+
+El flujo es sencillo:
+
+1. Abres [isitagentready.com](https://isitagentready.com/).
+2. Pegas una URL pública.
+3. Revisas el resultado general y cada comprobación.
+4. Abres un fallo concreto y lees qué está comprobando realmente.
+5. Copias el prompt que te entrega Cloudflare.
+6. Lo pasas a tu agente de código.
+7. Revisas los cambios antes de aplicarlos.
+8. Vuelves a escanear la web.
+
+La última parte es la que no conviene saltarse. Un prompt generado automáticamente puede saber qué archivo tocar y aun así no conocer las reglas concretas de tu proyecto.
+
+Por ejemplo, añadir un grupo nuevo de bots en `robots.txt` puede parecer inocente. Pero cuando una regla nombra a un rastreador concreto, ese rastreador deja de heredar algunas reglas generales. Si copias una plantilla sin revisar las exclusiones, puedes abrir rutas que antes estaban protegidas.
+
+Un agente de código ayuda mucho. No sustituye la revisión.
+
+## Lo que esta herramienta no demuestra
+
+Aquí está el matiz importante: **Agent Readiness no significa que ChatGPT vaya a recomendarte**.
+
+El escáner revisa señales técnicas que ayudan a los agentes a descubrir y utilizar una web. No es un medidor de menciones de marca ni un ranking de respuestas generativas.
+
+Un sitio puede pasar muchas comprobaciones y no aparecer mañana en una respuesta. Los motores tienen sus propios índices, criterios, modelos y tiempos de actualización. También puede ocurrir lo contrario: que una IA te encuentre aunque tu web no tenga ninguna de estas señales bien resuelta.
+
+Lo que sí te da es algo más útil que una promesa vaga: una lista concreta de obstáculos técnicos y un punto de partida para corregirlos.
+
+Es entrar en la conversación. No es ganar la recomendación.
+
+## Mi prueba
+
+Voy a pasar la herramienta por mi propia web y enseñar qué encuentra, qué prompt genera y qué cambia cuando lo ejecuta un agente de código.
+
+No quiero hacer un vídeo de "mira qué fácil es la IA". Quiero comprobar tres cosas:
+
+- qué parte del informe es realmente útil;
+- qué arreglos puede aplicar un agente sin romper otra cosa;
+- qué mejora después de volver a escanear.
+
+Si el resultado es malo, se enseña. Si el prompt propone una corrección absurda, también. La prueba no consiste en sacar una captura bonita del score: consiste en entender qué está midiendo y si el cambio sirve.
+
+## Si quieres probarlo
+
+Empieza por una URL pública que controles y guarda el resultado antes de tocar nada. Después copia solo el prompt de la comprobación que entiendas y vuelve a pasar el escáner cuando termines.
+
+Si vienes del vídeo, comenta **GEO** y te paso este artículo con el enlace directo y los pasos. Si todavía no has visto el vídeo, puedes hacer la prueba igualmente: la herramienta está abierta y no necesitas esperar a que yo te enseñe la pantalla.
+
+Y si tu web falla, no significa que no exista. Significa que hay una parte de ella que todavía estás dando por supuesta y que un agente no puede adivinar.

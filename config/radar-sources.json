@@ -1,0 +1,133 @@
+{
+  "$comment": "Curated RSS sources for the daily 'Noticias' edition. Edit this file to add/remove sources — no code changes needed. axis: ia | tecnologia | negocio | economia | geopolitica (the closed list is RADAR_AXIS_KEYS in src/config/taxonomy.ts). `name` is the feed's label and what the site shows as the source; `medio` is how the publisher is named in running text (the lead article may attribute it with either).",
+  "windowDays": 3,
+  "maxItemsPerSource": 10,
+  "sources": [
+    {
+      "name": "OpenAI News",
+      "medio": "OpenAI",
+      "url": "https://openai.com/news/rss.xml",
+      "axis": "ia",
+      "lang": "en"
+    },
+    {
+      "name": "Google DeepMind Blog",
+      "medio": "Google DeepMind",
+      "url": "https://deepmind.google/blog/rss.xml",
+      "axis": "ia",
+      "lang": "en"
+    },
+    {
+      "name": "Hugging Face Blog",
+      "medio": "Hugging Face",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "axis": "ia",
+      "lang": "en"
+    },
+    {
+      "name": "MIT Technology Review",
+      "medio": "MIT Technology Review",
+      "url": "https://www.technologyreview.com/feed/",
+      "axis": "tecnologia",
+      "lang": "en"
+    },
+    {
+      "name": "TechCrunch AI",
+      "medio": "TechCrunch",
+      "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+      "axis": "negocio",
+      "lang": "en"
+    },
+    {
+      "name": "TechCrunch Startups",
+      "medio": "TechCrunch",
+      "url": "https://techcrunch.com/category/startups/feed/",
+      "axis": "negocio",
+      "lang": "en"
+    },
+    {
+      "name": "The Verge AI",
+      "medio": "The Verge",
+      "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
+      "axis": "negocio",
+      "lang": "en"
+    },
+    {
+      "name": "Ars Technica",
+      "medio": "Ars Technica",
+      "url": "https://feeds.arstechnica.com/arstechnica/technology-lab",
+      "axis": "tecnologia",
+      "lang": "en"
+    },
+    {
+      "name": "ECB Press Releases",
+      "medio": "Banco Central Europeo",
+      "url": "https://www.ecb.europa.eu/rss/press.html",
+      "axis": "economia",
+      "lang": "en"
+    },
+    {
+      "name": "Eurostat",
+      "medio": "Eurostat",
+      "url": "https://ec.europa.eu/eurostat/en/search?p_p_id=estatsearchportlet_WAR_estatsearchportlet&p_p_lifecycle=2&p_p_state=maximized&p_p_mode=view&p_p_resource_id=atom&_estatsearchportlet_WAR_estatsearchportlet_collection=CAT_PREREL",
+      "axis": "economia",
+      "lang": "en"
+    },
+    {
+      "name": "European Commission Internal Market, Industry, Entrepreneurship and SMEs",
+      "medio": "Comisión Europea",
+      "url": "https://single-market-economy.ec.europa.eu/node/2/rss_en",
+      "axis": "negocio",
+      "lang": "en"
+    },
+    {
+      "name": "European Commission Press Corner",
+      "medio": "Comisión Europea",
+      "url": "https://ec.europa.eu/commission/presscorner/api/rss?language=en&pagesize=25",
+      "axis": "geopolitica",
+      "lang": "en"
+    },
+    {
+      "name": "Politico Europe Tech",
+      "medio": "Politico",
+      "url": "https://www.politico.eu/section/technology/feed/",
+      "axis": "geopolitica",
+      "lang": "en"
+    },
+    {
+      "name": "The Guardian AI",
+      "medio": "The Guardian",
+      "url": "https://www.theguardian.com/technology/artificialintelligenceai/rss",
+      "axis": "geopolitica",
+      "lang": "en"
+    },
+    {
+      "name": "Wired AI",
+      "medio": "Wired",
+      "url": "https://www.wired.com/feed/tag/ai/latest/rss",
+      "axis": "geopolitica",
+      "lang": "en"
+    },
+    {
+      "name": "Expansión Economía",
+      "medio": "Expansión",
+      "url": "https://e00-expansion.uecdn.es/rss/economia.xml",
+      "axis": "economia",
+      "lang": "es"
+    },
+    {
+      "name": "Cinco Días",
+      "medio": "Cinco Días",
+      "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/cincodias.elpais.com/portada",
+      "axis": "economia",
+      "lang": "es"
+    },
+    {
+      "name": "BBC News Business",
+      "medio": "BBC News",
+      "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
+      "axis": "economia",
+      "lang": "en"
+    }
+  ]
+}

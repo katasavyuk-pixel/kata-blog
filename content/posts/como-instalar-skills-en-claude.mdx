@@ -1,0 +1,197 @@
+---
+# Aprobada por Kata el 2026-10-16 («publícalo»), tras repetir ese día desde cero la instalación en
+# Claude Code, `npx skills` y Codex y comprobar sus enlaces. La parte de la app es del 13 de octubre.
+title: "Cómo instalar skills en Claude: en la app, en Cowork y en Claude Code"
+seoTitle: "Cómo instalar skills en Claude: app, Cowork y Code"
+description: "Cuatro formas de instalar una skill en Claude, y cómo va en Codex: pasos, dónde funciona cada una y qué revisar antes. Probado desde cero en octubre."
+kicker: Instalar
+dek: "Depende de dónde uses Claude. Dos formas van por la app, sin terminal; las otras dos son un comando. Con lo que he probado y con lo que solo sé por la documentación, dicho aparte."
+respuesta: "En la app de Claude se añade el repositorio desde Personalización > Plugins y queda en tu cuenta; en Claude Code bastan dos comandos y queda en ese equipo; para otros agentes está npx skills add. Antes de instalar la skill de otra persona, lee su SKILL.md y mira qué hacen sus scripts."
+te_llevas:
+  - "En Claude Code: /plugin marketplace add propietario/repositorio y /plugin install plugin@marketplace; el marketplace puede no llamarse como en GitHub."
+  - "Antes de instalar una ajena: lee el SKILL.md, mira qué hacen sus scripts y de dónde viene, y pruébala con datos inventados."
+  - "Si publicas skills, instálalas desde cero con cada instalador antes de enlazarlas: uno puede saltarse algunas sin dar ningún error."
+date: 2026-10-16
+tema: ia-aplicada
+formato: guia
+seccion: practica
+tags:
+  - skills
+  - claude
+  - claude code
+  - cowork
+  - instalación
+se_resuelve_con:
+  - empezar
+faq:
+  - q: "¿Las skills de Claude son gratis?"
+    a: "Instalar una skill no cuesta nada, y muchas son de código abierto. Lo que necesitas es un plan de Claude que las admita: la documentación de Anthropic dice Pro, Max, Team y Enterprise, y su artículo de ayuda incluye también el plan gratuito. Al usarlas gastan del uso de tu plan, como cualquier otra conversación."
+  - q: "¿Una skill instalada en Claude Code aparece en la app de Claude?"
+    a: "No. Lo que instalas desde la línea de comandos se queda en ese equipo. Al revés sí funciona: un plugin que añades a tu cuenta desde la app se descarga en Claude Code la siguiente vez que lo abres con esa misma cuenta."
+  - q: "¿Qué diferencia hay entre una skill y un plugin?"
+    a: "Una skill es una carpeta con instrucciones para una tarea concreta. Un plugin es un paquete que reúne varias skills, y a veces otras piezas, para instalarlas de una vez. Si te pasan un repositorio con un fichero marketplace.json, es un repositorio de plugins; si te pasan una carpeta con un SKILL.md, es una skill."
+  - q: "¿Cómo se desinstala una skill?"
+    a: "En Claude Code, con claude plugin uninstall seguido del nombre del plugin y su origen, por ejemplo negocio-pequeno@kata-ivanovych. Si la instalaste con la herramienta skills, con npx skills remove y el nombre. En la app, desde Personalización > Plugins > Añadir > Gestionar marketplaces: al eliminar el repositorio se desinstalan sus plugins. Para dejarlo instalado pero apagado está el interruptor de la página del plugin."
+  - q: "¿Es seguro instalar skills de otra persona?"
+    a: "Depende de quién sea y de qué traiga. Una skill son instrucciones que Claude sigue y, a veces, programas que ejecuta en tu equipo. Anthropic revisa los plugins de su directorio; lo que añades desde un repositorio o subes tú no pasa esa revisión. Lee el SKILL.md y mira qué hacen los scripts antes de activarla."
+cover: /covers/como-instalar-skills-en-claude.webp
+coverAlt: Unas manos meten un formón nuevo, con una franja roja en el mango, en un estuche de lona junto a herramientas gastadas, sobre un banco de carpintero.
+cta_inline:
+  gancho: "Te aviso cuando publique una skill nueva"
+  promesa: "Un correo con lo que hace, cómo se ha probado y lo que se rompió por el camino."
+draft: false
+premium: false
+---
+
+Una skill es una carpeta con instrucciones que Claude carga cuando la tarea encaja con ella. Se instala de cuatro formas: añadiendo un repositorio de plugins desde la app de Claude, subiendo un ZIP, con dos comandos en Claude Code o con `npx skills add` para cualquier agente. Cuál te toca depende de dónde uses Claude.
+
+| Dónde usas Claude | Cómo se instala | Dónde queda disponible | ¿Lo he probado? |
+| --- | --- | --- | --- |
+| App de Claude (web o escritorio) y Cowork | Añadiendo un repositorio de plugins | En tu cuenta: chat, Cowork y Claude Code | Sí, en el chat, el 13 de octubre |
+| App de Claude, una skill suelta | Subiendo un ZIP | En tu cuenta | No. Pasos de la documentación |
+| Claude Code | Con dos comandos | En ese equipo | Sí |
+| Claude Code y otros agentes | Con `npx skills add` | En la carpeta del proyecto o en tu usuario | Sí |
+| Codex (de OpenAI) | Con dos comandos, del mismo repositorio | En ese equipo | Sí |
+
+Lo de la terminal lo repetí desde cero el 16 de octubre de 2026, con Claude Code 2.1.300, `skills` 1.7.2 y Codex CLI 0.162.1. Lo de la app, el 13 de octubre.
+
+## ¿Qué es una skill de Claude y qué se instala exactamente?
+
+Una carpeta con un fichero `SKILL.md`. Dentro van un nombre, una descripción de una o dos frases y las instrucciones. Puede llevar además scripts, que son programas pequeños para que las cuentas las haga un programa y no el modelo, y ficheros de consulta.
+
+Claude no se lee todas las skills al empezar. De cada una ve solo el nombre y la descripción. Cuando lo que pides encaja con una, la abre y sigue lo que dice. Por eso una skill con una descripción vaga no se activa nunca, por buena que sea por dentro. Lo explica la [documentación de Anthropic](https://claude.com/docs/skills/overview).
+
+Un **plugin** es un paquete: varias skills juntas que se instalan de una vez. El formato es abierto, se llama [Agent Skills](https://agentskills.io/specification), y la misma carpeta sirve en otros asistentes que lo leen.
+
+## ¿Cómo se instala una skill en la app de Claude, sin terminal?
+
+Desde **Personalización**, en claude.ai o en la app de escritorio. Lo que añades ahí se guarda en tu cuenta. Según la [documentación de plugins](https://claude.com/docs/plugins/overview), queda disponible en el chat, en Cowork y, la próxima vez que lo abras con esa cuenta, en Claude Code.
+
+1. Abre **Personalización** y entra en **Plugins**.
+2. Pulsa **Añadir** y elige **Añadir marketplace**.
+3. De las dos opciones que salen, **Añadir desde un repositorio**.
+4. En **URL**, escribe el repositorio, en la forma `propietario/repositorio` o con la dirección completa, y pulsa **Sincronizar**.
+5. El plugin aparece en **Descubrir**. Pulsa **Añadir** y la app contesta que está instalado y listo para usar.
+
+<figure>
+  <img src="/capturas/como-instalar-skills-en-claude/anadir-marketplace.webp" width="1440" height="572" loading="lazy" alt="Diálogo «Añadir marketplace» de la app de Claude, con dos opciones: «Explorar fuentes de Anthropic» y «Añadir desde un repositorio»." />
+  <figcaption>El paso 3. La opción de abajo es la que admite un repositorio cualquiera.</figcaption>
+</figure>
+
+<figure>
+  <img src="/capturas/como-instalar-skills-en-claude/anadir-desde-un-repositorio.webp" width="1440" height="720" loading="lazy" alt="Formulario para añadir un marketplace desde un repositorio: un aviso de confianza, el campo URL y el botón Sincronizar." />
+  <figcaption>El paso 4. Antes de sincronizar, la app avisa de que lo que viene de un repositorio no lo controla Anthropic.</figcaption>
+</figure>
+
+Sus skills salen después en **Personalización**, pestaña **Skills**, en **Tuyos**, bajo «De los marketplaces que has añadido». Para usar una, escribe `/` en un chat y elígela, o describe la tarea y deja que Claude la cargue. En la app se llaman por su nombre a secas, `/empezar`. En Claude Code llevan delante el del plugin.
+
+<figure>
+  <img src="/capturas/como-instalar-skills-en-claude/skills-instaladas.webp" width="1010" height="572" loading="lazy" alt="Página del plugin «Negocio pequeño» en la app de Claude, versión 2.0.1, con sus seis skills en lista: cerrar-trimestre, datos-de-documentos, empezar, prever-caja, reclamar-facturas y visibilidad-en-ia." />
+  <figcaption>El plugin ya instalado, con sus seis skills.</figcaption>
+</figure>
+
+La página del plugin tiene un botón, **Probar en chat**, que abre una conversación con una skill ya escrita en el mensaje. Así lo probé: la bienvenida de mi catálogo arrancó, buscó si ya había un perfil del negocio y empezó a preguntar. El mensaje que deja escrito ese botón está en inglés, y la respuesta salió en inglés.
+
+Hay dos requisitos, los dos de la documentación de Anthropic. Las skills se ejecutan en el entorno de código de Claude, así que tiene que estar activada la ejecución de código y creación de archivos en los ajustes de la cuenta (**Settings > Capabilities** en la interfaz en inglés). Y hace falta un plan que las admita. Ahí sus fuentes no coinciden: la [documentación](https://claude.com/docs/skills/overview) dice Pro, Max, Team y Enterprise, y el [artículo de ayuda](https://support.claude.com/en/articles/12512180-use-skills-in-claude) incluye también el plan gratuito.
+
+<Callout type="info" title="Con qué lo probé">
+El 13 de octubre de 2026, en claude.ai, con la interfaz en español, un plan Max y GitHub ya conectado a la cuenta, instalando mi propio repositorio. No lo he probado en Cowork, ni con otro plan, ni en una cuenta sin GitHub conectado: ahí no sé si pide algo más.
+</Callout>
+
+### Subir una sola skill en un ZIP
+
+Si lo que tienes es la carpeta de una skill y no un repositorio, se sube desde el apartado **Skills** de la personalización. Este camino no lo he probado: en la [ayuda de Anthropic](https://support.claude.com/en/articles/12512180-use-skills-in-claude), con la interfaz en inglés, es **Customize > Skills**, botón **+**, **Create skill** y **Upload a skill**.
+
+El ZIP tiene que llevar la carpeta dentro, no los ficheros sueltos: Claude busca `nombre-de-la-skill/SKILL.md`. La carpeta se llama igual que el campo `name` del fichero, en minúsculas, con números y guiones, hasta 64 caracteres. Está en [cómo empaquetar una skill](https://claude.com/docs/skills/how-to).
+
+Una skill subida así no la revisa nadie más que tú. Ábrela y lee su `SKILL.md` antes de activarla.
+
+## ¿Cómo se instala una skill en Claude Code?
+
+Con dos líneas dentro de una sesión. La primera da de alta el repositorio como fuente de plugins. La segunda instala el plugin:
+
+```text
+/plugin marketplace add katasavyuk-pixel/skills-negocio-pequeno
+/plugin install negocio-pequeno@kata-ivanovych
+```
+
+Lo que va detrás de la arroba es el nombre con el que se registra el repositorio, que no tiene por qué ser el de GitHub. Al instalar, Claude Code enseña lo que trae el plugin y pregunta el alcance: para ti en todos los proyectos, para todo el que trabaje en ese repositorio, o solo para ti en ese repositorio. Los detalles están en [instalar y gestionar plugins](https://code.claude.com/docs/en/plugins/install).
+
+Las mismas dos órdenes existen fuera de una sesión. Son las que ejecuté para comprobarlo, con una configuración vacía:
+
+```bash
+claude plugin marketplace add katasavyuk-pixel/skills-negocio-pequeno
+claude plugin install negocio-pequeno@kata-ivanovych
+```
+
+```text
+✔ Successfully added marketplace: kata-ivanovych (declared in user settings)
+✔ Successfully installed plugin: negocio-pequeno@kata-ivanovych (scope: user)
+```
+
+Las skills de un plugin llevan su nombre delante: `/negocio-pequeno:empezar`. Para ver qué hay instalado, `claude plugin list`. Para ver qué trae un plugin y cuánto ocupa, `claude plugin details negocio-pequeno`: del mío dice que son seis skills y unos 623 <Term id="token">tokens</Term> añadidos a cada sesión. Es lo que ocupan sus seis descripciones, lo único que Claude lleva siempre encima, y es la estimación de la propia herramienta, no una medida.
+
+Para quitarlo, `claude plugin uninstall negocio-pequeno@kata-ivanovych`.
+
+Una skill suelta también se puede copiar a mano: en `~/.claude/skills/<nombre>/` la tienes en todos tus proyectos, y en `.claude/skills/<nombre>/`, dentro de un proyecto, solo en ese. Lo cuenta la [documentación de Claude Code](https://code.claude.com/docs/en/skills).
+
+### En Codex
+
+Codex, el agente de OpenAI, lee el mismo fichero de marketplace que Claude Code, así que el repositorio sirve tal cual:
+
+```bash
+codex plugin marketplace add katasavyuk-pixel/skills-negocio-pequeno
+codex plugin add negocio-pequeno@kata-ivanovych
+```
+
+Después hay que abrir una sesión nueva. Lo probé el 15 de octubre de 2026 con Codex CLI 0.162.1: ve las seis, y la previsión de caja hizo su hoja con los datos de ejemplo.
+
+### Con `npx skills add`, para Claude Code y para otros agentes
+
+[`skills`](https://github.com/vercel-labs/skills) es una herramienta de línea de comandos que copia skills de un repositorio a la carpeta donde las busca tu asistente. Sirve cuando no usas Claude Code, o cuando quieres una sola skill y no el paquete entero.
+
+```bash
+npx skills add katasavyuk-pixel/skills-negocio-pequeno --list
+npx skills add katasavyuk-pixel/skills-negocio-pequeno --skill empezar -a claude-code -y --copy
+```
+
+La primera línea enseña lo que hay sin instalar nada. La segunda instala una skill, para Claude Code, sin preguntar y copiando los ficheros. En la prueba la dejó en `.claude/skills/empezar`, dentro de la carpeta desde la que lancé el comando. Con `-g` va a tu usuario y vale para todos los proyectos. Se quita con `npx skills remove empezar`.
+
+Dos cosas que conviene saber. La herramienta recoge datos de uso anónimos, y se desactiva poniendo `DISABLE_TELEMETRY=1` delante del comando. Y al terminar avisa de que revises lo instalado, porque se ejecuta con todos los permisos del asistente.
+
+## Lo que me encontré al publicar las mías
+
+La primera versión de mi catálogo tenía ocho skills. Claude Code las cargaba todas. `npx skills add` instalaba tres.
+
+Las otras cinco llevaban dos puntos sin comillas en la descripción, y eso rompe la cabecera del fichero, que es donde van el nombre y la descripción. Claude Code lo pasaba por alto. El otro instalador se saltaba esas cinco sin dar ningún error. La validación de plugins de Claude Code tampoco lo veía: daba el paquete por bueno.
+
+Lo vi porque instalé el paquete desde cero con los dos antes de enlazarlo. Desde entonces es una regla: una versión nueva no se enlaza hasta que los dos instaladores devuelven todas las skills. Está contado en el [registro de cambios](https://github.com/katasavyuk-pixel/skills-negocio-pequeno/blob/v2.0.1/CHANGELOG.md) del repositorio.
+
+La segunda vez fue al revés. La versión 2.0.0 se instalaba desde la terminal con los dos instaladores, y la app de Claude la rechazaba con un error que no ayudaba: «Error al sincronizar el mercado. Verifica la URL del repositorio». La URL estaba bien.
+
+El motivo estaba en la respuesta del servidor, no en la pantalla. El fichero que describe el paquete decía que el plugin estaba en `.`, la raíz del repositorio. Claude Code lo acepta. La app solo acepta una carpeta del propio repositorio si se escribe empezando por `./`. Dos caracteres en vez de uno, y entra en los tres sitios.
+
+Si publicas las tuyas: la descripción, entre comillas. Si tu repositorio es a la vez el paquete, `"source": "./"`. Y prueba la instalación en todos los sitios donde digas que se puede instalar, no solo en el que usas tú.
+
+## Qué revisar antes de instalar una skill de otra persona
+
+Una skill son instrucciones que Claude va a seguir y, a veces, programas que va a ejecutar. En Claude Code y en Cowork eso pasa en tu equipo, con tus ficheros delante.
+
+- **Lee el `SKILL.md`.** Es texto. Si no entiendes qué le pide a Claude, no la instales.
+- **Mira si trae scripts y qué hacen.** Sobre todo si abren conexiones a internet o tocan ficheros fuera de la carpeta de trabajo.
+- **Fíjate en de dónde viene.** Anthropic revisa los plugins de su directorio. Lo que añades desde un repositorio o subes tú no pasa por esa revisión.
+- **Empieza con datos de prueba.** Una factura inventada antes que las tuyas.
+
+En [mi catálogo](/marketplace) cada ficha dice qué lee la skill, qué escribe y qué sale de tu equipo. De las seis, solo una abre conexiones, y solo a la web que le pides auditar.
+
+## El límite de esta guía
+
+No he instalado nada en Cowork ni he subido una skill en un ZIP. Esas dos partes salen de la documentación.
+
+En la app solo he puesto en marcha una de mis seis skills, la bienvenida, y no la he completado. Que las otras cinco hagan allí sus cuentas igual que en la terminal está por comprobar.
+
+Los nombres de los menús son los del 13 de octubre de 2026. Pueden haber cambiado cuando leas esto.
+
+Lo que sí está probado desde cero, con las seis skills del catálogo: la instalación en la app el 13 de octubre, y los dos comandos de Claude Code, los de Codex y `npx skills add` el 16.
+
+Si quieres probar la instalación con algo ya hecho, son [seis skills para el trabajo de oficina de un negocio](/marketplace), gratis y con licencia MIT, para Claude, Codex y otros agentes. Se empieza por [la bienvenida](/marketplace/empezar), que pregunta por tu negocio una vez y adapta las demás.

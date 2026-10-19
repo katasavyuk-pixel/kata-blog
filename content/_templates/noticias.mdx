@@ -1,0 +1,57 @@
+---
+title: "Noticias — {{FECHA_LEGIBLE_DEL_DIA}}"
+description: "{{RESUMEN_DEL_DIA_EN_UNA_FRASE, max 300 chars}}"
+kicker: "Noticias"
+dek: "{{QUE_CUBRE_ESTA_EDICION_EN_UNA_FRASE, max 300 chars}}"
+date: {{FECHA_ISO_YYYY-MM-DD}}
+tema: contenido
+formato: radar
+seccion: radar
+cover: /covers/radar.webp
+coverAlt: "Vigía observa el horizonte al amanecer desde un puesto de costa, con una luz roja de señal."
+tags:
+  - radar
+cta_inline:
+  gancho: "Estas noticias las genera un sistema, no yo"
+  promesa: "Te cuento cómo está montado y cómo evita inventarse titulares, con el código delante."
+draft: false
+premium: false
+---
+
+<Callout type="info" title="Nota editorial">
+{{ESPACIO_PARA_COMENTARIO_DE_KATA — el generador deja aquí UNA frase neutra
+resumiendo el hilo conductor del día; Kata la sustituye o amplía en el aviso de
+revisión si quiere. Nunca opinión inventada en su nombre.}}
+</Callout>
+
+{{POR_CADA_ITEM_SELECCIONADO (5–7, cubriendo ia/tecnologia/negocio/economia/geopolitica si hay material sólido):}}
+
+{{LA URL Y TU TITULAR. El titular original, la fuente, la fecha y el eje los escribe
+después un script a partir del JSON, buscando por esa URL: lo que se teclee en esos
+atributos se descarta. `titular` es el tuyo, en español, para quien lleva un negocio
+pequeño: máximo 110 caracteres, sin comillas dobles (usa « »), y sin ninguna cifra,
+fecha, nombre o afirmación que no esté en el titular o el resumen del JSON. Si no
+cumple, el script lo quita y se enseña el titular original.}}
+
+<RadarItem url="{{URL_EXACTA_DEL_JSON}}" titular="{{TU_TITULAR_EN_ESPAÑOL}}">
+
+{{POR_QUE_IMPORTA: 2–3 frases en español. Qué pasó y por qué es relevante
+técnicamente o para el sector. Sin superlativos, sin predicciones, sin opinión
+política. Si el titular está en inglés, el análisis lo contextualiza en español.}}
+
+</RadarItem>
+
+{{FIN_DEL_LOOP}}
+
+{{COLOCA UN SOLO <SuscripcionInline /> ENTRE DOS </RadarItem> Y <RadarItem, hacia
+la mitad de la lista (tras el 3º o 4º ítem). Nunca dentro de un <RadarItem>: los
+dos parsers (el gate anti-alucinación y la tira de la home) leen esas etiquetas,
+y meterlo dentro rompería la verificación. El copy sale de `cta_inline`, no se
+escribe aquí.}}
+
+<SuscripcionInline />
+
+---
+
+*Estas noticias se generan cada día a partir de fuentes públicas verificadas y se
+publican en automático. ¿Falta algo importante? [Dímelo](/sobre-mi).*

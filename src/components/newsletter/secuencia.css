@@ -1,0 +1,74 @@
+/*
+ * The sequence of a newsletter edition (src/components/newsletter/secuencia.tsx).
+ *
+ * At rest it is the whole diagram: the dot on the last step and every failure
+ * showing, which is also what a reader without JavaScript gets. The dot only
+ * travels when the reader asks for it (DESIGN.md: movement only as a response),
+ * and with reduced motion it never does and the button is gone.
+ *
+ * In its own file, imported by the component, for the reason in
+ * docs/pitfalls.md: Vercel's build cache once served a stale globals.css.
+ */
+.secuencia {
+  --duracion: calc(var(--n) * 0.9s);
+  --desde: calc(100% / (2 * var(--n)));
+  --hasta: calc(100% - 100% / (2 * var(--n)));
+}
+
+.secuencia-linea {
+  left: var(--desde);
+  right: var(--desde);
+}
+
+.secuencia-punto {
+  left: var(--hasta);
+}
+
+.secuencia[data-estado="inicio"] .secuencia-punto {
+  left: var(--desde);
+}
+
+.secuencia[data-estado="inicio"] .secuencia-fallo {
+  opacity: 0;
+}
+
+.secuencia[data-estado="recorriendo"] .secuencia-punto {
+  animation: secuencia-recorre var(--duracion) cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+
+.secuencia[data-estado="recorriendo"] .secuencia-fallo {
+  animation: secuencia-aparece 300ms ease-out both;
+  animation-delay: calc(var(--i) / (var(--n) - 1) * var(--duracion));
+}
+
+@keyframes secuencia-recorre {
+  from {
+    left: var(--desde);
+  }
+  to {
+    left: var(--hasta);
+  }
+}
+
+@keyframes secuencia-aparece {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .secuencia-repetir {
+    display: none;
+  }
+  .secuencia[data-estado] .secuencia-punto,
+  .secuencia[data-estado] .secuencia-fallo {
+    animation: none;
+    left: var(--hasta);
+    opacity: 1;
+  }
+}

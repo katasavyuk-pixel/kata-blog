@@ -1,0 +1,99 @@
+name: LinkedIn — publicar al aprobar
+
+# Kata pone la etiqueta `publicar-linkedin` en una issue y el post sale en su
+# perfil. Esa etiqueta ES la aprobación, pieza a pieza: nadie más puede ponerla, y una issue ya publicada no se repite.
+#
+# La issue la deja preparada la skill `compartir-noticia`, con el texto entre
+# <!-- post --> y <!-- /post -->. Se puede ensayar a mano (workflow_dispatch con
+# `ensayo`): comprueba el texto y el formato y no publica.
+#
+# Secretos: LINKEDIN_ACCESS_TOKEN, LINKEDIN_PERSON_ID y LINKEDIN_TOKEN_EXPIRES los
+# guarda `npm run linkedin:autorizar`. El permiso caduca a los ~60 días.
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: "Número de la issue con el post"
+        required: true
+      ensayo:
+        description: "Solo comprobar el texto; no publica"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: linkedin-publicar
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    # Solo el dueño del repo, y solo con esa etiqueta. Un ensayo a mano también
+    # exige ser el dueño: `workflow_dispatch` ya pide permiso de escritura.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'publicar-linkedin' && github.actor == github.repository_owner)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ISSUE: ${{ github.event.issue.number || inputs.issue }}
+      ENSAYO: ${{ github.event_name == 'workflow_dispatch' && inputs.ensayo || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Leer la issue
+        id: issue
+        run: |
+          mkdir -p scratch
+          gh issue view "$ISSUE" --json body,labels,state > scratch/issue.json
+          jq -r '.body' scratch/issue.json > scratch/post.md
+          if jq -e '.labels[].name | select(. == "publicado-linkedin")' scratch/issue.json > /dev/null; then
+            echo "ya=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ya=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Ya estaba publicada
+        if: steps.issue.outputs.ya == 'true' && env.ENSAYO != 'true'
+        run: |
+          gh issue comment "$ISSUE" --body "Esta issue ya se publicó en LinkedIn; no se publica dos veces. Si quieres otro post, abre otra issue."
+          gh issue edit "$ISSUE" --remove-label publicar-linkedin
+
+      - name: Publicar en LinkedIn
+        id: publicar
+        if: steps.issue.outputs.ya != 'true' || env.ENSAYO == 'true'
+        run: node scripts/social/linkedin-publicar.mjs
+        env:
+          POST_FILE: scratch/post.md
+          DRY_RUN: ${{ env.ENSAYO }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_PERSON_ID: ${{ secrets.LINKEDIN_PERSON_ID }}
+          LINKEDIN_TOKEN_EXPIRES: ${{ secrets.LINKEDIN_TOKEN_EXPIRES }}
+
+      - name: Dejarlo dicho en la issue
+        if: success() && steps.publicar.outputs.url != '' && env.ENSAYO != 'true'
+        run: |
+          AVISO=""
+          DIAS='${{ steps.publicar.outputs.dias }}'
+          if [ -n "$DIAS" ] && [ "$DIAS" -lt 10 ]; then
+            AVISO=$'\n\n⚠️ El permiso de LinkedIn caduca en '"$DIAS"$' días. Renuévalo con `npm run linkedin:autorizar`.'
+          fi
+          gh issue comment "$ISSUE" --body "✅ Publicado en LinkedIn: ${{ steps.publicar.outputs.url }}${AVISO}"
+          gh issue edit "$ISSUE" --add-label publicado-linkedin --remove-label publicar-linkedin
+          gh issue close "$ISSUE" --reason completed
+
+      - name: Avisar si falla
+        if: failure() && env.ENSAYO != 'true'
+        run: |
+          gh issue comment "$ISSUE" --body "❌ No se pudo publicar en LinkedIn. Mira el registro: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Se ha quitado la etiqueta: cuando esté arreglado, vuelve a ponerla para reintentar."
+          gh issue edit "$ISSUE" --remove-label publicar-linkedin

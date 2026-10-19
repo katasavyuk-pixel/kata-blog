@@ -1,0 +1,128 @@
+---
+title: "Cómo hice MaitreAI: el agente de reservas que la IA no sabía recomendar"
+seoTitle: "Cómo hice MaitreAI, un agente de reservas para restaurantes"
+description: "MaitreAI está en beta y atiende reservas por WhatsApp y voz en un restaurante real. Cómo lo construí y el problema que descubrí después."
+kicker: Construcción pública
+dek: "MaitreAI está en beta. Ya funciona en un piloto real. Y cuando pregunté a una IA qué agente recomendar para restaurantes, no apareció."
+respuesta: "Lo construí para atender reservas por WhatsApp y voz sin inventar disponibilidad ni quitarle el control al restaurante, y antes que una demo tuvo que aguantar un flujo completo de reserva. Funciona en un piloto real, pero sigue en beta porque aún no está validado a escala."
+te_llevas:
+  - "Las cuatro pruebas: no prometer una mesa que no existe, atender por WhatsApp y voz, separar cada restaurante y pasar a una persona lo que no resuelve."
+  - "Una demo demuestra que el sistema puede responder; un piloto, que una conversación entra en un negocio que existe y tiene consecuencias."
+  - "La IA es una pieza, no el sistema: detrás hay base de datos, calendario, permisos, mensajería, voz, panel y registro."
+date: 2026-08-21
+tema: ia-aplicada
+formato: caso
+seccion: practica
+nbiRelacionado: true
+cover: /covers/como-hice-maitreai.webp
+coverAlt: Cocinera termina un plato mientras el equipo trabaja al fondo de la cocina.
+tags:
+  - maitreai
+  - hosteleria
+  - construccion-publica
+  - producto
+  - beta
+recurso: maitreai-geo
+cta_inline:
+  gancho: "Comprueba si una IA puede encontrar tu producto"
+  promesa: "El prompt de auditoría GEO que usé para MaitreAI, generalizado para que lo apliques a lo que tú vendas. Te llega por correo al confirmar."
+draft: false
+premium: false
+---
+
+**MaitreAI está en beta.** No es solo una demo: ya funciona en un piloto real con voz y WhatsApp en un restaurante de Irun. Puedes conocerlo y probar la demo en [maitreai.es](https://maitreai.es).
+
+Y, aun así, cuando le pregunté a una IA qué agente recomienda para atender las reservas de un restaurante, MaitreAI no apareció.
+
+Esa contradicción es la historia. En el [vídeo del episodio](https://youtu.be/9OB_O0w-8GI) cuento la segunda mitad —cómo descubrí que el producto no era visible para los sistemas de IA—, escrita a fondo en [Pregunté a una IA qué agente recomienda para restaurantes — y MaitreAI no salió](/blog/maitreai-geo). Aquí cuento la primera: de dónde salió, qué construí y qué significa exactamente que esté en beta.
+
+## La pregunta que empezó todo
+
+Un restaurante puede tener una web impecable y seguir perdiendo reservas.
+
+No porque nadie lo encuentre, sino porque la persona que debería contestar está sirviendo mesas, hablando con un proveedor o cerrando el local. El mensaje llega por WhatsApp. La llamada entra en mal momento. La reserva sencilla se queda esperando.
+
+Ahí empezó MaitreAI: no con la idea de hacer otro chatbot, sino con una pregunta más incómoda:
+
+> ¿Puede un agente atender una reserva real sin inventar disponibilidad y sin quitarle el control al restaurante?
+
+TheFork y otras plataformas resuelven el descubrimiento. MaitreAI intenta resolver la conversación que ya llega al negocio por sus propios canales. No sustituye al marketplace; trabaja después de que el cliente ya ha decidido escribir o llamar.
+
+## Construirlo fue pasar cuatro pruebas
+
+La primera versión no tenía que ganar una demo: tenía que aguantar un flujo completo de reserva.
+
+### 1. No prometer una mesa que no existe
+
+El agente tiene que consultar la disponibilidad antes de confirmar. Si no hay hueco, debe decirlo. Parece obvio hasta que recuerdas que una respuesta convincente y una reserva válida son dos cosas distintas.
+
+### 2. Atender donde ya llega la reserva
+
+La lógica tiene que funcionar por WhatsApp y por voz, no solo en una pantalla preparada para una demo. El cliente no cambia su canal porque el software lo prefiera.
+
+### 3. Mantener separado cada restaurante
+
+Horarios, servicios, reglas y datos pertenecen a un negocio concreto. MaitreAI se construyó como una aplicación SaaS multiempresa: cada restaurante trabaja con su propio contexto y sus propios permisos.
+
+### 4. Saber cuándo apartarse
+
+Si la petición se sale de lo que el sistema puede resolver, debe escalar a una persona. La automatización no consiste en fingir que sabe; consiste en resolver lo repetible y hacer visible lo demás.
+
+Por detrás hay base de datos, calendario, control de permisos, integraciones de mensajería y voz, panel de gestión y registro de lo que ocurre. La IA es una pieza del sistema, no el sistema entero.
+
+## Beta no significa “a medio hacer”
+
+Significa algo más preciso: el flujo principal funciona en un entorno real, pero todavía estoy comprobando dónde falla, qué excepciones aparecen y si el problema es lo bastante frecuente como para convertirse en un producto comercial.
+
+> **MaitreAI está en beta porque funciona, pero todavía no está validado a escala.**
+
+Eso también implica decir lo que no puedo afirmar. No tengo permiso ni datos estructurados para publicar cuántas reservas gestionó el piloto, cuánto ahorró o qué satisfacción produjo. Convertir una prueba gratuita en un caso de éxito sería contar una historia más cómoda que la real.
+
+## La prueba que cambió el proyecto
+
+Primero preparé una demo pública con un restaurante ficticio. Servía para comprobar que cualquiera podía iniciar una conversación por WhatsApp y entender el flujo.
+
+Después llegó el primer piloto real: un restaurante de Irun usando MaitreAI en producción con voz y WhatsApp.
+
+Ese fue el despliegue que importaba. Una demo demuestra que el sistema puede responder. Un piloto demuestra que una conversación entra en un negocio que existe y tiene consecuencias.
+
+También dejó claro lo que todavía falta. Estar funcionando en un piloto gratuito no es lo mismo que tener un producto comercial validado a escala. Por eso MaitreAI sigue en beta y por eso no lo presento como una historia de crecimiento.
+
+## El segundo problema apareció después
+
+Yo pensaba que el siguiente trabajo sería mejorar el agente.
+
+Entonces hice una prueba distinta: le pregunté a una IA qué solución recomendaría para atender llamadas y WhatsApp de un restaurante. Me devolvió dos nombres. MaitreAI no salió.
+
+El producto podía existir, tener un piloto y responder conversaciones. Para una IA que tuviera que recomendarlo, era como si no estuviera suficientemente descrito.
+
+Ahí empezó el experimento GEO. El [artículo de la auditoría](https://kata.ianexora.com/blog/maitreai-geo) explica qué comprobé, qué cambié y qué todavía no puedo dar por demostrado. Este post explica el producto que había detrás antes de tocar `llms.txt` o `robots.txt`.
+
+## Por qué lo cuento ahora
+
+Porque enseñar solo la parte del experimento deja una impresión equivocada. Parece que MaitreAI apareció cuando publiqué un archivo. No fue así.
+
+La secuencia real fue otra:
+
+1. Había una tarea operativa concreta: responder reservas mientras el restaurante estaba ocupado.
+2. Construí un sistema para atenderla por los canales donde ya llegan esas reservas.
+3. Lo puse en producción en un piloto real y lo mantuve bajo el nombre correcto: beta.
+4. Después descubrí que un sistema de IA no sabía encontrarlo ni recomendarlo.
+
+Construir en público solo sirve si también se explican los límites. MaitreAI funciona en beta. Todavía estoy separando lo que funciona técnicamente de lo que está validado como negocio.
+
+## Lo que voy a comprobar ahora
+
+No necesito otro anuncio. Necesito respuestas con fecha:
+
+- ¿Puede resolver de forma consistente una reserva sencilla?
+- ¿Sabe detectar una excepción y pasarla a una persona?
+- ¿Puede ser encontrado y considerado por una IA cuando alguien busca una solución parecida?
+
+Si una respuesta es no, también forma parte del producto y de la historia.
+
+## El recurso para auditar tu propio producto
+
+El prompt de auditoría GEO que usé para preparar la descripción de MaitreAI está generalizado para que lo apliques a tu propio producto o servicio. No te promete que una IA vaya a recomendarte; te ayuda a comprobar qué puede encontrar, qué entiende y qué señales le faltan.
+
+<SuscripcionInline />

@@ -1,0 +1,60 @@
+---
+title: De un prompt a un agente
+description: "Un agente es un prompt que no se queda quieto: un bucle con herramientas y decisiones. Juega con los mandos y mira por qué más autonomía no es gratis."
+kicker: Fundamentos
+dek: "Un agente es un prompt que no se queda quieto. Aquí lo ves como un bucle: pasos, autonomía y temperatura, y el coste de cada uno."
+respuesta: "Un agente es un prompt que no se queda quieto: repite un bucle de pasos y en cada vuelta decide qué hacer con sus herramientas. La diferencia no es más inteligencia sino más decisiones propias, y cada una es un punto donde puede desviarse del plan."
+te_llevas:
+  - "Da autonomía solo en los pasos finales y baratos; deja bajo tu aprobación los primeros: entender el problema y elegir la herramienta."
+  - "Temperatura baja y pasos acotados: un agente alucina igual que un prompt y, además, encadena un fallo con el siguiente."
+  - "Ante una demo de «agente autónomo», busca en qué punto puedes frenarlo si se equivoca. Si no lo hay, es un juego de azar."
+date: 2026-08-23
+updated: 2026-10-11
+tema: ia-aplicada
+formato: leccion
+seccion: practica
+cover: /covers/que-es-un-agente.webp
+coverAlt: Mecánico de bicicletas ajusta los radios de una rueda y comprueba su giro.
+tags:
+  - fundamentos
+  - agentes
+  - interactivo
+cta_inline:
+  gancho: "El glosario se queda corto: esto lo desmontamos juntos"
+  promesa: "Te aviso cuando publique la siguiente lección, y te llegan los sistemas que monto con lo que costaron."
+draft: false
+premium: false
+---
+
+Un <Term id="prompt">prompt</Term> te responde y se calla. Un **agente** no: repite un bucle —*plan, busca, razona, ejecuta, revisa*— y en cada vuelta decide qué hacer con las «herramientas» que tenga (buscar, leer, llamar a una API, escribir un archivo).
+
+La diferencia no es «más inteligencia», es **más pasos con decisiones propias**.
+
+<AgentLoop />
+
+## Por qué esto te importa
+
+- **Autonomía ≠ gratis.** Cada paso que el agente decide por sí mismo es un punto donde puede desviarse del plan. Por eso los agentes buenos traen <Term id="temperature">temperatura</Term> baja y pasos acotados.
+- **Más potencia, más superficie.** Un agente hace cosas que un prompt solo no hace — pero también falla de formas nuevas: alucina igual, y además se encadena un fallo con el siguiente.
+- **El punto de control.** La diferencia entre un agente y una bomba es dónde pones el *checkpoint* humano. Eso se decide en el diseño, no en la promesa.
+
+<Callout type="warn" title="La regla que evita la mayoría de sustos">
+Da autonomía de verdad únicamente en los pasos finales y baratos; deja los primeros (entender el problema, elegir la herramienta) bajo tu aprobación. Lo barato que se desvíe no rompe nada; lo caro que se desvíe, sí.
+</Callout>
+
+
+## Compruébalo
+
+<Quiz
+  id="agente-autonomia"
+  question="¿Por qué subir mucho la autonomía de un agente no sale gratis?"
+  options={[
+    { text: "Porque cada paso que decide por sí solo es un punto posible de desviarse del plan", correct: true, explain: "Exacto: más decisiones propias = más oportunidades de que un fallo se enganche con el siguiente, y más difícil de auditar." },
+    { text: "Porque un agente con autonomía gasta más tokens", explain: "También gasta más, sí — pero el motivo de fondo es el riesgo de desviarse por decisión propia, no el coste de tokens." },
+    { text: "Porque los agentes son más lentos que los prompts", explain: "La velocidad es secundaria. Lo que te cuesta no es el tiempo, es el control del resultado." },
+  ]}
+/>
+
+La próxima vez que veas una demo de «agente autónomo que lo hace todo», pregúntate una sola cosa: **¿en qué punto puedo frenarlo si se equivoca?** Si la pregunta no tiene respuesta, no es un agente, es un juego de azar.
+
+Si lo que quieres es decidir en tu empresa, escribí una versión para quien dirige una pyme: [qué es un agente de IA, y qué no es](https://ianexora.com/guias/que-es-un-agente-de-ia?utm_source=blog&utm_medium=article&utm_campaign=que-es-un-agente), en ianexora.com.

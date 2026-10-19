@@ -1,0 +1,123 @@
+---
+title: "Cuánto cuesta un agente de IA: la factura real, línea a línea"
+seoTitle: "Cuánto cuesta un agente de IA en 2026: la factura real"
+description: "Lo que gasta de verdad un agente de IA que trabaja cada día: el modelo, el servidor, los fallos y lo que no sale en ninguna factura. Con cifras medidas."
+kicker: Costes
+dek: "El agente que escribe las noticias de este sitio gasta menos de un dólar por edición en el modelo y céntimos en todo lo demás. Lo caro está en otra parte."
+respuesta: "Un agente de IA para una empresa pequeña cuesta en el modelo desde céntimos hasta varias decenas de dólares al mes, según cuál use, cuántos pasos dé por encargo y cuántos encargos haga. Esa es la única línea que se calcula antes de montar nada, y no es la cara: en mi agente de noticias, la más cara fueron los fallos."
+te_llevas:
+  - "La línea del modelo: coste por paso × pasos por encargo × encargos. Diez encargos de cinco pasos son cincuenta llamadas."
+  - "Las cuatro preguntas que no salen en la tabla de precios: qué servicios paga, dónde corre, quién lo revisa y qué pasa si falla."
+  - "La suscripción suele salir mejor si corre pocas veces al día y solo te sirve a ti; la API, si atiende a clientes o corre mucho."
+date: 2026-10-15
+tema: economia
+formato: guia
+seccion: practica
+cover: /covers/cuanto-cuesta-un-agente-de-ia.webp
+coverAlt: Antes del amanecer, un repartidor descarga de su bicicleta un fardo de periódicos envuelto en papel junto a un quiosco.
+tags:
+  - costes
+  - agentes
+  - claude
+  - presupuesto
+se_resuelve_con:
+  - calculadora-costes
+faq:
+  - q: "¿Cuánto cuesta al mes un agente de IA para una empresa pequeña?"
+    a: "Depende de tres cosas: el modelo, cuántos pasos da en cada encargo y cuántas veces trabaja. El mío escribe una edición de noticias al día con Claude Opus 5.5 y gasta unos 0,86 dólares por edición a precio de API, unos 26 al mes. Uno que dé pocos pasos con un modelo pequeño puede costar céntimos; uno que dé muchos con un modelo grande cada pocos minutos, mucho más."
+  - q: "¿Por qué un agente gasta más que una pregunta a un chat?"
+    a: "Porque no contesta una vez: da varios pasos y en cada uno vuelve a mandar al modelo todo lo anterior. En mi agente de noticias, el paso que da cuatro o cinco vueltas cuesta unos 0,20 dólares y el que da diez o trece, más de 0,60. Lo que se repite sale más barato si el proveedor lo tiene en caché, pero se paga."
+  - q: "¿Me sale más barato con la suscripción de Claude o con la API?"
+    a: "Para algo que corre unas pocas veces al día y solo te sirve a ti, la suscripción: pagas una cuota fija y el agente gasta de tu límite de uso, no de tu bolsillo. Mi agente de noticias funciona así. Para algo que atiende a clientes o corre muchas veces, la API: se paga por lo que se usa y no se come el límite con el que trabajas."
+  - q: "¿Qué modelo elijo para que no se dispare el coste?"
+    a: "El más pequeño que haga bien la tarea. Con los precios de Anthropic del 15 de octubre de 2026, Claude Haiku 5.5 cobra 0,10 dólares por millón de tokens de entrada y Claude Opus 5.5, 4: cuarenta veces más, y la misma proporción en la salida. Prueba primero con el pequeño y sube solo si falla."
+  - q: "¿Qué gastos de un agente no salen en la factura del modelo?"
+    a: "El servidor donde corre, los servicios que usa por su cuenta, el tiempo de quien revisa lo que produce y, sobre todo, los fallos. Mi agente de noticias falló 29 de 40 veces entre el 5 de septiembre y el 13 de octubre de 2026, y 26 de esos fallos no gastaron ni un céntimo de modelo: lo que costaron fueron días sin noticias."
+cta_inline:
+  gancho: "Te aviso cuando mida el siguiente"
+  promesa: "Un correo con lo que cuesta de verdad cada sistema que pongo en marcha, con la fuente de cada cifra."
+draft: false
+premium: false
+---
+
+El agente que escribe las [noticias de este sitio](/noticias) cada mañana gasta entre 0,85 $ y 0,87 $ por edición a precio de API: unos 26 $ al mes. Es la línea más grande de su factura. No es la más cara.
+
+## La factura de mi agente de noticias, línea a línea
+
+Cada mañana un sistema recoge las novedades de quince fuentes, elige la historia del día, le pide a Claude un artículo y una edición breve, comprueba cada titular contra su fuente y lo publica. Nadie lo lee antes de que salga: por eso cada pieza lleva el aviso «Generado con IA, sin revisión humana». Es un agente de verdad, con pasos, herramientas y fallos. Esto es lo que gasta.
+
+| Línea | Al mes | De dónde sale |
+| --- | --- | --- |
+| Modelo (Claude Opus 5.5) | unos 26 $ | entre 0,85 $ y 0,87 $ por edición, medido en dos ejecuciones completas del 13 de octubre, por 30 días |
+| Servidor (GitHub Actions) | unos 1,80 $ | unos diez minutos al día a 0,006 $ el minuto, la tarifa pública |
+| Alojamiento de la web | nada de más | la web ya existía: el agente solo le añade páginas |
+| Revisión humana | 0 minutos | a propósito, y por eso cada pieza lo dice |
+| Fallos | 29 de 40 ejecuciones | del 5 de septiembre al 13 de octubre; las horas de arreglarlo no las medí |
+
+Dos cosas que conviene saber de esa tabla.
+
+**El modelo no lo pago así.** El agente corre con mi suscripción de Claude, la misma con la que trabajo, así que no me llega una factura por tokens: gasta de mi límite de uso. Esos 0,85 $ por edición son lo que el propio Claude Code calcula al final de cada ejecución a precio de API. Es lo que pagarías tú si lo montaras con una clave de API.
+
+**Lo del servidor es una estimación.** Sale de la duración real de cada paso, redondeada al minuto como cobra GitHub, multiplicada por su [tarifa pública](https://docs.github.com/en/billing/reference/actions-runner-pricing). Si esos minutos caben en los que trae incluidos tu cuenta, son cero.
+
+<Callout type="info" title="Cómo lo he medido">
+Dos ensayos completos del 13 de octubre de 2026, con Claude Opus 5.5. Hacen lo mismo que la ejecución diaria salvo publicar. Artículo: 0,23 $ y 0,20 $. Edición breve: 0,61 $ y 0,66 $. En total, 0,85 $ y 0,87 $. Son las cifras que deja Claude Code en el registro de cada ejecución.
+</Callout>
+
+## ¿Cuánto cuesta un agente de IA al mes?
+
+La cuenta tiene tres factores:
+
+- **Lo que cuesta cada paso.** Los <Term id="token">tokens</Term> que entran (lo que le mandas: instrucciones, documentos, lo que lleva hecho) y los que salen (lo que escribe), cada uno a su precio.
+- **Cuántos pasos da por encargo.** Un agente no contesta una vez: lee, decide, escribe, se revisa. El artículo de mi agente da 4 o 5 pasos; la edición breve, entre 10 y 13.
+- **Cuántos encargos hace.** El mío, uno al día. Uno que contesta a clientes, tantos como clientes escriban.
+
+Multiplica las tres y tienes la línea del modelo. Las demás líneas se suman aparte, y ninguna depende de la primera.
+
+## ¿Por qué un agente gasta más que una pregunta?
+
+Una pregunta a un chat es un paso: mandas, contesta y se acabó. Un agente encadena pasos. Y en cada paso vuelve a mandar al modelo todo lo que lleva hecho, porque el modelo no recuerda nada entre una llamada y la siguiente.
+
+En mis ejecuciones del 13 de octubre se ve claro. El paso que dio 4 vueltas costó 0,20 $; el que dio 13, 0,66 $. Más del triple, con el mismo modelo y el mismo día.
+
+Lo que se repite no se paga entero. Anthropic guarda en caché lo que el modelo ya ha leído y, en Claude Opus 5.5, cobra esa relectura a una vigésima parte del precio normal de entrada, según su [tabla de precios](https://platform.claude.com/docs/en/about-claude/pricing). Ayuda. No lo deja en cero.
+
+## ¿Qué líneas tiene la factura de cualquier agente?
+
+Las mismas cinco de mi tabla, con otros números:
+
+- **El modelo.** Tokens por pasos por encargos. Es la única línea que se puede calcular antes de montar nada, y es la que calcula la calculadora de abajo.
+- **Lo que el agente usa por su cuenta.** Si manda mensajes por WhatsApp, busca en la web o lee documentos con otro servicio, cada uno tiene su tarifa y se suma. El mío no usa ninguno de pago: lee feeds públicos.
+- **Dónde corre.** Una tarea programada son minutos sueltos de servidor, como la mía. Uno que atiende a clientes a cualquier hora necesita algo encendido todo el día.
+- **La revisión.** El tiempo de la persona que lee lo que sale antes de que salga. En las noticias diarias decidí que fuera cero y lo digo en cada pieza. En lo que firmo, no es cero.
+- **Los fallos.** Lo que cuesta que no funcione. En mi caso, la línea más cara de todas.
+
+## ¿Me conviene más la suscripción o la API?
+
+Depende de para quién trabaje el agente.
+
+Si corre unas pocas veces al día y solo te sirve a ti, la suscripción suele salir mejor: pagas una cuota fija que ya pagabas y el agente gasta de tu límite de uso. Es lo que hago yo. El precio es ese: el día que el agente trabaja mucho, te queda menos margen para trabajar tú.
+
+Si atiende a clientes, o corre muchas veces al día, la API: pagas por lo que gasta, lo ves línea a línea y no compite con tu trabajo. Para hacer la cuenta antes de decidir está la calculadora.
+
+## ¿Cómo calculo el coste de mi agente?
+
+Elige el modelo, los tokens de entrada y de salida de un paso y cuántas llamadas al día. En un agente, las llamadas al día son **encargos por pasos**: diez encargos de cinco pasos son cincuenta llamadas.
+
+<CostCalculator />
+
+Para los tokens de entrada, piensa en todo lo que le mandas en el primer paso: las instrucciones, los documentos y la pregunta. En los pasos siguientes súmale lo que ya lleva escrito. Si no lo sabes, empieza alto: es mejor que te sobre presupuesto que descubrirlo en la factura.
+
+Los precios que usa, con su fecha y su fuente:
+
+<PreciosModelos />
+
+## Lo que no sale en ninguna factura
+
+Entre el 5 de septiembre y el 13 de octubre mi agente falló 29 de 40 veces. Quince, por el servidor en el que corría, que era mi portátil. Once, porque Claude se paraba antes de su primera llamada sin decir por qué. Dos, porque al publicar chocaba con otro cambio. Y una, porque un artículo rechazado arrastraba la edición entera.
+
+Veintiséis de esos fallos no gastaron ni un céntimo de modelo. Costaron días sin noticias y el tiempo de averiguar qué pasaba, que no medí. Hoy corre en un servidor de GitHub, lo intenta tres veces al día y abre un aviso al primer fallo.
+
+A eso me refiero con que el modelo no es lo caro. El precio por token se mira en una tabla. Lo que cuesta que un agente funcione solo, y que alguien responda cuando no lo hace, no está en ninguna. Lo escribí con más calma en [Cuando la IA se abarata, el coste cambia de sitio](/blog/cuando-la-ia-se-abarata-el-coste-cambia-de-sitio).
+
+Si vas a montar uno, haz la cuenta del modelo con la calculadora. Después contesta las otras cuatro: qué servicios paga, dónde corre, quién lo revisa y qué pasa el día que falle. En el mío, la última respuesta fue la cara.

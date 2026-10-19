@@ -1,0 +1,46 @@
+---
+title: ¿Cuánto te cuesta de verdad usar IA?
+description: "Calcula en vivo el coste mensual de una función con IA según modelo, tokens y volumen, y mira por qué el modelo y los tokens de salida deciden la factura."
+kicker: Práctica
+dek: "Antes de meter IA en tu producto, haz la cuenta. Mueve los mandos y mira cómo cambia la factura al mes."
+respuesta: "Depende de cuatro cosas: el modelo, los tokens de entrada, los de salida y las peticiones al día. Las que deciden la factura son el modelo que eliges y los tokens de salida, y la cuenta se hace antes de meter IA en tu producto."
+te_llevas:
+  - "Empieza por el modelo más pequeño que cumpla: del pequeño al mediano de una casa, la factura se multiplica por 20, y al más grande, por 100."
+  - "Pide respuestas más cortas: en los siete modelos de la tabla, un token de salida cuesta cinco veces lo que uno de entrada."
+  - "Antes de desplegar, pon un tope de tokens por petición y un freno por volumen: el coste se dispara con una IA llamando a otra en bucle."
+date: 2026-06-24
+updated: 2026-10-15
+tema: economia
+formato: leccion
+seccion: practica
+cover: /covers/cuanto-cuesta-la-ia.webp
+coverAlt: Un trabajador de una tostaduría pesa un puñado de granos en una balanza de latón.
+tags:
+  - práctica
+  - coste
+  - interactivo
+cta_inline:
+  gancho: "Te mando este cálculo por escrito"
+  promesa: "Tu desglose y la fórmula para rehacerlo con los precios de tu proyecto."
+draft: false
+premium: false
+---
+
+La pregunta que se salta casi todo el mundo antes de poner una IA en producción: **¿cuánto va a costar al mes?** La respuesta depende de cuatro cosas, y aquí las mueves tú:
+
+<CostCalculator captureMode source="post-inline" />
+
+Dos lecciones que saltan a la vista en cuanto juegas:
+
+- **El modelo manda.** Para la misma tarea, pasar del modelo pequeño de una casa al mediano multiplica la factura por 20, y al más grande por 100. Empieza siempre por el más pequeño que cumpla.
+- **La salida pesa más que la entrada.** En los siete modelos de la tabla, un <Term id="token">token</Term> de salida cuesta cinco veces lo que uno de entrada. Pedir respuestas más cortas es una de las optimizaciones de coste más fáciles. (Si el "token" todavía es una caja negra para ti: [qué es un token y por qué la IA no sabe contar letras](/blog/que-es-un-token).)
+
+Estos son los precios con los que hace la cuenta la calculadora:
+
+<PreciosModelos />
+
+<Callout type="info" title="Ojo con los bucles">
+El coste se dispara cuando una IA llama a otra IA en bucle sin límite. Pon siempre un tope de tokens por petición y un freno por volumen antes de desplegar nada que llame a un modelo de pago.
+</Callout>
+
+Esto es lo que cuesta usar IA en un producto. Si lo que quieres saber es [cuánto cuesta trabajar con NBI y cómo se paga](https://ianexora.com/precios?utm_source=blog&utm_medium=article&utm_campaign=cuanto-cuesta-la-ia), está explicado aparte.

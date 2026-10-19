@@ -1,0 +1,58 @@
+/*
+  Its own file, imported by mural.tsx, since 2026-10-15: written inside
+  globals.css, the first production build restored Vercel's build cache and
+  shipped the old globals.css without these rules, so the mural sat still.
+*/
+
+/* The home's mural (src/components/home/mural.tsx, 2026-10-15): the one
+   thing on the site that moves on its own, beside the h1 and never before it
+   (DESIGN.md). Each column holds its cards twice and slides by one copy, so
+   the loop has no seam. Hover, keyboard focus and the «Parar» button stop it;
+   with reduced motion it never starts (below: `animation: none`, which also
+   keeps the first copy in place instead of the reset's end frame). */
+@keyframes mural-sube {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes mural-baja {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.mural-columna {
+  animation: mural-sube var(--mural-dur, 80s) linear infinite;
+  will-change: transform;
+}
+.mural-columna[data-sentido="baja"] {
+  animation-name: mural-baja;
+}
+.mural:hover .mural-columna,
+.mural:focus-within .mural-columna,
+.mural[data-pausado="true"] .mural-columna {
+  animation-play-state: paused;
+}
+.mural-pieza {
+  transition: transform 260ms var(--ease-out-expo);
+}
+.mural-pieza:hover {
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* `none`, not the global reset's 0.001ms: that would leave the second copy
+     in place, and the first one is the one with focusable links. */
+  .mural-columna {
+    animation: none !important;
+  }
+  /* Nothing to stop. */
+  .mural-pausa {
+    display: none;
+  }
+}

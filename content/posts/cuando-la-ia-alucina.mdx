@@ -1,0 +1,64 @@
+---
+title: Cuando la IA miente con total seguridad
+description: "Las alucinaciones explicadas jugando: aprende a cazar datos inventados, citas falsas y cifras demasiado precisas. Y cómo un buen prompt reduce el riesgo."
+kicker: Pensamiento crítico
+dek: "Una IA suena igual de convincente cuando acierta que cuando se lo inventa. Entrena el ojo para distinguirlo."
+respuesta: "Una IA suena igual de convincente cuando acierta que cuando se lo inventa, así que el tono no sirve para distinguirlo. Lo que sirve es cazar las pistas que se repiten, comprobar cualquier dato verificable y pedir matices y fuentes en el prompt: el riesgo baja, aunque no desaparece."
+te_llevas:
+  - "Las pistas de un dato inventado: citas y referencias con pinta de relleno, cifras demasiado exactas y datos reales mezclados con detalles falsos."
+  - "Ante cualquier dato que se pueda comprobar, compruébalo: que suene convincente no dice nada sobre si es cierto."
+  - "En el prompt, pide matices, fuentes, que admita lo que no sabe y que distinga lo respaldado de lo no concluyente."
+date: 2026-06-23
+tema: ia-aplicada
+formato: leccion
+seccion: practica
+cover: /covers/cuando-la-ia-alucina.webp
+coverAlt: Anticuario examina con una lupa un cuenco que podría ser una imitación.
+tags:
+  - pensamiento crítico
+  - alucinaciones
+  - interactivo
+cta_inline:
+  gancho: "Los sistemas que monto llevan esta comprobación dentro"
+  promesa: "Te cuento cómo, con el código y los números, cuando ponga en marcha el siguiente. Como mucho, un correo a la semana."
+draft: false
+premium: false
+---
+
+El mayor peligro de la IA no es que falle: es que falla **con total seguridad**, con el mismo tono fluido y convincente que cuando acierta. A eso se le llama <Term id="hallucination">alucinación</Term>.
+
+Pon a prueba tu ojo. ¿Cuáles de estas afirmaciones son reales y cuáles se las ha inventado un modelo?
+
+<HallucinationQuiz
+  id="halu-1"
+  items={[
+    { claim: "La Torre Eiffel mide unos 330 metros y se inauguró en 1889.", fake: false, tell: "Real: datos verificables y consistentes entre sí." },
+    { claim: "En su novela 'El jardín de cristal', Gabriel García Márquez ganó el Nobel en 1982.", fake: true, tell: "Inventada: García Márquez sí ganó el Nobel en 1982, pero esa novela no existe. Mezclar un dato real con un título plausible falso es el patrón clásico." },
+    { claim: "Según Smith et al. (2021), el 73,4% de los modelos mejora con RAG (DOI: 10.1234/abcd.5678).", fake: true, tell: "Inventada: cifras sospechosamente precisas + una cita y un DOI con pinta de relleno. Las referencias fabricadas son una señal típica." },
+    { claim: "Python es un lenguaje interpretado y de tipado dinámico.", fake: false, tell: "Real y comprobable en cualquier documentación oficial." },
+  ]}
+/>
+
+Las pistas se repiten: **citas y DOIs inventados, cifras demasiado exactas, datos reales mezclados con detalles falsos.** Ante cualquier dato verificable, verifícalo.
+
+
+## El prompt también ayuda
+
+Buena parte de las alucinaciones nacen de preguntas vagas. Compara la misma consulta con dos prompts:
+
+<PromptDiff
+  a={{
+    label: "Prompt vago",
+    prompt: "Háblame de los beneficios del té verde.",
+    output: "El té verde tiene innumerables beneficios: acelera el metabolismo un 40%, previene el cáncer y cura la ansiedad…",
+    note: "Sin pedir fuentes ni cautela, el modelo rellena con afirmaciones rotundas (y exageradas).",
+  }}
+  b={{
+    label: "Prompt con barandillas",
+    prompt: "Resume qué dice la evidencia científica sobre el té verde. Distingue lo respaldado de lo no concluyente y dime si algo no está claro.",
+    output: "Hay evidencia moderada de efectos antioxidantes; el impacto en pérdida de peso es pequeño y no concluyente; no hay base sólida para afirmar que 'cura' enfermedades…",
+    note: "Mismo modelo: pedir matiz y honestidad reduce drásticamente las afirmaciones inventadas.",
+  }}
+/>
+
+No elimina el riesgo, pero un prompt que pide **matices, fuentes y que admita lo que no sabe** alucina mucho menos. Y cuando lo que necesitas es que responda sobre **tus** datos, la otra mitad del arreglo es dárselos: [qué es RAG y por qué importa](/blog/que-es-rag).

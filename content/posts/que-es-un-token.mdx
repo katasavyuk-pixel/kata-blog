@@ -1,0 +1,60 @@
+---
+title: Qué es un token (y por qué la IA no sabe contar letras)
+seoTitle: "Qué es un token y por qué la IA no sabe contar letras"
+description: "Los modelos no leen palabras ni letras: leen tokens. Pruébalo con el tokenizador interactivo y entiende de una vez qué es la ventana de contexto."
+kicker: Fundamentos
+dek: "Los modelos no leen palabras ni letras: leen tokens. Aquí lo pruebas tú mismo con un tokenizador en vivo y entiendes de una vez qué es la ventana de contexto."
+respuesta: "Un modelo no lee letras ni palabras, lee tokens: trozos de texto que pueden ser una palabra entera, un fragmento o un signo. De ahí salen lo que pagas, cuánto texto le cabe y que falle al contar letras, porque nunca las ve."
+te_llevas:
+  - "Pagas por token, no por palabra: en inglés, 1 token son unos 4 caracteres; en español, la misma frase suele costar bastantes más."
+  - "La ventana de contexto se mide en tokens: si te pasas, el modelo trunca lo que no cabe."
+  - "Ante un fallo «tonto» con letras, rimas o longitudes, no busques falta de inteligencia: el modelo nunca trabaja a nivel de letra."
+date: 2026-06-25
+tema: ia-aplicada
+formato: leccion
+seccion: practica
+cover: /covers/que-es-un-token.webp
+coverAlt: Manos de un tipógrafo ordenan pequeños bloques metálicos de letras en su taller.
+tags:
+  - fundamentos
+  - tokens
+  - interactivo
+cta_inline:
+  gancho: "Cada pieza de la IA, desmontada así"
+  promesa: "Te aviso cuando publique la siguiente lección, y te llegan los sistemas que monto con lo que costaron."
+draft: false
+premium: false
+---
+
+Cuando le pides a una IA que cuente las erres de «strawberry» y falla, no es que sea tonta: es que **no ve letras**. Ve <Term id="token">tokens</Term>: trozos de texto que pueden ser una palabra entera, un fragmento de palabra o un signo.
+
+La mejor forma de entenderlo es verlo. Escribe cualquier cosa y mira cómo se parte:
+
+<TokenizerPlayground />
+
+¿Has probado con tu nombre? ¿Con un emoji? ¿Con una frase en otro idioma? Verás que el número de tokens no coincide con el de palabras, y que lo que para ti es «una cosa» para el modelo pueden ser varias piezas.
+
+## Por qué esto te importa
+
+- **Coste.** Pagas por token, no por palabra. Un texto en español suele costar más tokens que el mismo texto en inglés.
+- **Límite.** La <Term id="context-window">ventana de contexto</Term> se mide en tokens: si te pasas, el modelo trunca lo que no cabe.
+- **Rarezas.** Por eso falla al contar letras, al hacer rimas o al manipular texto carácter a carácter: nunca trabaja a nivel de letra.
+
+<Callout type="tip" title="Regla práctica">
+En inglés, ~1 token ≈ 4 caracteres ≈ ¾ de palabra. En español y otros idiomas con más acentos y declinaciones, la misma frase suele costar bastantes más tokens.
+</Callout>
+
+
+## Compruébalo
+
+<Quiz
+  id="token-letras"
+  question="¿Por qué a un modelo le cuesta contar cuántas erres tiene «strawberry»?"
+  options={[
+    { text: "Porque ve la palabra como uno o pocos tokens, no como letras sueltas", correct: true, explain: "Exacto: «strawberry» se parte en muy pocos tokens y el modelo nunca llega a 've' las letras individuales para contarlas." },
+    { text: "Porque no sabe inglés", explain: "No es cuestión de idioma: falla igual con palabras que domina. El problema es la unidad que procesa (el token), no el vocabulario." },
+    { text: "Porque cuenta mal a propósito para ahorrar cómputo", explain: "No hay tal intención. Simplemente la información de letras no está disponible a nivel de token." },
+  ]}
+/>
+
+La próxima vez que una IA te sorprenda con un fallo «tonto» de letras o de longitud, recuerda: está pensando en tokens, no en caracteres.

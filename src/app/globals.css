@@ -1,0 +1,820 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/*
+  Kata Ivanovych — design system (redesign for reading, 2026-10-14).
+
+  Kata chose it on the Claude Design canvas: «V1 · Conclusión primero», light.
+  Reading on a light page is what this site is for; the warm black stays the
+  ink and the video's ground, the red stays the one colour. Newsreader for
+  reading text and headlines, Schibsted Grotesk for the interface, JetBrains
+  Mono only for code.
+
+  Contrast ratios measured against --color-bg (#fbf9f8) and, second, against
+  --color-surface (#f2edeb); every text token clears 4.5:1 on both. The ones
+  that matter: --color-accent (4.63:1) is a SURFACE, never small text; red
+  text is --color-accent-ink (5.82:1); --color-amber (5.63:1) is the
+  "piloto / atención" state and the AI notice.
+
+  Status is always glyph + label, never colour alone (see DESIGN.md).
+
+  NEVER hardcode hex in JSX — reference tokens (bg-bg, text-fg, text-accent-ink,
+  text-amber, ...). All tokens are CSS variables (theme-swappable).
+*/
+
+@theme {
+  /* Surfaces (warm paper) */
+  --color-bg: #fbf9f8; /* page background */
+  --color-surface: #f2edeb; /* panel / callout surface */
+  --color-surface-2: #eee7e4; /* deeper band */
+  --color-panel: #ffffff; /* a door or card standing on the paper (the home's four doors) */
+
+  /* Text */
+  --color-fg: #140a0d; /* warm black ink (18.54:1; 16.76:1 on surface) */
+  --color-muted: #5e4b50; /* secondary text (7.70:1; 6.96:1) */
+  --color-faint: #76636a; /* tertiary (5.32:1; 4.81:1) */
+  --color-chrome: #3f3236; /* labels / metadata (11.63:1; 10.51:1) */
+
+  /* The one colour: red */
+  --color-accent: #e11423; /* SURFACE: buttons, rules. 4.63:1 → never small text */
+  --color-accent-ink: #c40f1f; /* TEXT red on paper (5.82:1; 5.27:1) */
+  --color-accent-strong: #7a0c18; /* hover on a red surface; decorative */
+  --color-on-accent: #ffffff; /* pure white on red: 4.85:1 */
+
+  /* "Piloto / atención" state and the AI notice (brand amber, darkened
+     so it can be text on paper: 5.63:1; 5.09:1). */
+  --color-amber: #8a5a12;
+
+  /* Lines & focus */
+  --color-border: #e3d9d6; /* hairlines (1.32:1 vs bg) */
+  --color-ring: #e11423;
+
+  /* Status */
+  --color-danger: #b3261e; /* 6.23:1 */
+
+  /* Elevation (ink shadows on paper) — menus and floating panels only */
+  --shadow-card: 0 1px 2px rgba(20, 10, 13, 0.08);
+  --shadow-card-hover: 0 16px 40px rgba(20, 10, 13, 0.12);
+
+  /* Motion easings */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Type scale (DESIGN.md). Utilities: text-h1-home, text-h1, text-h2, text-h3,
+     text-numeral, text-label, and text-lede for the short answer under an h1. */
+  --text-h1-home: clamp(2.375rem, 1.375rem + 3.3vw, 4rem);
+  --text-h1-home--line-height: 1.04;
+  --text-h1: clamp(2.375rem, 1.375rem + 3.4vw, 4.125rem);
+  --text-h1--line-height: 1.03;
+  --text-h2: clamp(1.5625rem, 1.0625rem + 1.1vw, 2rem);
+  --text-h2--line-height: 1.15;
+  --text-lede: clamp(1.3125rem, 0.9375rem + 0.75vw, 1.5625rem);
+  --text-lede--line-height: 1.42;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.3;
+  --text-numeral: clamp(2rem, 1.5rem + 1.5vw, 2.5rem);
+  --text-numeral--line-height: 1;
+  /* Skin A+B (2026-10-07): section headings that outweigh the cards under
+     them, and the one big result number of a piece. */
+  --text-h2-section: clamp(1.875rem, 1.35rem + 1.9vw, 2.75rem);
+  --text-h2-section--line-height: 1.08;
+  --text-numeral-xl: clamp(2.75rem, 1.9rem + 3.4vw, 4.75rem);
+  --text-numeral-xl--line-height: 0.95;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+}
+
+@theme inline {
+  /* next/font variables from src/app/layout.tsx. Newsreader reads and
+     headlines, Schibsted Grotesk runs the interface, JetBrains Mono is code. */
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+:root {
+  /* How far an interactive piece may step outside the 66ch reading column,
+     per side. The article column is a size container, so a widget never grows
+     past the column itself. */
+  --breakout: 6rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    /* 18px on a phone, 20.5px on a laptop: the size the canvas was read at. */
+    font-size: clamp(1.125rem, 0.97rem + 0.4vw, 1.28125rem);
+    line-height: 1.64;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+
+  /* Headlines read in the same face as the text; only h3 and below switch to
+     the interface face so a section label does not compete with the heading
+     above it. */
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    color: var(--color-fg);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+    color: var(--color-fg);
+    font-weight: 600;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+  }
+
+  h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+  }
+
+  h3 {
+    font-size: var(--text-h3);
+  }
+
+  /* Interface elements are Inter even inside reading text. */
+  nav,
+  button,
+  input,
+  select,
+  textarea,
+  label,
+  summary {
+    font-family: var(--font-sans);
+  }
+
+  /* Numbers line up in data: every mono run is tabular. */
+  code,
+  kbd,
+  samp,
+  pre,
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+}
+
+/* Skip link: off-canvas until it has keyboard focus. It had no rule at all,
+   which is why «Saltar al contenido» sat visibly in the top-left corner. */
+.site-skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  transform: translateY(calc(-100% - 1rem));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-skip-link:focus-visible {
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.site-public-surface {
+  min-width: 0;
+}
+
+.site-public-surface :is(section[id], [id="newsletter"]) {
+  scroll-margin-top: 1.5rem;
+}
+
+/* --- Reading text (@tailwindcss/typography, tuned to the scale) --- */
+.prose {
+  --tw-prose-body: var(--color-fg);
+  --tw-prose-headings: var(--color-fg);
+  --tw-prose-lead: var(--color-muted);
+  --tw-prose-links: var(--color-accent-ink);
+  --tw-prose-bold: var(--color-fg);
+  --tw-prose-counters: var(--color-accent-ink);
+  --tw-prose-bullets: var(--color-accent-ink);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-quotes: var(--color-muted);
+  --tw-prose-quote-borders: var(--color-accent);
+  --tw-prose-captions: var(--color-faint);
+  --tw-prose-code: var(--color-accent-ink);
+  --tw-prose-pre-bg: var(--color-surface);
+  /* Text a highlighter leaves uncoloured (a `text` block, plain words in a bash one)
+     inherits this. The plugin's default is a light grey meant for dark code, and on
+     this paper surface it read at 1.06:1 (Lighthouse, 17-oct-2026). */
+  --tw-prose-pre-code: var(--color-fg);
+  --tw-prose-th-borders: var(--color-border);
+  --tw-prose-td-borders: var(--color-border);
+  max-width: 66ch;
+  font-family: var(--font-body);
+  font-size: clamp(1.125rem, 0.97rem + 0.4vw, 1.28125rem);
+  line-height: 1.64;
+}
+
+.prose :where(h2):not(:where([class~="not-prose"] *)) {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  line-height: var(--text-h2--line-height);
+  letter-spacing: -0.01em;
+  margin-top: 2.4em;
+  margin-bottom: 0.8em;
+}
+
+.prose :where(h3):not(:where([class~="not-prose"] *)) {
+  font-family: var(--font-sans);
+  font-size: var(--text-h3);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+
+.prose :where(h4):not(:where([class~="not-prose"] *)) {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.prose :where(a):not(:where([class~="not-prose"] *)) {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-accent-ink) 45%, transparent);
+  text-underline-offset: 0.18em;
+  font-weight: inherit;
+}
+
+.prose :where(a):not(:where([class~="not-prose"] *)):hover {
+  text-decoration-color: currentColor;
+}
+
+.prose :where(code):not(:where([class~="not-prose"] *)) {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
+.prose :where(figcaption, table):not(:where([class~="not-prose"] *)) {
+  font-family: var(--font-sans);
+}
+
+/* Interactive pieces break the reading column: a widget may take up to
+   --breakout per side, but never more than the column (100cqw) allows. The
+   article column declares `container-type: inline-size`. */
+.article-column {
+  container-type: inline-size;
+}
+
+.prose :where(.widget-frame, [data-breakout]) {
+  --breakout-width: min(100cqw, 100% + 2 * var(--breakout));
+  width: var(--breakout-width);
+  margin-inline: calc((100% - var(--breakout-width)) / 2);
+}
+
+/* --- Code blocks (rehype-pretty-code, github-light) --- */
+[data-rehype-pretty-code-figure] {
+  margin: 1.5rem 0;
+}
+[data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  padding: 1rem 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+[data-rehype-pretty-code-figure] code {
+  display: grid;
+  font-family: var(--font-mono);
+}
+[data-rehype-pretty-code-figure] [data-line] {
+  padding: 0 1.25rem;
+  border-left: 2px solid transparent;
+}
+[data-rehype-pretty-code-figure] [data-highlighted-line] {
+  background-color: color-mix(in oklab, var(--color-accent) 18%, transparent);
+  border-left-color: var(--color-accent);
+}
+[data-rehype-pretty-code-title] {
+  border: 1px solid var(--color-border);
+  border-bottom: 0;
+  background-color: var(--color-surface);
+  padding: 0.5rem 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+}
+[data-rehype-pretty-code-title] + pre {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.diff.add {
+  background-color: color-mix(in oklab, #22c55e 16%, transparent);
+}
+.diff.remove {
+  background-color: color-mix(in oklab, #ef4444 16%, transparent);
+}
+
+/* --- Heading anchors (rehype-autolink-headings, behavior: wrap) --- */
+.prose :is(h2, h3, h4) > a.heading-anchor {
+  color: inherit;
+  text-decoration: none;
+}
+.prose :is(h2, h3, h4) > a.heading-anchor:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 4px;
+}
+
+/* Reading-progress bar driven purely by scroll position (zero JS). It is a
+   gauge, not motion: it moves only as the reader scrolls, linearly, with no
+   easing — which is why it survives reduced motion below. Without
+   scroll-driven animations it stays hidden rather than lying (a full bar). */
+.reading-progress {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+@supports (animation-timeline: scroll()) {
+  .reading-progress {
+    animation: reading-progress-grow linear both;
+    animation-timeline: scroll(root block);
+  }
+  @keyframes reading-progress-grow {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+/* --- Reduced motion: neutralize all of the above globally --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: reduce) {
+    /* Re-assert the scroll-linked gauge over the global `*` reset above:
+       the shorthand resets the 0.001ms duration, and `linear` keeps it free
+       of easing. It tracks the scroll position; it does not animate. */
+    .reading-progress {
+      animation: reading-progress-grow linear both !important;
+      animation-timeline: scroll(root block) !important;
+    }
+  }
+}
+
+/* --- Interactive pieces (phase 4, src/components/pieza/) --- */
+
+/* Body text inside a piece: the frame is `not-prose`, so the MDX it hosts
+   (a step, a side, a simulated email) gets its own small typography here. */
+.pieza-cuerpo {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-fg);
+}
+.pieza-cuerpo > * + * {
+  margin-top: 0.75em;
+}
+.pieza-cuerpo :where(strong) {
+  font-weight: 600;
+}
+.pieza-cuerpo :where(a) {
+  color: var(--color-accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+.pieza-cuerpo :where(code) {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--color-accent-ink);
+}
+.pieza-cuerpo :where(ul, ol) {
+  padding-left: 1.25em;
+}
+.pieza-cuerpo :where(ul) {
+  list-style: disc;
+}
+.pieza-cuerpo :where(ol) {
+  list-style: decimal;
+}
+.pieza-cuerpo :where(li) + :where(li) {
+  margin-top: 0.25em;
+}
+.pieza-cuerpo :where(li)::marker {
+  color: var(--color-accent-ink);
+}
+.pieza-cuerpo :where(table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+}
+.pieza-cuerpo :where(th, td) {
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  text-align: left;
+  vertical-align: top;
+}
+.pieza-cuerpo :where(th) {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+.pieza-cuerpo :where(td:last-child) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* PasoAPaso: every step is in the HTML; once hydrated, only the active one
+   shows. Instant — there is no transition to reduce. */
+.paso-a-paso-lista {
+  counter-reset: paso;
+}
+.paso-a-paso-lista > .paso {
+  counter-increment: paso;
+}
+.paso-numero::before {
+  content: "Paso " counter(paso);
+}
+.paso-a-paso[data-mejorado] .paso-numero {
+  display: none;
+}
+.paso-a-paso[data-mejorado] .paso {
+  border-bottom: 0;
+}
+.paso-a-paso[data-mejorado][data-activo="1"] .paso:not(:nth-child(1)),
+.paso-a-paso[data-mejorado][data-activo="2"] .paso:not(:nth-child(2)),
+.paso-a-paso[data-mejorado][data-activo="3"] .paso:not(:nth-child(3)),
+.paso-a-paso[data-mejorado][data-activo="4"] .paso:not(:nth-child(4)),
+.paso-a-paso[data-mejorado][data-activo="5"] .paso:not(:nth-child(5)),
+.paso-a-paso[data-mejorado][data-activo="6"] .paso:not(:nth-child(6)),
+.paso-a-paso[data-mejorado][data-activo="7"] .paso:not(:nth-child(7)),
+.paso-a-paso[data-mejorado][data-activo="8"] .paso:not(:nth-child(8)) {
+  display: none;
+}
+
+/* Comparador: radio tabs on a narrow container, side by side on a wide one.
+   Without :has() every side simply stacks, titles visible. */
+.comparador {
+  container-type: inline-size;
+}
+.comparador-tabs {
+  display: none;
+}
+@supports selector(:has(*)) {
+  .comparador-tabs {
+    display: flex;
+  }
+  .comparador-lado,
+  .comparador-titulo {
+    display: none;
+  }
+  .comparador:has(.comparador-tabs > :nth-child(1) > input:checked) .comparador-lados > :nth-child(1),
+  .comparador:has(.comparador-tabs > :nth-child(2) > input:checked) .comparador-lados > :nth-child(2),
+  .comparador:has(.comparador-tabs > :nth-child(3) > input:checked) .comparador-lados > :nth-child(3),
+  .comparador:has(.comparador-tabs > :nth-child(4) > input:checked) .comparador-lados > :nth-child(4) {
+    display: block;
+  }
+}
+@container (min-width: 40rem) {
+  .comparador[data-modo="comparar"] .comparador-tabs {
+    display: none;
+  }
+  .comparador[data-modo="comparar"] .comparador-lados {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+  .comparador[data-modo="comparar"] .comparador-lados > .comparador-lado {
+    display: block;
+  }
+  .comparador[data-modo="comparar"] .comparador-titulo {
+    display: block;
+  }
+  .comparador[data-modo="comparar"] .comparador-lado + .comparador-lado {
+    border-left: 1px solid var(--color-border);
+  }
+}
+
+/* --- Tokenizer chips (dark tints, cold-white text) --- */
+.tok-chip {
+  display: inline-block;
+  border-radius: var(--radius-sm);
+  padding: 0.05rem 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--color-fg);
+  white-space: pre;
+}
+.tok-0 {
+  background-color: color-mix(in oklab, var(--color-accent) 22%, var(--color-surface));
+}
+.tok-1 {
+  background-color: color-mix(in oklab, var(--color-accent) 40%, var(--color-surface));
+}
+.tok-2 {
+  background-color: color-mix(in oklab, var(--color-fg) 16%, var(--color-surface));
+}
+.tok-3 {
+  background-color: color-mix(in oklab, var(--color-accent-strong) 55%, var(--color-surface));
+}
+
+
+/* --- Copy-code button (injected onto rehype-pretty-code figures) --- */
+.copy-code-btn {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  padding: 0.15rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+[data-rehype-pretty-code-figure]:hover .copy-code-btn,
+.copy-code-btn:focus-visible {
+  opacity: 1;
+}
+.copy-code-btn:hover {
+  color: var(--color-fg);
+}
+
+
+/* ===========================================================================
+   Skin A + B (2026-10-07): «revista con cara» + «ensayo vivo».
+   Same palette and fonts; more contrast between sections, the author's face,
+   the covers back, and pieces that respond like instruments.
+   =========================================================================== */
+
+/* --- Segmented 1–5 control (Puntuador) -----------------------------------
+   Real radio inputs (arrow keys move and select natively), each wrapped in a
+   44px label; the dot is drawn by the span. Dots up to the value fill. */
+.seg {
+  display: inline-flex;
+  touch-action: pan-y;
+}
+.seg-opcion {
+  position: relative;
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.seg-opcion > input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.seg-punto {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-faint);
+  background: transparent;
+  transition:
+    background-color 160ms var(--ease-out-expo),
+    border-color 160ms var(--ease-out-expo),
+    transform 160ms var(--ease-out-expo);
+}
+.seg-opcion:hover .seg-punto {
+  border-color: var(--color-accent-ink);
+}
+.seg-opcion[data-lleno] .seg-punto {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.seg-opcion[data-actual] .seg-punto {
+  transform: scale(1.3);
+}
+.seg-opcion:has(input:focus-visible) {
+  outline: 2px solid var(--color-ring);
+  outline-offset: -4px;
+  border-radius: 9999px;
+}
+
+/* --- Result bars (Puntuador, Lista) ---------------------------------------
+   Width changes are transforms on a full-width fill: GPU-only, 260ms, and
+   instant under reduced motion (global rule above). */
+.barra {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--color-border);
+  border-radius: 9999px;
+}
+.barra > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transform-origin: 0 50%;
+  transition:
+    transform 260ms var(--ease-out-expo),
+    background-color 200ms ease;
+}
+
+/* --- Range slider (Calculadora) -------------------------------------------
+   The track fill is the value, not decoration: --p is set inline (0–100%). */
+.deslizador {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2.75rem;
+  background: transparent;
+  cursor: pointer;
+}
+.deslizador::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    var(--color-accent) 0 var(--p, 0%),
+    var(--color-border) var(--p, 0%) 100%
+  );
+}
+.deslizador::-moz-range-track {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-border);
+}
+.deslizador::-moz-range-progress {
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-accent);
+}
+.deslizador::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: -0.5rem;
+  border-radius: 9999px;
+  background: var(--color-fg);
+  border: 3px solid var(--color-accent);
+  transition: transform 150ms var(--ease-out-expo);
+}
+.deslizador::-moz-range-thumb {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background: var(--color-fg);
+  border: 3px solid var(--color-accent);
+}
+.deslizador:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+.deslizador:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* Native form chrome follows the palette. */
+:root {
+  accent-color: var(--color-accent);
+  caret-color: var(--color-accent-ink);
+}
+
+/* --- The reader's lens (src/lib/impacto.ts) ---------------------------------
+   A lead story carries three readings and all three are in the HTML. Which one
+   is the reader's comes from one of two places:
+   1. `data-lente` on <html>. The inline script always sets it, before paint,
+      from `?lente=`, the saved choice or the default;
+   2. with JavaScript off there is no attribute, and the checked radio decides.
+      It starts on the default, so the default shows.
+   One rule marks the reader's reading; the layout further down only says what
+   the other two do on a wide screen. tests/lente.test.ts checks every lens has its line here. */
+.lente-lectura {
+  display: none;
+  color: var(--lente-tinta, var(--color-muted));
+  transition: color 200ms;
+}
+:is(
+    html[data-lente="direccion"],
+    html:not([data-lente]):not(:has(.lente-radio:checked:not([value="direccion"])))
+  )
+  .lente-lectura[data-lente-de="direccion"],
+:is(html[data-lente="operaciones"], html:not([data-lente]):has(.lente-radio[value="operaciones"]:checked))
+  .lente-lectura[data-lente-de="operaciones"],
+:is(html[data-lente="tecnologia"], html:not([data-lente]):has(.lente-radio[value="tecnologia"]:checked))
+  .lente-lectura[data-lente-de="tecnologia"] {
+  display: block;
+  --lente-tinta: var(--color-fg);
+  --lente-marca: var(--color-accent);
+}
+/* No JavaScript and no `:has()`: the default reading, and nothing to switch. */
+@supports not selector(:has(*)) {
+  html:not([data-lente]) .lente-lectura[data-lente-de="direccion"] {
+    display: block;
+    --lente-tinta: var(--color-fg);
+    --lente-marca: var(--color-accent);
+  }
+  html:not([data-lente]) .lente-selector {
+    display: none;
+  }
+}
+
+/* The option that is on. Keyed on the attribute when there is one, so a saved
+   choice is drawn right before React has touched the radios. */
+html:not([data-lente]) .lente-radio:checked + .lente-etiqueta,
+html[data-lente="direccion"] .lente-radio[value="direccion"] + .lente-etiqueta,
+html[data-lente="operaciones"] .lente-radio[value="operaciones"] + .lente-etiqueta,
+html[data-lente="tecnologia"] .lente-radio[value="tecnologia"] + .lente-etiqueta {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+.lente-radio:focus-visible + .lente-etiqueta {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+.lente-etiqueta:hover {
+  border-color: var(--color-chrome);
+  color: var(--color-fg);
+}
+
+/* On a wide screen the three readings sit side by side, the reader's lit and
+   the other two readable but quiet. Narrower, only the reader's shows. */
+@media (min-width: 1024px) {
+  .lente-lecturas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 2.5rem;
+  }
+  .lente-lecturas .lente-lectura {
+    display: block;
+    border-top: 2px solid var(--lente-marca, var(--color-border));
+    padding-top: 1rem;
+    transition:
+      color 200ms,
+      border-color 200ms;
+  }
+}
+
+/* --- Marketplace logos (2026-10-14) ------------------------------------------
+   The one exception to straight corners: a skill's logo is a tile with
+   rounded corners, like an app icon, so the catalogue reads as one at a glance.
+   The colour comes from config/logos.ts; the glyph is white on it. */
+.logo-skill {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22%;
+  color: var(--color-on-accent);
+}

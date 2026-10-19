@@ -1,0 +1,375 @@
+---
+title: "Antes de tu programa de gestión hay otro sistema: tu inbox"
+seoTitle: "Cuánto cuesta pasar a mano los datos del correo al sistema"
+description: "Cuánto cuesta pasar a mano al programa lo que llega por correo, y si compensa automatizarlo. Un caso de transporte que vale para cualquier pyme."
+kicker: Sistemas
+dek: "El caso es logístico, pero el patrón no: donde la información entra por un correo y sale hacia un sistema estructurado, siempre hay una persona haciendo de puente. Cómo medir ese coste y decidir si el retorno justifica automatizarlo."
+respuesta: "Tu programa de gestión no crea datos: los recibe de una persona que lee correos y los teclea. Antes de automatizar ese puente, calcula lo que cuesta hoy hacerlo a mano; sin la inversión real no hay retorno defendible, y el arreglo es que el dato se escriba una vez y quien tecleaba pase a revisar."
+te_llevas:
+  - "La cuenta orientativa del coste actual: documentos al mes × minutos por documento ÷ 60 × coste por hora."
+  - "El filtro de tres preguntas: volumen y coste del error dicen si tocar un proceso; la variabilidad, cuánto costará."
+  - "El arreglo en cuatro pasos: inbox, extracción, revisión humana obligatoria y, solo entonces, dato validado."
+date: 2026-08-04
+updated: 2026-10-11
+tema: operaciones
+formato: sistema
+seccion: practica
+nbiRelacionado: true
+cover: /covers/antes-del-tms-tu-inbox.webp
+coverAlt: Operario guía un carro de cajas en un muelle de carga al anochecer.
+youtubeId: 7_IBXLlXk-s
+tags:
+  - sistemas
+  - automatización
+  - logística
+  - roi
+  - kpis
+  - construccion-publica
+recurso: 25-datos-emails-logisticos
+cta_inline:
+  gancho: "El inventario, para tu operación"
+  promesa: "Los 25 campos en sus 5 bloques, con el filtro de 3 preguntas y el flujo de inbox a dato validado, en un PDF. Te llega al confirmar, y te quedas en la newsletter."
+draft: false
+premium: false
+---
+
+<Callout type="info" title="Escrito en agosto, con un caso de transporte">
+Parto de una empresa de transporte, por eso habla de TMS. El patrón es el mismo en cualquier pyme que recibe pedidos, albaranes u otros documentos por correo y tiene a alguien pasándolos a mano al programa. Hoy lo trabajo en NBI (Nexora Business Intelligence): consultoría, automatización y agentes de IA para pymes, desde Irún. Si es tu caso, empieza por [los errores al teclear pedidos](https://ianexora.com/guias/errores-al-teclear-pedidos?utm_source=blog&utm_medium=article&utm_campaign=antes-del-tms-tu-inbox) o por [OCR o IA para leer pedidos](https://ianexora.com/guias/ocr-o-ia-para-leer-pedidos?utm_source=blog&utm_medium=article&utm_campaign=antes-del-tms-tu-inbox).
+</Callout>
+
+Una empresa de transporte compra un TMS —un sistema de gestión de transporte— para ordenar la operación. Tiene sentido: ahí viven
+las expediciones, los estados, los costes, la trazabilidad. La decisión se discute meses, se
+compara con dos alternativas y se firma con la sensación de haber resuelto algo grande.
+
+Y entonces llega el lunes, y el dato sigue entrando igual que antes: alguien abre un correo,
+lee una confirmación escrita en prosa y la teclea en una pantalla.
+
+Un TMS no crea datos. Los recibe. Quien los crea es una persona leyendo un email.
+
+## El TMS empieza donde el dato ya está limpio
+
+Casi todo el software de operaciones —TMS, ERP, CRM, la herramienta de tickets— asume el
+mismo punto de partida: que el dato llega ya estructurado, con su campo y su formato. Es una
+suposición razonable para el fabricante del software, porque estructurar el dato del mundo
+real no es su problema. Es el tuyo.
+
+Por eso comprar la herramienta rara vez produce el salto que se esperaba. La herramienta
+ordena lo que ya está dentro. No toca los treinta metros anteriores, que es donde está el
+trabajo repetitivo de verdad.
+
+## El sistema que no elegiste
+
+Abre el buzón de tráfico de cualquier transportista y verás la capa de entrada real: un
+cliente que manda el pedido en un PDF adjunto, un proveedor que confirma la hora en el cuerpo
+del correo, un hilo de nueve mensajes donde la ventana de carga cambió dos veces y la buena es
+la del séptimo.
+
+Eso es un sistema. Tiene entradas, tiene reglas y tiene una salida. Lo que no tiene es lo que
+se le pide a cualquier otro sistema de la casa:
+
+- **No tiene dueño.** Si preguntas quién es el responsable del proceso, la respuesta es un
+  nombre propio, no un rol.
+- **No está documentado.** Las reglas ("si el asunto trae la matrícula, es de la ruta nueva")
+  viven en la cabeza de quien lleva años haciéndolo.
+- **No se mide.** Nadie sabe cuánto tiempo consume ni cuántos errores mete, porque nunca se
+  contó.
+
+Tres señales de que lo tienes en casa, sea cual sea tu sector:
+
+1. Hay campos de tu sistema que alguien rellena **mirando otra pantalla**.
+2. La respuesta a "¿de dónde sale este dato?" es un nombre propio.
+3. Cuando esa persona se va de vacaciones, algo se atasca.
+
+## Esto no va de logística
+
+El caso logístico es el más fácil de ver porque el volumen lo hace evidente, pero el patrón es
+el mismo en cualquier operación donde la información **entra por un canal conversacional**
+(correo, WhatsApp, un PDF, una llamada) y tiene que **salir hacia un sistema estructurado**.
+
+Cambia el vocabulario, no la forma:
+
+| Sector | Entra así | Alguien lo teclea aquí |
+|---|---|---|
+| Transporte | Confirmación de carga por email | TMS |
+| Asesoría | Factura del cliente en PDF | Software contable |
+| Clínica | Cita pedida por WhatsApp | Agenda |
+| Agencia | Brief en un hilo de correo | Gestor de proyectos |
+| Ecommerce | Incidencia del proveedor por email | Herramienta de tickets |
+
+Si te reconoces en cualquier fila, el resto del artículo va contigo aunque no tengas un camión.
+
+## Cuánto trabajo es, en realidad
+
+Antes de decidir nada hay que dejar de discutir con intuiciones. La pregunta útil no es
+"¿cuánto tiempo se pierde?" —esa nadie la responde bien de memoria— sino **cuántos campos
+distintos se están tecleando a mano**.
+
+<Revelar pregunta="Piensa en un correo típico de confirmación de transporte. ¿Cuántos campos distintos crees que acaban tecleados a mano en el sistema?" boton="Ver el inventario">
+
+Cuando lo inventarié para el checklist que preparé sobre esto, salieron **25 campos**,
+repartidos en cinco bloques: identificación y partes, fechas/horas/ventanas, carga y medidas,
+dinero y condiciones, y documentación y trazabilidad.
+
+Un aviso honesto: 25 no es una estadística del sector ni sale de ningún estudio. Es el número
+de campos de ese inventario concreto — una cuenta, no una medición. Tu operación puede tener
+doce o cuarenta. El valor no está en la cifra, está en **tener la lista escrita** para dejar
+de decidir de oído.
+
+Estos son los 25, en sus cinco bloques. Marca mentalmente los que en tu casa teclea hoy una persona:
+
+**A · Identificación y partes**
+
+1. Referencia del cliente o número de pedido
+2. Número de expediente propio
+3. Cargador o remitente (razón social exacta)
+4. Consignatario o destinatario final
+5. Contacto en carga y en descarga (nombre y teléfono)
+6. CIF/NIF y datos de facturación
+
+**B · Fechas, horas y ventanas**
+
+7. Fecha de carga
+8. Ventana horaria de carga (desde – hasta)
+9. Fecha y ventana de entrega
+10. Cita previa o booking obligatorio
+11. Zona horaria y calendario local
+
+**C · Carga, unidades y medidas**
+
+12. Número de bultos o palés
+13. Tipo de palé o mercancía sin paletizar
+14. Peso bruto total
+15. Metros lineales o volumen
+16. Medidas por bulto y apilabilidad
+17. Requisitos especiales: ADR, temperatura, medios de descarga
+
+**D · Dinero y condiciones**
+
+18. Precio acordado y moneda
+19. Qué incluye el precio: peajes, espera, descarga, tasas
+20. Tiempo de espera libre y coste de la hora extra
+21. Forma de pago, plazo e incoterm
+
+**E · Documentación y trazabilidad**
+
+22. Documentos exigidos en la entrega (CMR, albarán sellado, POD)
+23. Instrucciones especiales en texto libre
+24. Adjuntos y su versión
+25. Origen del dato: quién lo dijo, en qué correo y cuándo
+
+El error típico de cada campo, el recuento y las señales de cuál duele de verdad están en el PDF del final.
+
+</Revelar>
+
+## El filtro de tres preguntas
+
+No todo proceso repetitivo merece que lo automatices. Para cada candidato, tres preguntas:
+
+1. **Volumen.** ¿Cuántas veces al día o a la semana ocurre?
+2. **Coste del error.** Si el dato entra mal, ¿se corrige en dos minutos o hay que llamar a un
+   cliente?
+3. **Variabilidad.** ¿Llega siempre con la misma forma, o cada remitente lo escribe a su
+   manera?
+
+Las dos primeras te dicen si tocarlo, y la tercera cuánto va a costar:
+
+| | Coste del error bajo | Coste del error alto |
+|---|---|---|
+| **Volumen alto** | Automatiza; revisa por muestreo | Automatiza **con revisión humana obligatoria** |
+| **Volumen bajo** | Déjalo. No es tu problema | Checklist humana primero; automatiza después |
+
+La variabilidad no cambia el cuadrante, cambia el esfuerzo: un flujo donde cada remitente
+escribe distinto se puede resolver igual, pero cuesta más y se equivoca más al principio. Si
+alguien te vende que eso da igual, desconfía.
+
+## El ROI —retorno de la inversión— empieza por el coste actual
+
+Antes de hablar de retorno, calcula qué estás pagando hoy por mantener la entrada manual. No hace
+falta empezar por la IA ni por una herramienta nueva. Empieza por tres datos de tu operación:
+
+1. Cuántos documentos entran al mes.
+2. Cuántos minutos necesita una persona para abrir, leer, copiar y corregir cada uno.
+3. Qué coste horario utiliza tu empresa para medir esa carga.
+
+La cuenta orientativa es:
+
+`coste manual mensual = documentos al mes × minutos por documento ÷ 60 × coste por hora`
+
+Por ejemplo, **30 documentos al día durante 22 días laborables** son 660 documentos al mes. A
+**8 minutos por documento**, son 5.280 minutos, o **88 horas mensuales**. Con **20 €/hora**,
+el coste manual estimado es de **1.760 €/mes**.
+
+> **Ejemplo ilustrativo, no caso de cliente.** Sustituye los supuestos por tus datos antes de tomar ninguna decisión.
+
+Aquí puedes sustituirlos. Parte del mismo ejemplo; cambia los cuatro datos por los tuyos:
+
+<Pieza
+  titulo="Coste de la entrada manual"
+  formula="coste manual mensual = documentos al día × días laborables × minutos por documento ÷ 60 × coste por hora"
+  supuestos="los valores de partida son el ejemplo ilustrativo de arriba, no un caso de cliente. Sale lo que cuesta hoy la entrada manual; no es un ahorro ni un ROI, porque para eso falta la inversión real."
+>
+  <Calculadora modelo="coste-entrada-manual" />
+</Pieza>
+
+Con esa línea base ya puedes formular el ROI:
+
+`ROI = (coste manual evitado − inversión) ÷ inversión`
+
+El coste manual evitado no tiene por qué convertirse en una reducción de plantilla. Puede ser
+capacidad para absorber más volumen, menos correcciones, menos retrasos o menos dependencia de una
+persona. Y la inversión debe ser la real para el alcance real. Si falta cualquiera de las dos
+cifras, todavía no hay un ROI defendible.
+
+## Los KPI que hacen comprobable la decisión
+
+La cantidad de documentos procesados no basta. Para saber si el cambio mejora la operación, mide
+estos seis indicadores clave (KPI) desde el principio:
+
+| KPI | Qué mide | Cómo usarlo |
+|---|---|---|
+| Horas manuales al mes | Carga actual del proceso | Comparar antes y después |
+| Coste manual mensual | Traducción económica de esas horas | Construir la línea base del ROI |
+| Tiempo desde la recepción hasta el sistema | Retraso de entrada | Ver si la orden llega antes al siguiente paso |
+| Porcentaje de correcciones | Trabajo repetido y errores detectados después | Medir la calidad de la entrada |
+| Porcentaje de excepciones | Casos que necesitan revisión humana | Saber dónde termina la automatización segura |
+| Documentos correctos a la primera | Fiabilidad operativa | Comprobar si el flujo evita perseguir datos |
+
+Una excepción visible es mejor que un dato inventado. Por eso el KPI de revisión humana no es un
+fracaso del sistema: te dice qué parte todavía necesita criterio y te permite medirla.
+
+Si quieres hacer la cuenta con tus propios números, prueba la [calculadora de coste de tareas
+repetitivas de ianexora.com](https://ianexora.com/calculadora-coste-tareas-repetitivas?utm_source=blog&utm_medium=article&utm_campaign=antes-del-tms-tu-inbox).
+Introduce el volumen, los minutos por documento y tu coste horario: te dice lo que cuesta hoy
+hacerlo a mano, no lo que ahorrarías. Es una herramienta para poner números a la conversación,
+no una promesa de retorno.
+
+Este artículo no lleva una cifra de ahorro a propósito: el retorno financiero solo se puede cerrar
+cuando se conoce la inversión real y el alcance del proceso. Para revisar la operación de verdad y
+decidir qué cambio compensa, está el [diagnóstico de
+procesos](https://ianexora.com/servicios/diagnostico-de-procesos?utm_source=blog&utm_medium=article&utm_campaign=antes-del-tms-tu-inbox).
+
+## La forma que tiene el arreglo
+
+Cuatro pasos, en este orden:
+
+1. **Inbox** — el buzón deja de ser el sitio donde alguien lee y pasa a ser una entrada del
+   sistema: se recoge el mensaje y sus adjuntos.
+2. **Extracción** — de ese texto se sacan los campos del inventario. No "todo lo que se pueda":
+   exactamente los campos de la lista.
+3. **Revisión humana** — lo extraído se muestra junto al original, y una persona confirma o
+   corrige. Este paso no es opcional.
+4. **Dato validado** — solo entonces entra en el TMS, en la agenda o donde sea.
+
+Así se ve con un correo. Todo lo de abajo es simulado: la remitente, la empresa y las cifras son
+inventadas, no de ningún cliente.
+
+<Pieza
+  titulo="De correo a dato validado"
+  supuestos="correo, personas, referencias y cifras inventados para el ejemplo. Muestra ocho de los 25 campos, no todos."
+>
+<PasoAPaso etiqueta="Los cuatro pasos con un correo simulado">
+<Paso titulo="Inbox">
+
+Llega esto. El cliente no cambia nada: escribe como siempre, con el hilo arrastrando reenvíos.
+
+<Correo de="Marta, tráfico <trafico@cliente.example>" asunto="RE: RE: Carga martes, pedido 4471-B" fecha="lun 09:12">
+
+Buenos días:
+
+Confirmo la carga del martes en el almacén de Getafe, de 8:00 a 11:00. Son 12 palés europeos, 9.400 kg brutos, no apilables. Entrega el miércoles en Zaragoza, con cita previa: el hueco os lo paso en otro correo.
+
+El precio, el que hablamos ayer: 640 €, todo incluido salvo la espera. Ojo, que hay una versión 2 del albarán con las medidas buenas.
+
+Un saludo, Marta
+
+</Correo>
+
+</Paso>
+<Paso titulo="Extracción">
+
+Del texto salen exactamente los campos del inventario, no «todo lo que se pueda». Ocho de los 25:
+
+| Campo | Lo que sale |
+| --- | --- |
+| 1 · Referencia del cliente | 4471-B |
+| 7 · Fecha de carga | «el martes» |
+| 8 · Ventana de carga | 8:00 – 11:00 |
+| 10 · Cita previa | sí, hueco pendiente |
+| 12 · Bultos o palés | 12 europalés |
+| 14 · Peso bruto | 9.400 kg |
+| 16 · Apilabilidad | no apilable |
+| 24 · Adjuntos y versión | albarán v2 |
+
+</Paso>
+<Paso titulo="Revisión humana">
+
+Lo extraído se enseña junto al correo original, y una persona confirma o corrige. Aquí hay tres cosas que no se pueden dar por buenas:
+
+- **Fecha de carga.** «El martes» no es una fecha. Se confirma contra el hilo: el de esta semana, no el siguiente.
+- **Qué incluye el precio.** «Todo incluido salvo la espera» se registra con su excepción, no como «todo incluido».
+- **Tiempo de espera libre.** No aparece en el correo. Se marca como pendiente y se pregunta antes de cargar.
+
+Este paso no es opcional: es el que convierte un error repetible en un error que se ve.
+
+</Paso>
+<Paso titulo="Dato validado">
+
+Solo ahora entra en el TMS, y cada campo lleva pegado de dónde salió, que es el campo 25 del inventario:
+
+| Campo | Valor | Origen |
+| --- | --- | --- |
+| Fecha de carga | martes de esta semana | correo de Marta, lun 09:12 · confirmado en revisión |
+| Ventana de carga | 8:00 – 11:00 | correo de Marta, lun 09:12 |
+| Precio | 640 €, espera aparte | correo de Marta, lun 09:12 |
+| Espera libre | pendiente | preguntado al cliente |
+
+El dato se ha escrito una vez. Quien antes lo tecleaba, ahora lo ha revisado.
+
+</Paso>
+</PasoAPaso>
+</Pieza>
+
+Fíjate en lo que **no** promete este diseño. No es "la IA gestiona tu operación". Es algo más
+aburrido y más defendible: **el dato se escribe una vez**, y quien antes tecleaba ahora revisa.
+
+<Callout type="warn" title="Lo que esto no te arregla">
+No sustituye al TMS: lo alimenta. No es cero errores — un extractor se equivoca, igual que se
+equivoca una persona a las siete de la tarde; la diferencia es que el error de la máquina es
+medible y repetible, y por eso está el paso 3. Y sobre todo: no arregla un proceso que nadie
+sabe describir. Si no puedes escribir la lista de campos, todavía no tienes un problema de
+automatización — tienes un problema de definición.
+</Callout>
+
+## Construido en público, y sin promesas de cifras
+
+Estoy construyendo esta capa de entrada en NBI, y este blog funciona con esa misma regla: aquí
+solo entran los números que puedo enseñar. El ejemplo de 88 horas y 1.760 €/mes es una cuenta
+ilustrativa, no un porcentaje de ahorro de NBI. El día que tenga los datos de un caso real —y
+permiso para publicarlos— van a estar aquí con fecha, y también los que salgan mal.
+
+Mientras tanto, lo que ya está funcionando en público lo puedes auditar tú mismo: las
+[noticias](/noticias) de este blog se generan con un pipeline que verifica cada titular
+contra su fuente antes de dejar publicar nada. Mismo principio que el paso 3 — la máquina
+propone, el humano firma.
+
+## Llévate el inventario
+
+El checklist completo — los 25 campos agrupados en sus cinco bloques, con el filtro de tres
+preguntas y el flujo de cuatro pasos de arriba — está en un PDF para que lo apliques a tu
+propia operación: márcalo con tu equipo campo a campo y verás dónde duele de verdad. Te lo
+mando aquí mismo.
+
+<SuscripcionInline />
+
+---
+
+### ¿Prefieres que lo mire contigo?
+
+Esto es lo otro que hago, y va aparte del recurso de arriba: si tienes un negocio en marcha y
+quieres saber si tu capa de entrada da para automatizarla, cuéntame el caso en
+[Trabaja con NBI](https://ianexora.com/contacto?utm_source=blog&utm_medium=article&utm_campaign=antes-del-tms-tu-inbox)
+— qué proceso te está costando tiempo o dinero, y te digo si tiene sentido y por dónde empezaría.
+También puedes consultar la [biblioteca de sistemas](/sistemas) para ver cómo se construyen estas
+capas. Te contesto yo, no un equipo comercial.
+
+Si lo que necesitas es que lo que llega por correo salga ordenado en tu programa, mira [el agente de correo de NBI](https://ianexora.com/agentes/correo?utm_source=blog&utm_medium=article&utm_campaign=antes-del-tms-tu-inbox).

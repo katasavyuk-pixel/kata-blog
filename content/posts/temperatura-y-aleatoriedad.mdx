@@ -1,0 +1,47 @@
+---
+title: Por qué la IA da respuestas distintas (y cómo controlarlo)
+seoTitle: "Por qué la IA da respuestas distintas y cómo controlarlo"
+description: "Temperatura, top-p y sampling explicados tocando la distribución real. Por qué a veces el modelo es aburrido y a veces se vuelve loco."
+kicker: Fundamentos
+dek: "El mando que casi todo el mundo copia a ciegas. Aquí lo giras tú y ves, en directo, cómo el modelo pasa de seguro a caótico."
+respuesta: "Porque en cada paso el modelo tira un dado sobre los posibles siguientes tokens, y la temperatura decide cómo de cargado está. A 0 elige siempre el más probable; al subirla gana variedad y también riesgo de disparates, así que se ajusta según quieras precisión o variedad."
+te_llevas:
+  - "Temperatura baja, de 0 a 0,3, para código, extracción de datos o clasificación; de 0,7 a 1,0 para escribir o una lluvia de ideas."
+  - "Si necesitas el mismo dato cada vez, como el total de una factura, ponla cerca de 0: con una alta, el número puede variar entre ejecuciones."
+  - "El top-p es la otra poda: deja solo los tokens más probables hasta sumar esa probabilidad y descarta el resto."
+date: 2026-06-25
+tema: ia-aplicada
+formato: leccion
+seccion: practica
+cover: /covers/temperatura-y-aleatoriedad.webp
+coverAlt: Manos de alfarero moldean arcilla húmeda en un torno con un reflejo rojo.
+tags:
+  - fundamentos
+  - sampling
+  - interactivo
+draft: false
+premium: false
+---
+
+Si le haces la misma pregunta dos veces a una IA y te da respuestas distintas, no está «pensando» diferente: está **tirando un dado** sobre una lista de posibles siguientes tokens. La <Term id="temperature">temperatura</Term> controla cómo de cargado está ese dado.
+
+Gíralo tú mismo. La distribución de abajo es real (pre-calculada); cambia la temperatura y mira cómo se reparten las probabilidades:
+
+<TemperatureSandbox />
+
+¿Lo ves? Con temperatura **0** el modelo siempre elige la opción más probable (determinista, pero repetitivo). Subiéndola, las opciones poco probables empiezan a tener oportunidad: más variedad, pero también más riesgo de disparates. El **top-p** es otra forma de podar: se queda solo con los tokens más probables que sumen esa probabilidad.
+
+<Callout type="tip" title="Regla práctica">
+Para tareas exactas (código, extracción de datos, clasificación) usa temperatura baja (0–0,3). Para escribir, lluvia de ideas o creatividad, súbela (0,7–1,0). No hay un valor «correcto»: depende de si quieres precisión o variedad.
+</Callout>
+
+
+<Quiz
+  id="temp-1"
+  question="Quieres que un modelo extraiga el importe total de una factura, siempre igual. ¿Qué temperatura usas?"
+  options={[
+    { text: "Cerca de 0", correct: true, explain: "Correcto: para una tarea exacta y reproducible quieres el comportamiento determinista, sin azar." },
+    { text: "Alta (1.0 o más)", explain: "Eso introduce variedad innecesaria: el mismo documento podría darte resultados distintos. Justo lo que no quieres en extracción de datos." },
+    { text: "Da igual, la temperatura no afecta a tareas de datos", explain: "Sí afecta: a cualquier generación. Con temperatura alta el modelo puede 'redondear' o variar el número entre ejecuciones." },
+  ]}
+/>

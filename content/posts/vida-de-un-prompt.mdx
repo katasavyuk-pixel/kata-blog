@@ -1,0 +1,33 @@
+---
+title: La vida de un prompt, paso a paso
+description: "Un recorrido scroll a scroll por dentro de un modelo de lenguaje: de tu frase a la respuesta, pasando por tokens, embeddings, atención, logits y sampling."
+kicker: La caja de cristal
+dek: "Haz scroll y mira, etapa a etapa, qué le pasa a tu frase dentro del modelo: del texto a los números y de vuelta al texto."
+respuesta: "No hay magia: tu frase se parte en tokens, cada token se vuelve una lista de números, los tokens se miran entre sí para entender el contexto, el modelo puntúa cada posible palabra siguiente y elige una con algo de azar. Esa palabra se añade al final y todo se repite hasta completar la respuesta."
+te_llevas:
+  - "Los nombres de las cinco etapas, en orden: tokens, embeddings, atención, logits y sampling. Cada artículo del blog desmonta una."
+  - "El azar entra al elegir: las puntuaciones se convierten en probabilidades y la temperatura decide si el modelo va a lo seguro o se arriesga."
+date: 2026-06-26
+tema: ia-aplicada
+formato: leccion
+seccion: practica
+cover: /covers/vida-de-un-prompt.webp
+coverAlt: Perfumista añade una gota a un frasco y compara el aroma mientras lo formula.
+tags:
+  - fundamentos
+  - transformers
+  - interactivo
+cta_inline:
+  gancho: "Así desmonto todo lo que publico"
+  promesa: "Un sistema que ya funciona en mi negocio: qué hace, sus números y qué se rompió. Como mucho, un correo a la semana."
+draft: false
+premium: false
+---
+
+«¿Cómo sabe la IA qué decir?» La respuesta no es magia: es una cadena de pasos muy concretos que convierten tu texto en números, los mezclan, y los vuelven a convertir en texto.
+
+En vez de explicártelo, te lo enseño. Haz scroll y sigue la frase **«El cielo es de color»** mientras atraviesa el modelo. El panel se queda fijo y se actualiza en cada paso:
+
+<LifeOfAPrompt />
+
+Y ya está. No hay más misterio: tokenizar, convertir a vectores, dejar que los tokens se miren entre sí, puntuar candidatos y elegir uno. Repetir. Cada artículo de este blog desmonta una de estas piezas para que la toques por dentro.
