@@ -67,6 +67,7 @@ jobs:
 
   noticias:
     name: Escribir, verificar y publicar
+    environment: CLAUDE_CODE_OAUTH_TOKEN
     needs: estado
     # A run from any branch other than main, or with `ensayo`, is a rehearsal:
     # it writes and verifies everything and publishes nothing.
