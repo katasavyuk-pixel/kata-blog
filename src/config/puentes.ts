@@ -53,6 +53,7 @@ export const PUENTE_POR_POST: Record<string, GuiaNbi> = {
   "cuanto-cuesta-la-ia": "medir",
   "cuando-la-ia-alucina": "rpa",
   "que-es-rag": "agente",
+  "antes-de-delegar-a-un-agente-escribo-cuatro-cosas": "medir",
 };
 
 /** The guide's URL with the blog's UTM convention (`utm_medium=puente`). */
