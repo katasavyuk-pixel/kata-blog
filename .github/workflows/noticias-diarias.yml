@@ -7,9 +7,9 @@
 # non-blocking issue afterwards.
 #
 # Safe to repeat. The first job asks whether today's edition is already on main
-# and the rest only runs when it is not, so the three schedules below are three
-# attempts at one edition, not three editions: a morning lost to a model limit
-# or a feed outage is retried a few hours later with nobody awake.
+# and the rest only runs when it is not, so the schedules below are attempts at
+# one edition, not several editions: a morning lost to a model limit or a feed
+# outage is retried a few hours later with nobody awake.
 #
 # When a day does break, the last job keeps ONE issue open (`noticias-averia`)
 # with the step that failed and closes it when an edition is out again.
@@ -21,9 +21,20 @@ on:
   schedule:
     # Off the top of the hour on purpose: that is when GitHub delays schedules
     # the most (this workflow's 06:00 run used to start between 10:00 and 14:00).
+    #
+    # It starts them late anyway, and by hours. Measured on this repo, 19-22 Oct
+    # 2026: all 10 slots of the 6-hourly YouTube workflow started, none lost, 2.0
+    # to 4.7 h late, and this workflow's 10:23 slot of 21 Oct started at 15:21 UTC. So the
+    # first slot is early enough that a 5 h delay still lands the edition in the
+    # Madrid morning, and the last ones are retries for a day that broke (a model
+    # limit, a feed outage), not later editions: the first job below skips every
+    # attempt once the day is on main.
+    - cron: "23 2 * * *"
     - cron: "23 4 * * *"
     - cron: "23 7 * * *"
     - cron: "23 10 * * *"
+    - cron: "41 13 * * *"
+    - cron: "53 16 * * *"
   workflow_dispatch:
     inputs:
       ensayo:
@@ -77,8 +88,8 @@ jobs:
     # is also an empty machine: there the writing model reads untrusted feed text
     # with nothing around it but this repository, and no personal Claude settings
     # (model, hooks, plugins) leak into the run. Costs hosted minutes on a
-    # private repo: about six a day (the attempt that publishes bills four,
-    # each of the two that find the day done bills one).
+    # private repo: about nine a day (the attempt that publishes bills four,
+    # each of the five that find the day done bills one).
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
