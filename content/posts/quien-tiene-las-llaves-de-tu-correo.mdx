@@ -1,0 +1,79 @@
+---
+title: "¿Quién tiene las llaves de tu correo? Tu proveedor de TI y tu agente de IA"
+seoTitle: "Quién tiene acceso a tu Microsoft 365: proveedores y IA"
+description: "Esta semana dos noticias hablan de lo mismo: el acceso que le das a un proveedor o a un agente de IA para actuar por ti. Qué ha pasado con ConnectWise y con 1Password for Agents, y qué revisar hoy."
+kicker: Seguridad
+dek: "Un ataque a un proveedor de TI y una herramienta para que los agentes entren en tus cuentas sin ver la contraseña. Dos noticias de la misma semana y una sola pregunta."
+respuesta: "Más gente, y más programas, de los que crees: proveedores de copia de seguridad, aplicaciones conectadas y, cada vez más, agentes de IA. Esta semana lo muestran un ataque a ConnectWise y un lanzamiento de 1Password."
+te_llevas:
+  - "Haz una lista de qué proveedores y aplicaciones pueden entrar en tu correo y tus archivos sin que tú escribas la contraseña."
+  - "Pregunta a tu proveedor de TI cuánto tardaría en cortar esa conexión si le robaran sus credenciales."
+  - "A un agente de IA no se le pegan contraseñas en el chat: que pida permiso en cada acceso y que el permiso acabe con la tarea."
+date: 2026-10-23
+tema: ia-aplicada
+formato: nota
+seccion: practica
+cover: /covers/quien-tiene-las-llaves-de-tu-correo.webp
+coverAlt: La mano de un tendero toma una llave de un tablero de madera con decenas de llaves colgadas, en la trastienda de una ferretería de barrio.
+tags:
+  - seguridad
+  - agentes
+  - microsoft-365
+  - proveedores
+  - credenciales
+draft: true
+premium: false
+---
+
+Esta semana han coincidido dos noticias que parecen de mundos distintos y hablan de lo mismo: quién puede actuar en nombre de tu negocio sin que tú estés delante.
+
+## Qué pasó con ConnectWise
+
+ConnectWise es un proveedor de servicios de TI. Una de sus aplicaciones, Cloud Backup, tenía acceso a las cuentas de Microsoft 365 de sus clientes. El 21 de octubre, Microsoft publicó que un grupo al que considera alineado con China, Storm-0940, comprometió esa aplicación.
+
+Lo importante es cómo entraron. Usaron las **credenciales de la aplicación**: la llave que usa un programa para entrar en tu cuenta sin pedirte la contraseña. Con ella podían identificarse como la propia aplicación, sin que ninguna persona iniciara sesión. Microsoft no explica cómo se robaron esas credenciales.
+
+Después pusieron agentes de IA, programas que hacen tareas solos, a probar el acceso a más de 2.250 cuentas de empresa de Microsoft 365. Con una herramienta abierta que se llama ARTEX.
+
+Ojo con la cifra. Son **intentos de acceso**, no empresas hackeadas. Algunos titulares hablan de «miles de empresas espiadas», y eso no es lo que dice Microsoft. Según su análisis, la mayoría de los intentos falló. Pero en varias organizaciones el grupo consiguió acceso privilegiado a la nube, en algunos casos en menos de tres horas desde el primer intento. Cuántas fueron, no lo dice nadie.
+
+En algunos entornos, los agentes fueron más allá de entrar. Añadieron credenciales nuevas a las aplicaciones para conservar el acceso y tocaron identidades, grupos y roles. Es decir: se dejaron una puerta propia.
+
+ConnectWise cortó sus servicios el sábado 17 y empezó a restablecerlos el miércoles 21, y pidió a los clientes que mantuvieran las conexiones desactivadas. Microsoft aclara que no fue un fallo de sus sistemas.
+
+## Qué pasó con 1Password
+
+El jueves 22, 1Password presentó **1Password for Agents**. La idea: cuando un agente de IA necesita entrar en una cuenta tuya, se identifica con una clave propia. A ti te llega un aviso. Lo apruebas, y 1Password escribe la contraseña por él. El agente no la ve nunca.
+
+Según TechCrunch, funciona con Claude, ChatGPT Work, Muse, Grok Bot y otros agentes. El artículo no dice cuándo estará disponible ni cuánto costará. Y yo no lo he probado.
+
+El mismo artículo recoge un matiz que conviene no perder. Según Axios, los bancos no siempre saben distinguir si lo que ocurre en una cuenta lo ha pedido el cliente o un agente. Y Chase pide a sus clientes que no den su usuario y su contraseña a nadie.
+
+## Lo que tienen en común
+
+En los dos casos el problema no es la contraseña. Es el **acceso delegado**: un permiso que das una vez a un programa o a un proveedor y que sigue ahí meses después, con más alcance del que necesita, sin que nadie lo mire.
+
+La diferencia está en qué le pasa a la llave. En ConnectWise, alguien la robó y pudo usarla como si fuera la aplicación. En 1Password, la llave no llega al agente y el permiso se aprueba caso a caso.
+
+Para tu negocio la lectura es la misma. Si usas un proveedor que se conecta a tu Microsoft 365 o a tu Google Workspace, o si vas a dejar que un agente trabaje con tus cuentas, tienes este mismo punto de entrada. Y casi seguro no sabes cuántos hay.
+
+## Qué revisaría hoy
+
+No hace falta ser técnico. Son cinco preguntas.
+
+1. **¿Qué aplicaciones y proveedores tienen permiso para entrar?** Quien administra tu Microsoft 365 o tu Google Workspace puede enseñarte la lista de aplicaciones conectadas. Apunta cuáles reconoces y cuáles no.
+2. **¿Cuáles ya no usas?** Una integración de un proveedor con el que ya no trabajas sigue siendo una puerta abierta. La propia guía de Microsoft pide revisar también las integraciones sin uso.
+3. **¿Cuánto tardaría tu proveedor en cortar la conexión?** Y qué pasaría con tus copias mientras tanto. A ConnectWise le costó del sábado al miércoles empezar a recuperar el servicio.
+4. **¿Usas ConnectWise Cloud Backup?** Sigue la guía de Microsoft y de ConnectWise: mantén las conexiones desactivadas hasta que den instrucciones y no borres las aplicaciones antes de guardar los registros de acceso.
+5. **¿Vas a usar agentes de IA con tus cuentas?** No pegues contraseñas en el chat. Dales el mínimo permiso, que pidan aprobación en cada acceso y que el permiso termine con la tarea. Si puedes, una cuenta aparte para el agente.
+
+<Callout type="info" title="Lo que no he podido comprobar">
+No sé cuántas organizaciones fueron comprometidas de verdad: Microsoft no lo publica. La atribución a un grupo alineado con China es de Microsoft y no la he contrastado con otra fuente independiente. De 1Password for Agents solo he leído el artículo de TechCrunch: no lo he probado y no sé su disponibilidad ni su precio. Esta nota es un análisis de fuentes, no una prueba mía.
+</Callout>
+
+## Fuentes (comprobadas el 23 de octubre de 2026)
+
+- [Microsoft Security Blog: campaña de Storm-0940 con ARTEX y ConnectWise](https://www.microsoft.com/en-us/security/blog/2026/10/21/storm-0940-uses-artex-agentic-ai-connectwise-supply-chain-compromise/), 21 de octubre.
+- [CyberScoop: cobertura del ataque a ConnectWise](https://cyberscoop.com/?p=91224), 21 de octubre.
+- [TechCrunch: hackers chinos y ConnectWise](https://techcrunch.com/2026/10/22/chinese-hackers-spied-on-thousands-of-companies-after-breaching-it-giant-connectwise/), 22 de octubre.
+- [TechCrunch: 1Password for Agents](https://techcrunch.com/2026/10/22/1password-launches-a-way-for-ai-agents-to-log-in-on-your-behalf-without-seeing-your-password/), 22 de octubre.
