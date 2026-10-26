@@ -128,6 +128,34 @@
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "axis": "economia",
       "lang": "en"
+    },
+    {
+      "name": "The Decoder",
+      "medio": "The Decoder",
+      "url": "https://the-decoder.com/feed/",
+      "axis": "ia",
+      "lang": "en"
+    },
+    {
+      "name": "Xataka",
+      "medio": "Xataka",
+      "url": "https://www.xataka.com/feedburner.xml",
+      "axis": "tecnologia",
+      "lang": "es"
+    },
+    {
+      "name": "El País Tecnología",
+      "medio": "El País",
+      "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/tecnologia/portada",
+      "axis": "tecnologia",
+      "lang": "es"
+    },
+    {
+      "name": "Europa Press Tecnología",
+      "medio": "Europa Press",
+      "url": "https://www.europapress.es/rss/rss.aspx?ch=69",
+      "axis": "tecnologia",
+      "lang": "es"
     }
   ]
 }
