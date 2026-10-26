@@ -245,7 +245,7 @@ jobs:
               — copy them verbatim, do not invent one. Do not point `cover` at
               any other path: that file is the shared Radar cover. A repair
               step restores it if you omit it or the file does not exist.
-            - Select the 5-7 most relevant items from the last ~24h, covering
+            - Select the 10-12 most relevant items from the last ~24h, covering
               the five axes (ia, tecnologia, negocio, economia, geopolitica)
               if solid material exists for each. If `scratch/lead.json` has `status: lead`, exclude its
               exact source URL; that story already has its own full article.
