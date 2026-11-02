@@ -51,6 +51,7 @@ export const PUENTE_POR_POST: Record<string, GuiaNbi> = {
   "temperatura-y-aleatoriedad": "rpa",
   bienvenida: "mapa",
   "cuanto-cuesta-la-ia": "medir",
+  "que-es-el-pre-dua": "mapa",
   "cuando-la-ia-alucina": "rpa",
   "que-es-rag": "agente",
   "antes-de-delegar-a-un-agente-escribo-cuatro-cosas": "medir",
