@@ -7,6 +7,7 @@ te_llevas:
   - "Lo que decide si funciona es la recuperación: sin fragmentos que coincidan no hay contexto, y el modelo responde de memoria."
   - "Úsalo para respuestas ancladas en información específica y verificable: documentación, catálogos, normativa. Para redacción genérica, quizá no haga falta."
 date: 2026-06-20
+updated: 2026-11-09
 tema: ia-aplicada
 formato: leccion
 seccion: practica
@@ -20,26 +21,28 @@ draft: false
 premium: false
 ---
 
-**RAG** (Retrieval-Augmented Generation) es una de las técnicas más útiles para
+**<Term id="rag">RAG</Term>** (Retrieval-Augmented Generation) es una de las técnicas más útiles para
 construir aplicaciones de IA fiables. La idea es sencilla: en lugar de confiar
 solo en lo que el modelo "recuerda", se le da contexto recuperado de tus propios
-datos antes de que responda.
+datos antes de que responda. En una frase: [qué es RAG en el glosario](/glosario/rag).
 
 ## El problema
 
 Un modelo de lenguaje no conoce tus documentos internos ni la información que
-cambia cada día. Si le preguntas por ellos, **se lo inventa** ([alucina](/blog/cuando-la-ia-alucina)). RAG
+cambia cada día. Si le preguntas por ellos, **se lo inventa** (<Term id="hallucination">alucina</Term>:
+[cuándo la IA alucina](/blog/cuando-la-ia-alucina)). RAG
 resuelve esto buscando la información relevante y pasándosela al modelo.
 
 ## Cómo funciona RAG
 
-1. **Embeddings**: conviertes tus textos en vectores numéricos.
+1. **<Term id="embedding">Embeddings</Term>**: conviertes tus textos en vectores numéricos.
 2. **Recuperación**: ante una pregunta, buscas los fragmentos más parecidos.
 3. **Generación**: el modelo responde usando solo ese contexto recuperado.
 
 El paso que decide si tu RAG funciona es el 2. Juega con él: pregunta, mira qué
 fragmentos se recuperan y con qué puntuación, y mueve el top-k para ver cómo
-cambia el contexto que recibiría el modelo.
+cambia el contexto que recibiría el modelo. Lo que pagas y lo que cabe en esa
+consulta se mide en <Term id="token">tokens</Term> ([qué es un token](/blog/que-es-un-token)).
 
 <RagSandbox />
 
@@ -69,3 +72,9 @@ Usa RAG cuando necesites respuestas ancladas en **información específica y
 verificable** (documentación, catálogos, normativa). Si solo necesitas redacción
 genérica, quizá no haga falta. La regla de oro: **menos alucinación, más
 control**.
+
+Si lo que quieres no es una respuesta anclada en documentos, sino un bucle que
+decide y usa herramientas, eso ya es un [agente](/blog/que-es-un-agente) —otra pieza del
+[glosario](/glosario)—, no RAG.
+
+Para seguir en el terreno de la pyme: [qué es un agente de IA, y qué no es](https://ianexora.com/guias/que-es-un-agente-de-ia?utm_source=blog&utm_medium=article&utm_campaign=que-es-rag), en ianexora.com.
