@@ -10,7 +10,7 @@ import { feedAlternates, withOpenGraph } from "@/config/site";
 export const metadata: Metadata = withOpenGraph("/glosario", {
   title: "Glosario",
   description:
-    "Glosario de IA en español: qué es un token, un embedding, RAG, un prompt, una alucinación o la ventana de contexto, explicado en una frase cada uno.",
+    "Glosario de IA en español: qué es un token, un embedding, RAG, un agente, un prompt, una alucinación o la ventana de contexto, explicado en una frase cada uno.",
   alternates: { ...feedAlternates, canonical: "/glosario" },
 });
 

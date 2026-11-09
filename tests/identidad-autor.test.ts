@@ -68,13 +68,18 @@ describe('identidad del autor', () => {
       // 13-oct-2026: precios de la calculadora releídos, y las dos proporciones del texto con ellos.
       // 15-oct-2026: releídos otra vez, sin cambios; la fecha va con la de la tabla.
       ['content/posts/cuanto-cuesta-la-ia.mdx', '/precios', '2026-10-15'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/agentes/correo', '2026-10-11'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/agentes/correo', '2026-11-09'],
       // 11-oct-2026: el artículo del TMS, reencuadrado (A7 del diagnóstico AEO), apunta a las guías y al servicio vigentes.
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/guias/errores-al-teclear-pedidos', '2026-10-11'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/guias/ocr-o-ia-para-leer-pedidos', '2026-10-11'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/calculadora-coste-tareas-repetitivas', '2026-10-11'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/servicios/diagnostico-de-procesos', '2026-10-11'],
+      // 9-nov-2026: actualización SEO (fila 9): enlaces a /transporte y /transporte-aduanas-irun.
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/guias/errores-al-teclear-pedidos', '2026-11-09'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/guias/ocr-o-ia-para-leer-pedidos', '2026-11-09'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/calculadora-coste-tareas-repetitivas', '2026-11-09'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/servicios/diagnostico-de-procesos', '2026-11-09'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/transporte', '2026-11-09'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/transporte-aduanas-irun', '2026-11-09'],
       ['content/posts/que-es-un-agente.mdx', '/guias/que-es-un-agente-de-ia', '2026-10-11'],
+      // 9-nov-2026: revisión del glosario / RAG (fila 7).
+      ['content/posts/que-es-rag.mdx', '/guias/que-es-un-agente-de-ia', '2026-11-09'],
       ['content/posts/medir-un-sistema.mdx', '/guias/como-medir-si-una-automatizacion-funciona', '2026-10-11'],
     ];
     for (const [file, ruta, fecha] of enlaces) {

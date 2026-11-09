@@ -16,9 +16,9 @@ export type GlossaryEntry = {
 export const glossary: Record<string, GlossaryEntry> = {
   token: {
     title: "Token",
-    def: "La unidad mínima que procesa un modelo de lenguaje: trozos de palabra, no letras ni palabras enteras. El precio y el límite de contexto se miden en tokens.",
+    def: "La unidad mínima que lee un modelo de lenguaje: un trozo de texto (palabra, fragmento o signo), no una letra. Con tokens se mide lo que pagas y lo que cabe en la ventana de contexto.",
     relatedSlug: "que-es-un-token",
-    updated: "2026-07-26",
+    updated: "2026-11-09",
     enFrase: "un token",
   },
   embedding: {
@@ -29,9 +29,9 @@ export const glossary: Record<string, GlossaryEntry> = {
   },
   rag: {
     title: "RAG",
-    def: "Retrieval-Augmented Generation: recuperar fragmentos relevantes de tus datos y dárselos al modelo como contexto antes de que responda, para reducir alucinaciones.",
+    def: "Retrieval-Augmented Generation: buscar en tus propios datos los fragmentos que responden a la pregunta y pasárselos al modelo para que conteste solo con ellos. Así se reducen las alucinaciones.",
     relatedSlug: "que-es-rag",
-    updated: "2026-07-26",
+    updated: "2026-11-09",
     enFrase: "RAG",
   },
   prompt: {
@@ -39,6 +39,13 @@ export const glossary: Record<string, GlossaryEntry> = {
     def: "Las instrucciones y el contexto que le das al modelo. Pequeños cambios en el prompt pueden cambiar mucho la respuesta.",
     updated: "2026-06-24",
     enFrase: "un prompt",
+  },
+  agente: {
+    title: "Agente",
+    def: "Un prompt que no se queda quieto: repite un bucle de pasos y en cada vuelta decide qué hacer con sus herramientas. Más autonomía son más decisiones propias, y cada una es un punto donde puede desviarse.",
+    relatedSlug: "que-es-un-agente",
+    updated: "2026-11-09",
+    enFrase: "un agente",
   },
   hallucination: {
     title: "Alucinación",
