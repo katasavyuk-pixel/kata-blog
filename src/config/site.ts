@@ -24,7 +24,7 @@ export type SocialLink = { label: string; href: string };
 
 export const siteConfig = {
   /** §1 NOMBRE_MARCA — marca personal = tu nombre. */
-  name: "Kata Ivanovych",
+  name: "Kata Savyuk",
   /** §1 DOMINIO (without protocol) — subdominio del dominio NBI ianexora.com. */
   domain: "kata.ianexora.com",
   /** Absolute base URL — used for metadataBase / canonical / OG. */
@@ -38,7 +38,7 @@ export const siteConfig = {
   tagline:
     "Sistemas de IA que ya funcionan en un negocio real. Con sus números y con lo que se rompió.",
   /** Mono label above the home headline. Email 2 already calls the blog this. */
-  kicker: "El cuaderno de obra de Kata Ivanovych",
+  kicker: "El cuaderno de obra de Kata Savyuk",
   /**
    * The home's own words (2026-10-14). Kata found a home that opened with his
    * face and his promise too much about him: the home is now the map of what
@@ -83,26 +83,28 @@ export const siteConfig = {
   audience: "quien dirige un negocio y quiere aplicar IA sin fiarse de una demo",
   author: {
     /** §1 TU_NOMBRE */
-    name: "Kata Ivanovych",
+    name: "Kata Savyuk",
     /** How the home introduces the author: "Soy Kata." */
     firstName: "Kata",
     /**
-     * The name behind the byline. ianexora.com declares the relationship from its
-     * side ("En el blog firmo como Kata Ivanovych", decision D5 of the
-     * ianexora.com SEO plan):
-     * declare it, don't unify the two brands. Same words in the footer, in
-     * /sobre-mi and in the `Person` node, so schema and page never disagree.
+     * The full name behind the byline: «Katalin (Kata) Savyuk», the one name of
+     * the person on both sites. Until 10-nov-2026 the blog signed with another
+     * pen name and declared Katalin Savyuk as the real one;
+     * Kata dropped it, so there is nothing left to declare: the byline says who he is.
+     * Same words in the footer, in /sobre-mi and in the `Person` node, so schema
+     * and page never disagree.
      */
-    alternateName: "Katalin Savyuk",
+    alternateName: "Katalin (Kata) Savyuk",
     /** Where that name has its own page: the reciprocal of ianexora.com's side. */
     profileUrl: "https://ianexora.com/sobre-katalin-savyuk",
     profileLabel: "Más en ianexora.com",
     /**
-     * Visible line. Approved vocabulary only: "construye NBI",
-     * never a role, "la empresa", "somos" or a legal form.
+     * Visible line. Founder of NBI, as ianexora.com says it: always with the
+     * full name «NBI (Nexora Business Intelligence)», never a legal form,
+     * «la empresa» or «somos».
      */
     byline:
-      "Kata Ivanovych es el nombre con el que firma Katalin Savyuk, que construye NBI (Nexora Business Intelligence).",
+      "Katalin (Kata) Savyuk, fundador de NBI (Nexora Business Intelligence), escribe y mantiene este blog.",
     /** §1 TU_BIO_CORTA — identity in one line + credential + mission. */
     bio: "Construyo NBI, mi negocio de automatización con IA, y aquí documento cada sistema que pongo en marcha: qué hace, cómo está montado y dónde falló.",
   },
@@ -249,21 +251,24 @@ export function hasOwnSignupForm(pathname: string): boolean {
 /**
  * The person behind both sites, as ONE entity (Katalin, 17-oct-2026).
  *
- * Until then the blog declared its own `Person` («Kata Ivanovych», @id on this
- * domain) and ianexora.com another («Katalin Savyuk», @id there): two entities
- * for one person, neither pointing at the other. Now both sites emit this same
- * node: the @id ianexora.com already published, the name its pages use, the pen
- * name as `alternateName`, and one `sameAs`. ianexora.com defines it
- * (lib/seo/schema.ts there): change the two together. The visible byline here
- * stays «Kata Ivanovych» (siteConfig.author).
+ * Until then the blog declared its own `Person` and ianexora.com another
+ * («Katalin Savyuk», @id there): two entities for one person, neither pointing
+ * at the other. Now both sites emit this same node: the @id ianexora.com already
+ * published, the name its pages use, «Kata Savyuk» as `alternateName`, and one
+ * `sameAs`. ianexora.com defines it (lib/seo/schema.ts there): change the two
+ * together. The visible name here is «Kata Savyuk» (siteConfig.author).
  */
 export const PERSONA = {
   id: "https://ianexora.com/sobre-katalin-savyuk#person",
   name: "Katalin Savyuk",
-  alternateName: "Kata Ivanovych",
+  alternateName: "Kata Savyuk",
+  givenName: "Katalin",
+  familyName: "Savyuk",
   url: "https://ianexora.com/sobre-katalin-savyuk",
   image: "https://ianexora.com/images/katalin-donostia.jpg",
   jobTitle: "Fundador de NBI",
+  description:
+    "Katalin (Kata) Savyuk es el fundador de NBI (Nexora Business Intelligence), en Irún (Gipuzkoa), y escribe el blog kata.ianexora.com.",
   worksFor: "https://ianexora.com/#organization",
   /**
    * The profiles the footer links, and this blog — written out, not
@@ -314,7 +319,7 @@ type Imagenes = NonNullable<OpenGraph["images"]>;
  * Next merges metadata shallowly per segment and replaces `openGraph` and
  * `twitter` wholesale, so a page that declares either loses everything the
  * layout set in it: the default card image (25 of 57 URLs had none, audit of
- * 17-oct-2026) and, for `twitter`, the title, which stayed «Kata Ivanovych» on
+ * 17-oct-2026) and, for `twitter`, the title, which stayed with the site name on
  * 34 pages. And a page that declares neither used to inherit the layout's
  * `og:url`, the site root, so sharing it showed the home. Built here:
  *   - og:title and twitter:title are the page's <title>, unless the page passes

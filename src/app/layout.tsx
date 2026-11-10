@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   // No title, description or url here: a page that declares no `openGraph`
-  // inherits this block whole, and with them it said «Kata Ivanovych» and
+  // inherits this block whole, and with them it said the author's name and
   // pointed at the home on every such page (audit of 17-oct-2026). Without
   // them Next fills og:title and og:description from the page's own, and the
   // card image comes from src/app/opengraph-image.tsx. Pages build their

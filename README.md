@@ -1,6 +1,6 @@
 # kata.ianexora.com
 
-Código del blog y la newsletter de Kata Ivanovych: artículos, noticias diarias sobre IA, herramientas que funcionan en el navegador y un correo semanal con doble opt-in. En producción en [kata.ianexora.com](https://kata.ianexora.com).
+Código del blog y la newsletter de Kata Savyuk: artículos, noticias diarias sobre IA, herramientas que funcionan en el navegador y un correo semanal con doble opt-in. En producción en [kata.ianexora.com](https://kata.ianexora.com).
 
 ## Arrancar
 

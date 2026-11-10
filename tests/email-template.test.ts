@@ -27,7 +27,7 @@ const SITIO = 'https://kata.ianexora.com';
 /** Las mismas que pasa `renderStep` en src/lib/welcome-sequence.tsx. */
 const VARS = {
   url_sitio: SITIO,
-  nombre_sitio: 'Kata Ivanovych',
+  nombre_sitio: 'Kata Savyuk',
   apertura_personalizada: '',
   bloque_descarga: '',
   bloque_regalo: '',

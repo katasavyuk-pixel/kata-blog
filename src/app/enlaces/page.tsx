@@ -11,7 +11,7 @@ export const revalidate = 900;
 export const metadata: Metadata = {
   title: "Enlaces",
   description:
-    "Vídeos, sistemas de IA, recursos y formas de trabajar con Kata Ivanovych y NBI.",
+    "Vídeos, sistemas de IA, recursos y formas de trabajar con Kata Savyuk y NBI.",
   robots: { index: false, follow: false },
 };
 

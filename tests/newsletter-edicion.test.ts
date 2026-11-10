@@ -190,7 +190,7 @@ describe('cada edición tiene lo que su correo necesita', () => {
 describe('la plantilla, en el HTML que sale', () => {
   let plantilla: Plantilla;
   const html = (edicion: Edicion) =>
-    plantilla.render(plantilla.EdicionEmail({ edicion, brand: 'Kata Ivanovych', preview: 'p', siteUrl: SITIO, unsubscribeUrl: BAJA }));
+    plantilla.render(plantilla.EdicionEmail({ edicion, brand: 'Kata Savyuk', preview: 'p', siteUrl: SITIO, unsubscribeUrl: BAJA }));
   const enOrden = (correo: string, piezas: string[]) => {
     // From <body> on: React lists the images to preload in <head>, before everything.
     const texto = correo.slice(correo.indexOf('<body'));

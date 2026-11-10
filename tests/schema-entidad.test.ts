@@ -23,7 +23,7 @@ describe('la persona', () => {
   test('es la de ianexora.com: mismo @id, nombre, cargo y empresa', () => {
     assert.equal(person['@id'], 'https://ianexora.com/sobre-katalin-savyuk#person');
     assert.equal(person.name, 'Katalin Savyuk');
-    assert.equal(person.alternateName, 'Kata Ivanovych');
+    assert.equal(person.alternateName, 'Kata Savyuk');
     assert.equal(person.jobTitle, 'Fundador de NBI');
     assert.deepEqual(person.worksFor, { '@id': 'https://ianexora.com/#organization' });
   });

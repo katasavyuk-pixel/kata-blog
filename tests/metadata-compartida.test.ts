@@ -12,7 +12,7 @@ import { metadataDeMes, mesesPublicados } from '@/lib/mensual';
  * Next fusiona la metadata por segmento sin mezclar `openGraph` ni `twitter`:
  * quien declara uno lo sustituye entero, y quien no declara ninguno hereda el
  * del layout. El 17-oct-2026 una auditoría externa encontró el resultado: 11
- * URLs con og:title «Kata Ivanovych», 34 con ese twitter:title, 25 sin imagen y
+ * URLs con og:title el nombre del autor, 34 con ese twitter:title, 25 sin imagen y
  * 10 con el og:url de la home. Desde entonces el layout no fija título, texto
  * ni url, y cada página construye sus bloques con `withOpenGraph`.
  */

@@ -17,7 +17,7 @@ import { XMLParser } from "fast-xml-parser";
 const POSTS_DIR = new URL("../../content/posts/", import.meta.url);
 const OUT_PATH = new URL("../../scratch/youtube-new.json", import.meta.url);
 
-// Kata Ivanovych's channel. This is public data — it's in the channel URL and in
+// Kata Savyuk's channel. This is public data — it's in the channel URL and in
 // the RSS feed this script reads — so it lives here instead of in an env var that
 // has to be remembered on every run. Override with YOUTUBE_CHANNEL_ID to point at
 // another channel.

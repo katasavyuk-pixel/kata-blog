@@ -219,5 +219,5 @@ Esto solo se asegura de que la máquina se entere.
 
 ---
 
-*Kata Ivanovych · [kata.ianexora.com](https://kata.ianexora.com) — si aplicas esto a tu negocio y
+*Kata Savyuk · [kata.ianexora.com](https://kata.ianexora.com) — si aplicas esto a tu negocio y
 sale algo raro, respóndeme al correo con el que te llegó esto y lo miro.*
