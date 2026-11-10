@@ -51,7 +51,14 @@ describe('los pasos de Claude', () => {
   const pasos = WORKFLOWS.flatMap(({ file, text }) => pasosDeClaude(text).map((paso) => ({ file, paso })));
 
   test('hay pasos que comprobar', () => {
-    assert.ok(pasos.length >= 3);
+    // Las noticias diarias ya no usan Claude (pasan por Gemini). Quedan los
+    // pasos de YouTube y de cualquier otro workflow que aún llame a la acción.
+    assert.ok(pasos.length >= 1, 'si no queda ningún paso de Claude, esta suite sobra');
+    assert.equal(
+      WORKFLOWS.find((w) => w.file === 'noticias-diarias.yml')?.text.includes('anthropics/claude-code-action'),
+      false,
+      'noticias-diarias.yml volvió a Claude Code',
+    );
   });
 
   test('llevan github_token explícito y nunca id-token', () => {

@@ -144,14 +144,14 @@ describe('cableado: nada de force push y publicación única', () => {
   });
 
   test('la protagonista se decide antes de escribir la edición, y nunca tumba el día', () => {
-    const escribe = workflow.indexOf('name: Write the lead article with Claude');
+    const escribe = workflow.indexOf('name: Write the lead article with Gemini');
     const decide = workflow.indexOf('settle-lead.mjs "$LEAD_FILE"');
-    const edicion = workflow.indexOf('name: Write edition with Claude');
+    const edicion = workflow.indexOf('name: Write edition with Gemini');
     assert.ok(escribe > 0 && escribe < decide && decide < edicion, 'escribir → decidir → edición');
     assert.match(workflow, /if: steps\.lead\.outputs\.lead_status == 'lead'/);
     assert.match(workflow, /select-lead\.mjs/);
     // Si el paso de escritura falla, el siguiente retira el artículo y sigue.
-    assert.match(paso('Write the lead article with Claude'), /continue-on-error: true/);
+    assert.match(paso('Write the lead article with Gemini'), /continue-on-error: true/);
     // El gate estricto ya no es un paso: con él, un artículo malo costaba la edición entera.
     assert.doesNotMatch(workflow, /run: node scripts\/radar\/verify-article\.mjs/);
     // Se publica lo que hay en disco: un artículo retirado ya no está.
@@ -231,13 +231,15 @@ describe('cableado: se puede repetir, no depende de un portátil y avisa', () =>
     );
   });
 
-  test('la acción de Claude usa el token del job, no un intercambio que puede saltarse el paso', () => {
-    // En el primer ensayo desde una rama, el intercambio OIDC → token de la app
-    // rechazó el workflow por no ser idéntico al de main, y la acción terminó
-    // «bien» sin escribir nada.
-    for (const nombre of ['Write the lead article with Claude', 'Write edition with Claude']) {
-      assert.match(paso(nombre), /github_token: \$\{\{ github\.token \}\}/, nombre);
+  test('la escritura es un script del repo, no una acción que pueda saltarse el paso', () => {
+    // La acción de Claude intercambiaba un token OIDC y, si el workflow no era
+    // idéntico al de main, terminaba «bien» sin escribir nada. El script de
+    // Gemini no habla con GitHub: o escribe el fichero o sale con error.
+    for (const nombre of ['Write the lead article with Gemini', 'Write edition with Gemini']) {
+      assert.match(paso(nombre), /run: node scripts\/radar\/write-with-gemini\.mjs (lead|edition)/, nombre);
+      assert.doesNotMatch(paso(nombre), /uses:/, nombre);
     }
+    assert.doesNotMatch(workflow, /anthropics\/claude-code-action/);
     assert.doesNotMatch(workflow, /id-token: write/);
   });
 
@@ -247,42 +249,33 @@ describe('cableado: se puede repetir, no depende de un portátil y avisa', () =>
     assert.ok(control < workflow.indexOf('uses: actions/upload-artifact@v4'), 'antes de guardar el artefacto de un ensayo');
     assert.ok(control < workflow.indexOf('publish-safe.sh "feat(noticias)'), 'antes de publicar');
     const yaml = paso('Refuse to publish a credential');
-    assert.match(yaml, /CLAUDE_CODE_OAUTH_TOKEN: \$\{\{ secrets\.CLAUDE_CODE_OAUTH_TOKEN \}\}/);
+    assert.match(yaml, /GEMINI_API_KEY: \$\{\{ secrets\.GEMINI_API_KEY \}\}/);
     assert.doesNotMatch(yaml, /\n\s+if: /, 'también corre en un ensayo');
   });
 
   test('el modelo y los ajustes no dependen de la máquina', () => {
-    for (const nombre of ['Write the lead article with Claude', 'Write edition with Claude']) {
-      const yaml = paso(nombre);
-      assert.match(yaml, /--model claude-opus-5-5\n/, nombre);
-      assert.match(yaml, /--setting-sources project\n/, nombre);
+    const script = readFileSync(join(ROOT, 'scripts', 'radar', 'write-with-gemini.mjs'), 'utf8');
+    assert.match(script, /export const DEFAULT_MODEL = "gemini-2\.5-flash"/);
+    // El workflow no elige modelo: usa el default del script, igual en todos los runners.
+    for (const nombre of ['Write the lead article with Gemini', 'Write edition with Gemini']) {
+      assert.doesNotMatch(paso(nombre), /GEMINI_MODEL/, nombre);
     }
   });
 
   test('el modelo solo puede escribir su fichero, y no lee nada de fuera del repo', () => {
-    // Medido en el runner el 13-oct-2026: con `Read,Write,Glob` a secas leía
-    // /etc/hostname y escribía en la raíz del repo, o sea, podía leer el entorno
-    // del runner y reescribir los scripts que verifican lo que escribe.
-    const casos: [string, string][] = [
-      ['Write the lead article with Claude', 'noticia'],
-      ['Write edition with Claude', 'noticias'],
-    ];
-    for (const [nombre, fichero] of casos) {
-      const permitido = paso(nombre).match(/--allowedTools "([^"]+)"\n/)?.[1].split(',') ?? [];
-      assert.ok(permitido.length > 0, `${nombre}: sin --allowedTools`);
-      const escribe = permitido.filter((regla) => !regla.startsWith('Read('));
-      assert.deepEqual(escribe, [`Edit(content/posts/${fichero}-\${{ needs.estado.outputs.date }}.mdx)`], nombre);
-      for (const regla of permitido) {
-        // Una regla sin ruta («Read», «Write», «Glob») vale para todo el disco;
-        // las de `Write(...)` se aceptan y no se consultan: la escritura es `Edit(...)`.
-        assert.match(regla, /^(Read|Edit)\([^/~.][^)]*\)$/, `${nombre}: ${regla}`);
-      }
-      assert.match(paso(nombre), /--disallowedTools "Bash,WebFetch,WebSearch"\n/, nombre);
+    // Gemini no tiene herramientas: no lee el disco del runner ni busca en la web.
+    // Los hechos le llegan en el prompt; el script escribe un solo fichero.
+    const script = readFileSync(join(ROOT, 'scripts', 'radar', 'write-with-gemini.mjs'), 'utf8');
+    assert.doesNotMatch(script, /google_search/);
+    assert.doesNotMatch(script, /tools:\s*\[/);
+    assert.match(script, /await writeFile\(outFile, mdx\)/);
+    for (const nombre of ['Write the lead article with Gemini', 'Write edition with Gemini']) {
+      assert.doesNotMatch(paso(nombre), /allowedTools|disallowedTools|WebSearch|WebFetch/, nombre);
     }
   });
 
   test('la edición solo teclea la url de cada ítem y su titular en español', () => {
-    const prompt = paso('Write edition with Claude');
+    const prompt = readFileSync(join(ROOT, 'scripts', 'radar', 'write-with-gemini.mjs'), 'utf8');
     assert.match(prompt, /<RadarItem url="\.\.\." titular="\.\.\.">/);
     assert.doesNotMatch(prompt, /copy `title`/);
     // Lo que el script comprueba se le dice antes al modelo.
@@ -315,10 +308,11 @@ describe('cableado: se puede repetir, no depende de un portátil y avisa', () =>
       assert.ok(aviso.includes(condicion), condicion);
     }
     assert.match(aviso, /PIPELINE: \$\{\{ needs\.noticias\.result \}\}/);
-    assert.match(aviso, /CLAUDE_REASON: \$\{\{ needs\.noticias\.outputs\.motivo \}\}/);
+    assert.match(aviso, /WRITE_REASON: \$\{\{ needs\.noticias\.outputs\.motivo \}\}/);
     assert.match(aviso, /node scripts\/radar\/incident\.mjs report/);
-    // El motivo sale del fichero que guarda la acción, solo si algo falló.
-    assert.match(paso('Say why Claude stopped'), /if: failure\(\)/);
+    // El motivo sale del fichero que guarda el script, solo si algo falló.
+    assert.match(paso('Say why the writer stopped'), /if: failure\(\)/);
+    assert.match(paso('Say why the writer stopped'), /write-result\.mjs/);
     assert.match(job('noticias'), /motivo: \$\{\{ steps\.motivo\.outputs\.motivo \}\}/);
   });
 

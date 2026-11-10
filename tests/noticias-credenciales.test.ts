@@ -45,7 +45,7 @@ describe('credenciales en lo que se va a publicar', () => {
   }
 
   test('algo con forma de token se rechaza aunque no sea de este job', () => {
-    const casos = ['ghp_' + 'a1B2'.repeat(9), 'github_pat_' + '11AA_bb'.repeat(6), '-----BEGIN OPENSSH PRIVATE KEY-----'];
+    const casos = ['ghp_' + 'a1B2'.repeat(9), 'github_pat_' + '11AA_bb'.repeat(6), 'AIzaSyA' + 'xYz0'.repeat(8), '-----BEGIN OPENSSH PRIVATE KEY-----'];
     for (const texto of casos) {
       assert.equal(secretFindings(edicion(texto)).length, 1, texto.slice(0, 12));
     }

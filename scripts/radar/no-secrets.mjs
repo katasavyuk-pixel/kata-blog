@@ -17,11 +17,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
-export const SECRET_ENV = ["CLAUDE_CODE_OAUTH_TOKEN", "ANTHROPIC_API_KEY", "GITHUB_TOKEN", "GH_TOKEN"];
+export const SECRET_ENV = ["GEMINI_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN", "ANTHROPIC_API_KEY", "GITHUB_TOKEN", "GH_TOKEN"];
 
 /** Shapes that are never legitimate in a news post, whoever they belong to. */
 export const TOKEN_SHAPES = [
   { name: "Anthropic key or token", re: /sk-ant-[a-z0-9]+-[A-Za-z0-9_-]{20,}/ },
+  { name: "Google API key", re: /\bAIza[0-9A-Za-z_-]{20,}/ },
   { name: "GitHub token", re: /\bgh[pousr]_[A-Za-z0-9]{30,}/ },
   { name: "GitHub fine-grained token", re: /\bgithub_pat_[A-Za-z0-9_]{30,}/ },
   { name: "JWT", re: /\beyJ[A-Za-z0-9_-]{15,}\.eyJ[A-Za-z0-9_-]{15,}\.[A-Za-z0-9_-]{10,}/ },

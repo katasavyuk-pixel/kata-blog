@@ -17,7 +17,7 @@
  *
  * Usage: node scripts/radar/incident.mjs status|report
  * Env:   GITHUB_TOKEN, GITHUB_REPOSITORY; `report` also reads EDITION_DATE,
- *        EDITION, DEPLOY, INCIDENT, PIPELINE, CLAUDE_REASON, GITHUB_RUN_ID.
+ *        EDITION, DEPLOY, INCIDENT, PIPELINE, WRITE_REASON (or CLAUDE_REASON), GITHUB_RUN_ID.
  */
 import { appendFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -138,7 +138,7 @@ export function entry({ kind, date, time, runUrl, commitsUrl, failed = [], claud
     return `${heading}\n\nNo se pudo comprobar si la edición de hoy estaba publicada, así que este intento no escribió nada${run}. El siguiente intento programado empieza de cero.`;
   }
   const where = failed.length > 0 ? `Falló en: ${failed.map((name) => `«${name}»`).join(", ")}` : "No hay ningún paso marcado como fallido";
-  const reason = claudeReason ? `\n\nLo que respondió Claude al pararse: «${oneLine(claudeReason)}»` : "";
+  const reason = claudeReason ? `\n\nLo que respondió el modelo al pararse: «${oneLine(claudeReason)}»` : "";
   return `${heading}\n\nHoy todavía no hay edición. ${where}${run}.${reason}\n\nEl siguiente intento programado empieza de cero. Si era el último del día, se puede lanzar a mano en Actions → «Noticias diarias» → Run workflow.`;
 }
 
@@ -236,7 +236,7 @@ async function main(command, env) {
       time: now.time,
       runId: env.GITHUB_RUN_ID,
       repoUrl: env.GITHUB_SERVER_URL ? `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}` : "",
-      claudeReason: env.CLAUDE_REASON || "",
+      claudeReason: env.WRITE_REASON || env.CLAUDE_REASON || "",
     });
     console.log(`incident: ${done}`);
     return;
