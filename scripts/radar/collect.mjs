@@ -6,7 +6,7 @@
  *
  * This step deliberately involves NO LLM: titles, URLs and dates come straight
  * from the feeds, which is what protects the generated post from hallucinated
- * sources. The writing step (Claude Code Action) may only pick from this file.
+ * sources. The writing step (Gemini) may only pick from this file.
  *
  * Usage: node scripts/radar/collect.mjs
  */

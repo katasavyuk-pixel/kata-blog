@@ -1,14 +1,14 @@
 /**
  * Noticias — deterministic metadata repair.
  *
- * Claude writes the Spanish prose; this step overwrites every verifyable
+ * The writing model writes the Spanish prose; this step overwrites every verifyable
  * metadata field of each <RadarItem> (title/source/axis/date) with the exact
  * candidate values by URL, so the anti-hallucination gate cannot trip on the
  * writing model re-typing a headline. The URL stays the identity key: if a URL
  * is not in the candidates, that is a real problem and this exits 1.
  *
  * Only the attributes are repaired — the prose inside each <RadarItem> is left
- * as Claude wrote it. The same pass stamps the frontmatter the redesign
+ * as the model wrote it. The same pass stamps the frontmatter the redesign
  * requires (`seccion`, and a cover file that exists) so a forgotten field
  * cannot fail `velite --strict` after the commit. Run this before
  * verify-edition.mjs.

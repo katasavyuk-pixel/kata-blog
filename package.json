@@ -18,7 +18,8 @@
     "verify": "npm run typecheck && npm run lint && npm run test",
     "bitacora": "node scripts/bitacora/borrador.mjs",
     "portada": "node scripts/portada/portada.mjs",
-    "correo": "node --no-warnings --experimental-strip-types --import ./tests/alias-hook.ts scripts/correo/preparar.ts"
+    "correo": "node --no-warnings --experimental-strip-types --import ./tests/alias-hook.ts scripts/correo/preparar.ts",
+    "noticias:ensayo": "node scripts/radar/ensayo.mjs"
   },
   "imports": {
     "#site/content": "./.velite/index.js"

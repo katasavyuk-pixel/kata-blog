@@ -16,7 +16,7 @@ import { RADAR_AXES, RADAR_AXIS_KEYS, etiquetaDeEje } from '@/config/taxonomy';
 const ROOT = join(import.meta.dirname, '..');
 type Fuente = { name: string; medio?: string; url: string; axis: string; lang: string };
 const { sources } = JSON.parse(readFileSync(join(ROOT, 'config/radar-sources.json'), 'utf8')) as { sources: Fuente[] };
-const workflow = readFileSync(join(ROOT, '.github/workflows/noticias-diarias.yml'), 'utf8');
+const prompt = readFileSync(join(ROOT, 'scripts/radar/write-with-gemini.mjs'), 'utf8');
 const plantilla = readFileSync(join(ROOT, 'content/_templates/noticias.mdx'), 'utf8');
 
 describe('ejes de las noticias', () => {
@@ -50,7 +50,7 @@ describe('ejes de las noticias', () => {
 
   test('al modelo se le nombran los mismos ejes, en el mismo orden', () => {
     const lista = RADAR_AXIS_KEYS.join(', ');
-    assert.ok(workflow.includes(`(${lista})`), `el workflow no nombra (${lista})`);
+    assert.ok(prompt.includes(`(${lista})`), `el prompt no nombra (${lista})`);
     assert.ok(plantilla.includes(RADAR_AXIS_KEYS.join('/')), 'la plantilla no nombra los mismos ejes');
   });
 });
