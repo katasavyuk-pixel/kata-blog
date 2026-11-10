@@ -1,5 +1,5 @@
 ---
-name: "Kata Ivanovych — lectura en claro"
+name: "Kata Savyuk — lectura en claro"
 description: "Noticias, herramientas y skills de IA para un negocio pequeño."
 colors:
   bg: "#FBF9F8"
@@ -77,7 +77,7 @@ layout:
   sections: "56px vertical (80px ≥ 640px); hierarchy by heading size, bands and one red band"
 ---
 
-# Sistema de diseño — Kata Ivanovych
+# Sistema de diseño — Kata Savyuk
 
 **Qué es:** un sitio para leer. Conclusión primero: el h1, la respuesta corta y lo que te llevas, y el texto empieza dentro de la primera pantalla de un portátil. Piezas interactivas que rompen la columna y fichas con datos. No es una revista cinematográfica: nada de grano, viñeta, halo rojo ni titulares condensados.
 
@@ -107,7 +107,7 @@ Escala: `text-h1-home`, `text-h1`, `text-h2-section` (cabeceras de sección en h
 
 - **`Hero`** (`components/home/hero.tsx`): h1 = `siteConfig.home.titular` (lo que el lector puede hacer aquí), su línea y la tarjeta de la newsletter con el formulario. Es la sección `#newsletter`, la única con formulario en la home. Sin retrato ni promesa personal desde el 2026-10-14: los dos están en /sobre-mi.
 - **Logo de skill** (`components/marketplace/logo-skill.tsx`, `config/logos.ts`): el glifo en blanco sobre el color propio de cada skill, en una baldosa con las esquinas redondeadas (22 %). `tests/logos.test.ts`: toda skill instalable tiene logo, el blanco pasa 4,5:1 y ningún color está a menos de 25° del cian de NBI o del ámbar de MaitreAI.
-- **Retrato** (`components/ui/retrato.tsx`): `RETRATO` (fichero, tamaño, alt «Kata Ivanovych») y `RetratoMini` (firma del artículo). Lo usan la home, el artículo y /sobre-mi.
+- **Retrato** (`components/ui/retrato.tsx`): `RETRATO` (fichero, tamaño, alt «Kata Savyuk») y `RetratoMini` (firma del artículo). Lo usan la home, el artículo y /sobre-mi.
 - **`Cover`** (`components/content/cover.tsx`): la portada documental 16:9 de un post, con su `coverAlt`. Nunca en noticias.
 - **`SectionHead`** (`components/ui/section-head.tsx`): regla roja de 3 px a todo lo ancho, h2 a `text-h2-section` en la letra de lectura, una línea debajo, y el recuento —solo si sale del código— en palabras, al lado. Sin numeral grande en mono (2026-10-14). `tone="rojo"` para la banda roja.
 - **`Ficha`** (`components/sistema/ficha.tsx`): la ficha de un sistema. Portada si el listado pasa `post`; píldora de `Estado` (icono + etiqueta + «desde …» sobre fondo tintado); qué hace; **«Qué se rompió» como el bloque destacado** (superficie roja tenue — es lo que nadie más publica); coste en una fila compacta, o «Coste sin medir aún» en pequeño y apagado; recurso. Los datos salen de `config/library.ts`; `assertEvidencia` y `assertCosteMensual` rompen la build si falta una fuente o una fecha. «Nada documentado todavía» es una respuesta válida; una avería inventada no.

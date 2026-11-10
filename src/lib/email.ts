@@ -11,7 +11,7 @@ import { Resend } from "resend";
  * read. It now falls back to the domain that is actually verified.
  */
 export const FROM =
-  process.env.RESEND_FROM ?? "Kata Ivanovych <news@news.ianexora.com>";
+  process.env.RESEND_FROM ?? "Kata Savyuk <news@news.ianexora.com>";
 
 /**
  * Reply-to for emails that invite replies (welcome sequence). The sending

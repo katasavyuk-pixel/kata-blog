@@ -99,7 +99,7 @@ export function GET() {
 
   const body = `# ${siteConfig.name}
 
-> ${siteConfig.tagline} — blog y newsletter en español sobre IA aplicada a un negocio: cada sistema documentado con sus números y con lo que se rompió, un curso interactivo de IA y las Noticias de IA cada día. Autor: ${siteConfig.author.name}.
+> ${siteConfig.tagline} — blog y newsletter en español sobre IA aplicada a un negocio: cada sistema documentado con sus números y con lo que se rompió, un curso interactivo de IA y las Noticias de IA cada día. Autor: ${siteConfig.author.alternateName}, fundador de NBI (Nexora Business Intelligence).
 
 Este sitio publica en español. Su audiencia es ${siteConfig.audience}: cada sistema documentado incluye qué hace, cómo está montado y qué se rompió. Las afirmaciones son verificables por diseño.
 
@@ -121,7 +121,7 @@ ${ACTIVOS.map((item) => `- [${item.title}](${url}${item.href}): ${item.queHace}`
 
 ${[
   line("/sobre-mi"),
-  `- Autor: ${siteConfig.author.name}`,
+  `- Autor: ${siteConfig.author.name}, es decir, ${siteConfig.author.alternateName}, fundador de NBI (Nexora Business Intelligence). Su página en ianexora.com: ${siteConfig.author.profileUrl}`,
   `- Contacto: ${siteConfig.contactEmail}`,
   `- RSS: ${url}${feeds.editorial.href}`,
   `- RSS de las noticias: ${url}${feeds.noticias.href}`,

@@ -9,7 +9,7 @@ import { siteConfig } from '@/config/site';
  *
  * Un título de más de 60 caracteres y una descripción de más de 155 se cortan
  * en el resultado. El 13-oct-2026 once títulos (con el sufijo «· Kata
- * Ivanovych» que añade el layout) y trece descripciones pasaban de ahí.
+ * Savyuk» que añade el layout) y trece descripciones pasaban de ahí.
  *
  * Arreglarlos era trabajo de contenido, artículo a artículo, así que no se
  * exigió de golpe: `PENDIENTES` era la deuda, con nombre. Se saldó el 14-oct

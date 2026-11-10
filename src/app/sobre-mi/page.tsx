@@ -15,7 +15,7 @@ import { PUBLICACIONES_LINKEDIN } from "@/config/linkedin";
 
 export const metadata: Metadata = withOpenGraph("/sobre-mi", {
   title: "Sobre mí",
-  description: `Quién está detrás de ${siteConfig.name}: ${siteConfig.author.alternateName}, que construye NBI y documenta cada sistema de IA que pone en marcha, con sus números y sus fallos.`,
+  description: `Quién está detrás de ${siteConfig.name}: ${siteConfig.author.alternateName}, fundador de NBI (Nexora Business Intelligence), que documenta cada sistema de IA que pone en marcha.`,
   alternates: { ...feedAlternates, canonical: "/sobre-mi" },
 });
 

@@ -66,7 +66,7 @@ def ajustes(ws):
 
     ws["B2"] = "Recupera horas de tu semana con IA"
     ws["B2"].font = f(size=20, bold=True, color=TINTA)
-    ws["B3"] = "La hoja de tu semana · Kata Ivanovych · kata.ianexora.com"
+    ws["B3"] = "La hoja de tu semana · Kata Savyuk · kata.ianexora.com"
     ws["B3"].font = f(size=10, color=GRIS)
 
     ws["B5"] = "Cómo se usa (15 minutos)"

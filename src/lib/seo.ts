@@ -26,7 +26,7 @@ export function tituloEfectivo(post: Pick<Post, "title" | "seoTitle">): string {
 
 export function metadataDePost(post: Post): Metadata {
   return {
-    // `absolute` ignores the layout's `%s · Kata Ivanovych` template, so a
+    // `absolute` ignores the layout's `%s · Kata Savyuk` template, so a
     // seoTitle has the full width. The H1 and og:title keep `title`: the first
     // is for the reader, the second for whoever sees the link shared.
     title: post.seoTitle ? { absolute: post.seoTitle } : post.title,

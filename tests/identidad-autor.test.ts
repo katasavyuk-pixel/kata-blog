@@ -6,11 +6,11 @@ import { PERSONA, siteConfig } from '@/config/site';
 import { articleJsonLd, personJsonLd } from '@/lib/jsonld';
 
 /**
- * Kata Ivanovych y Katalin Savyuk: la relación se declara, no se unifica
- * (decisión D5 del plan SEO de ianexora.com, la mitad del blog).
+ * Una sola persona con un solo nombre (10-nov-2026): Kata Savyuk, que es
+ * Katalin (Kata) Savyuk, fundador de NBI (Nexora Business Intelligence). Antes el
+ * blog firmaba con otro nombre y declaraba la relación; ese nombre se retiró.
  *
- * ianexora.com ya dice «En el blog firmo como Kata Ivanovych». Aquí va la
- * recíproca: una línea visible en el pie y en «El viaje», el mismo dato en el
+ * Va una línea visible en el pie y en «El viaje», el mismo dato en el
  * nodo `Person` y tres enlaces desde artículos que tocan temas de la web.
  * Todo sale de `siteConfig.author` para que lo que declara el schema y lo que
  * se ve no puedan separarse.
@@ -21,11 +21,14 @@ const source = (file: string) => readFileSync(`${root}${file}`, 'utf8');
 describe('identidad del autor', () => {
   test('el nodo Person declara el nombre alternativo y su página en ianexora.com', () => {
     // 17-oct-2026 (Katalin): una sola entidad en los dos sitios. El nombre del
-    // nodo es Katalin Savyuk, la firma Kata Ivanovych va como alternateName y
+    // nodo es Katalin Savyuk, «Kata Savyuk» va como alternateName y
     // la página de ianexora.com es su `url` (antes, un `sameAs` más).
     const person = personJsonLd() as Record<string, unknown>;
     assert.equal(person.name, 'Katalin Savyuk');
-    assert.equal(person.alternateName, 'Kata Ivanovych');
+    assert.equal(person.alternateName, 'Kata Savyuk');
+    assert.equal(person.givenName, 'Katalin');
+    assert.equal(person.familyName, 'Savyuk');
+    assert.match(String(person.description), /fundador de NBI \(Nexora Business Intelligence\)/);
     assert.equal(person.url, 'https://ianexora.com/sobre-katalin-savyuk');
     // Los perfiles de siempre siguen en sameAs: la página nueva se suma, no sustituye.
     for (const link of siteConfig.social) assert.ok((person.sameAs as string[]).includes(link.href));
@@ -51,12 +54,14 @@ describe('identidad del autor', () => {
       assert.match(source(file), /siteConfig\.author\.profileUrl/, `${file} ya no enlaza a la página de ianexora.com.`);
     }
     assert.ok(siteConfig.author.byline.includes(siteConfig.author.alternateName));
+    assert.equal(siteConfig.author.name, 'Kata Savyuk');
   });
 
-  test('la línea usa solo el vocabulario aprobado: «construye NBI», sin forma jurídica, cargo ni plural de empresa', () => {
-    // Reglas de voz: ni forma jurídica, ni cargo, ni plural de empresa.
-    assert.doesNotMatch(siteConfig.author.byline, /S\.L\.|\bCIF\b|sociedad|\bsomos\b|mi equipo|la empresa|fundador|consultor/i);
-    assert.match(siteConfig.author.byline, /construye NBI \(Nexora Business Intelligence\)/);
+  test('la línea dice «fundador de NBI (Nexora Business Intelligence)», sin forma jurídica ni plural de empresa', () => {
+    // Reglas de voz: ni forma jurídica, ni plural de empresa; «Nexora» nunca solo.
+    assert.doesNotMatch(siteConfig.author.byline, /S\.L\.|\bCIF\b|sociedad|\bsomos\b|mi equipo|la empresa|consultor/i);
+    assert.match(siteConfig.author.byline, /fundador de NBI \(Nexora Business Intelligence\)/);
+    assert.doesNotMatch(siteConfig.author.byline.replace(/Nexora Business Intelligence/g, ''), /Nexora/);
   });
 
   test('los artículos que tocan temas de la web enlazan a una página de ianexora.com que existe, con su utm', () => {

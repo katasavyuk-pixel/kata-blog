@@ -28,7 +28,7 @@
 
 const args = parseArgs(process.argv.slice(2))
 const PERSON_ID = args['person-id'] ?? 'https://ianexora.com/sobre-katalin-savyuk#person'
-const AUTHOR_NAMES = (args['author-names'] ?? 'Kata Ivanovych,Katalin Savyuk').split(',').map((s) => s.trim())
+const AUTHOR_NAMES = (args['author-names'] ?? 'Kata Savyuk,Katalin Savyuk').split(',').map((s) => s.trim())
 
 function parseArgs(argv) {
   const out = {}

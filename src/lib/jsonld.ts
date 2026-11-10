@@ -193,7 +193,7 @@ export function websiteJsonLd(): Json {
  * the social profiles via `sameAs`.
  *
  * This is the cheapest entity-clarity lever in GEO: an answer engine that can
- * resolve "Kata Ivanovych" across LinkedIn/X/GitHub stops guessing whether the
+ * resolve "Kata Savyuk" across LinkedIn/X/GitHub stops guessing whether the
  * name on an article is a person, a brand or a typo. It reads `siteConfig.social`
  * — the same list the footer renders — so a profile added there appears here
  * without a second edit, and the two can never disagree.
@@ -201,9 +201,9 @@ export function websiteJsonLd(): Json {
  * Since 17-oct-2026 it is the node both sites share (`PERSONA`): the same @id,
  * name, `jobTitle` («Fundador de NBI», Katalin's choice, which ianexora.com
  * already published) and `sameAs` as on ianexora.com, which defines it.
- * `scripts/seo/check.mjs --compare` fails when the two disagree. No
- * `description`: each site words the bio its own way, and two different values
- * for the same property of one entity contradict each other. The footer links
+ * `scripts/seo/check.mjs --compare` fails when the two disagree. Since
+ * 10-nov-2026 it carries a short `description` that says what the byline says:
+ * founder of NBI (Nexora Business Intelligence). The footer links
  * every `sameAs` profile and the person's page (`url`).
  */
 export function personJsonLd(): Json {
@@ -213,9 +213,12 @@ export function personJsonLd(): Json {
     "@id": PERSON_ID,
     name: PERSONA.name,
     alternateName: PERSONA.alternateName,
+    givenName: PERSONA.givenName,
+    familyName: PERSONA.familyName,
     url: PERSONA.url,
     image: PERSONA.image,
     jobTitle: PERSONA.jobTitle,
+    description: PERSONA.description,
     worksFor: { "@id": PERSONA.worksFor },
     sameAs: [...PERSONA.sameAs],
   };
@@ -326,6 +329,8 @@ export function perfilJsonLd(pagina: { path: string; name: string; description: 
       inLanguage: "es-ES",
       isPartOf: { "@id": WEBSITE_ID },
       mainEntity: { "@id": PERSON_ID },
+      // The person's own page on ianexora.com: where the same entity is described.
+      sameAs: [PERSONA.url],
     },
     personJsonLd(),
     breadcrumbJsonLd([{ name: "Inicio", path: "/" }, { name: pagina.name, path: pagina.path }]),
