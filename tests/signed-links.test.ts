@@ -12,7 +12,7 @@ import { signedDownloadUrl, verifyDownloadSignature, isDownloadSigningConfigured
  */
 
 const SECRETO = 'secreto-de-prueba-no-usar-en-produccion';
-const SITIO = 'https://kataivanovych.com';
+const SITIO = 'https://kata.ianexora.com';
 const previo = process.env.DOWNLOAD_LINK_SECRET;
 
 beforeEach(() => {

@@ -4,11 +4,11 @@ import { Resend } from "resend";
  * Sender. A dedicated subdomain verified in Resend — today `news.ianexora.com`
  * (DKIM + SPF + MX), sending from eu-west-1.
  *
- * The fallback used to name `news.kataivanovych.com`, a domain that is not
- * verified and not even ours. That is not a graceful default: Resend rejects
- * every send from an unverified domain, so a missing RESEND_FROM turned the
- * whole site silently into "Algo falló" instead of failing where it could be
- * read. It now falls back to the domain that is actually verified.
+ * The fallback used to name a domain that is not verified and not even ours.
+ * That is not a graceful default: Resend rejects every send from an unverified
+ * domain, so a missing RESEND_FROM turned the whole site silently into
+ * "Algo falló" instead of failing where it could be read. It now falls back to
+ * the domain that is actually verified.
  */
 export const FROM =
   process.env.RESEND_FROM ?? "Kata Savyuk <news@news.ianexora.com>";

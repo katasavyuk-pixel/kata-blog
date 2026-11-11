@@ -31,7 +31,7 @@ faq:
   - q: "¿Qué diferencia hay entre una skill y un plugin?"
     a: "Una skill es una carpeta con instrucciones para una tarea concreta. Un plugin es un paquete que reúne varias skills, y a veces otras piezas, para instalarlas de una vez. Si te pasan un repositorio con un fichero marketplace.json, es un repositorio de plugins; si te pasan una carpeta con un SKILL.md, es una skill."
   - q: "¿Cómo se desinstala una skill?"
-    a: "En Claude Code, con claude plugin uninstall seguido del nombre del plugin y su origen, por ejemplo negocio-pequeno@kata-ivanovych. Si la instalaste con la herramienta skills, con npx skills remove y el nombre. En la app, desde Personalización > Plugins > Añadir > Gestionar marketplaces: al eliminar el repositorio se desinstalan sus plugins. Para dejarlo instalado pero apagado está el interruptor de la página del plugin."
+    a: "En Claude Code, con claude plugin uninstall seguido del nombre del plugin y su origen, por ejemplo negocio-pequeno@kata-savyuk. Si la instalaste con la herramienta skills, con npx skills remove y el nombre. En la app, desde Personalización > Plugins > Añadir > Gestionar marketplaces: al eliminar el repositorio se desinstalan sus plugins. Para dejarlo instalado pero apagado está el interruptor de la página del plugin."
   - q: "¿Es seguro instalar skills de otra persona?"
     a: "Depende de quién sea y de qué traiga. Una skill son instrucciones que Claude sigue y, a veces, programas que ejecuta en tu equipo. Anthropic revisa los plugins de su directorio; lo que añades desde un repositorio o subes tú no pasa esa revisión. Lee el SKILL.md y mira qué hacen los scripts antes de activarla."
 cover: /covers/como-instalar-skills-en-claude.webp
@@ -112,7 +112,7 @@ Con dos líneas dentro de una sesión. La primera da de alta el repositorio como
 
 ```text
 /plugin marketplace add katasavyuk-pixel/skills-negocio-pequeno
-/plugin install negocio-pequeno@kata-ivanovych
+/plugin install negocio-pequeno@kata-savyuk
 ```
 
 Lo que va detrás de la arroba es el nombre con el que se registra el repositorio, que no tiene por qué ser el de GitHub. Al instalar, Claude Code enseña lo que trae el plugin y pregunta el alcance: para ti en todos los proyectos, para todo el que trabaje en ese repositorio, o solo para ti en ese repositorio. Los detalles están en [instalar y gestionar plugins](https://code.claude.com/docs/en/plugins/install).
@@ -121,17 +121,17 @@ Las mismas dos órdenes existen fuera de una sesión. Son las que ejecuté para 
 
 ```bash
 claude plugin marketplace add katasavyuk-pixel/skills-negocio-pequeno
-claude plugin install negocio-pequeno@kata-ivanovych
+claude plugin install negocio-pequeno@kata-savyuk
 ```
 
 ```text
-✔ Successfully added marketplace: kata-ivanovych (declared in user settings)
-✔ Successfully installed plugin: negocio-pequeno@kata-ivanovych (scope: user)
+✔ Successfully added marketplace: kata-savyuk (declared in user settings)
+✔ Successfully installed plugin: negocio-pequeno@kata-savyuk (scope: user)
 ```
 
 Las skills de un plugin llevan su nombre delante: `/negocio-pequeno:empezar`. Para ver qué hay instalado, `claude plugin list`. Para ver qué trae un plugin y cuánto ocupa, `claude plugin details negocio-pequeno`: del mío dice que son seis skills y unos 623 <Term id="token">tokens</Term> añadidos a cada sesión. Es lo que ocupan sus seis descripciones, lo único que Claude lleva siempre encima, y es la estimación de la propia herramienta, no una medida.
 
-Para quitarlo, `claude plugin uninstall negocio-pequeno@kata-ivanovych`.
+Para quitarlo, `claude plugin uninstall negocio-pequeno@kata-savyuk`.
 
 Una skill suelta también se puede copiar a mano: en `~/.claude/skills/<nombre>/` la tienes en todos tus proyectos, y en `.claude/skills/<nombre>/`, dentro de un proyecto, solo en ese. Lo cuenta la [documentación de Claude Code](https://code.claude.com/docs/en/skills).
 
@@ -141,7 +141,7 @@ Codex, el agente de OpenAI, lee el mismo fichero de marketplace que Claude Code,
 
 ```bash
 codex plugin marketplace add katasavyuk-pixel/skills-negocio-pequeno
-codex plugin add negocio-pequeno@kata-ivanovych
+codex plugin add negocio-pequeno@kata-savyuk
 ```
 
 Después hay que abrir una sesión nueva. Lo probé el 15 de octubre de 2026 con Codex CLI 0.162.1: ve las seis, y la previsión de caja hizo su hoja con los datos de ejemplo.

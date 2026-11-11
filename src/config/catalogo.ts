@@ -22,7 +22,7 @@ export const CATALOGO = {
     ref: "v2.1.0",
   },
   /** `name` of .claude-plugin/marketplace.json: what follows the `@` on install. */
-  marketplace: "kata-ivanovych",
+  marketplace: "kata-savyuk",
   /** `name` of .claude-plugin/plugin.json: the prefix of every skill command. */
   plugin: "negocio-pequeno",
   /** The skill that sets the others up for one business. */
