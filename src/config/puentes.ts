@@ -56,6 +56,7 @@ export const PUENTE_POR_POST: Record<string, GuiaNbi> = {
   "que-es-rag": "agente",
   "antes-de-delegar-a-un-agente-escribo-cuatro-cosas": "medir",
   "quien-tiene-las-llaves-de-tu-correo": "agente",
+  "que-hace-y-que-no-hace-un-asistente-de-whatsapp-en-una-inmobiliaria": "agente",
 };
 
 /** The guide's URL with the blog's UTM convention (`utm_medium=puente`). */
