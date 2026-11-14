@@ -1,6 +1,6 @@
 ---
-# Borrador subido el 2026-11-14 para que Kata mande la prueba desde /panel.
-# No enviar a la lista: lleva `draft: true` y `sent: false` hasta que él lo apruebe.
+# Aprobada por Kata el 2026-11-14 para enviarla a la lista desde /panel.
+# `draft: false` la deja enviable. Tras el envío real, poner `sent: true` y desplegar.
 issue: 2026-11-agente-whatsapp
 subject: "🛠️ Un recepcionista en tu WhatsApp Business, con lo que ya trae Meta"
 preheader: "Cómo se configura el agente de IA de la app, y un texto para una peluquería. Sin inventar citas."
@@ -8,7 +8,7 @@ title: "El agente de WhatsApp Business, paso a paso"
 date: 2026-11-14
 tipo: sistema
 pregunta: "Si atiendes por WhatsApp, ¿qué pregunta te llega más veces fuera de horario?"
-draft: true
+draft: false
 sent: false
 ---
 
