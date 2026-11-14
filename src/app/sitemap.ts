@@ -7,10 +7,13 @@ import {
   getNoticias,
   getPost,
   getPostsByEstante,
+  getPostsBySector,
   zonasConContenido,
+  sectoresConContenido,
   type Post,
 } from "@/lib/posts";
 import { RUTA_POR_ESTANTE } from "@/config/taxonomy";
+import { RUTA_SECTORES, rutaDeSector } from "@/config/sectores";
 import { COURSE_SLUGS } from "@/config/course";
 import { REVISADO } from "@/config/revisiones";
 import { entradasBitacora } from "@/lib/bitacora";
@@ -111,11 +114,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // /noticias itself stays: it is the page that explains and lists them.
   const postRoutes = allPosts.filter(esIndexable).map((post) => entry(post.permalink, dia(fechaDe(post))));
 
+  // Sector listings, only those with a published article. Dated by the newest
+  // piece they list, like /guias. The index follows the same rule.
+  const sectores = sectoresConContenido();
+  const sectorRoutes = [
+    ...(sectores.length > 0
+      ? [entry(RUTA_SECTORES, newestOf(sectores.flatMap((s) => fechasDe(getPostsBySector(s)))))]
+      : []),
+    ...sectores.map((sector) => entry(rutaDeSector(sector), newestOf(fechasDe(getPostsBySector(sector))))),
+  ];
+
   // No tag routes: /blog/tag/<tag> is `noindex, follow`, and a sitemap that
   // lists pages it asks crawlers not to index is contradicting itself.
   return [
     ...staticRoutes,
     ...zonaRoutes,
+    ...sectorRoutes,
     ...activoRoutes,
     ...glossaryRoutes,
     ...postRoutes,

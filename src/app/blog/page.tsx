@@ -7,7 +7,8 @@ import { Container } from "@/components/ui/container";
 import { ESTANTES, RUTA_POR_ESTANTE, TEMAS } from "@/config/taxonomy";
 import { feedAlternates, siteConfig, withOpenGraph } from "@/config/site";
 import { facetas, filtrar, hrefDeArchivo, leerFiltro } from "@/lib/archivo";
-import { estanteDe, getEditoriales, tienePaginaViva } from "@/lib/posts";
+import { estanteDe, getEditoriales, tienePaginaViva, sectoresConContenido } from "@/lib/posts";
+import { RUTA_SECTORES, SECTORES, rutaDeSector } from "@/config/sectores";
 
 export const metadata: Metadata = withOpenGraph("/blog", {
   // The search title (brief of 17-oct-2026); the H1 and the Blog node keep «Lecturas».
@@ -76,6 +77,24 @@ export default async function BlogIndexPage({
               Noticias
             </Link>
             .
+            {sectoresConContenido().length > 0 ? (
+              <>
+                {" "}
+                También están agrupadas{" "}
+                <Link href={RUTA_SECTORES} className={linkClass}>
+                  por sector
+                </Link>
+                {": "}
+                {sectoresConContenido().map((sector, i, all) => (
+                  <span key={sector}>
+                    <Link href={rutaDeSector(sector)} className={linkClass}>
+                      {SECTORES[sector].label}
+                    </Link>
+                    {i < all.length - 1 ? ", " : "."}
+                  </span>
+                ))}
+              </>
+            ) : null}
           </p>
         </Container>
       </header>
