@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/ui/json-ld";
 import { coleccionJsonLd, datosDe } from "@/lib/jsonld";
 import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
+import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { CourseList, type CourseItem } from "@/components/course/course-list";
 import { COURSE_SLUGS } from "@/config/course";
 import { getPost } from "@/lib/posts";
@@ -50,14 +50,16 @@ export default function EmpiezaAquiPage() {
 
       <section aria-labelledby="curso-newsletter" className="mt-12 max-w-3xl border-t border-border pt-6 font-sans">
         <h2 id="curso-newsletter" className="text-h2">
-          ¿Terminaste el itinerario?
+          El itinerario es público
         </h2>
         <p className="mt-2 max-w-[60ch] text-[0.9375rem] leading-relaxed text-muted">
-          La newsletter sigue donde acaba el curso: cada sistema nuevo de la
-          biblioteca, contado para que lo repliques — sin ruido.
+          Las lecciones de arriba se pueden leer sin suscribirse. El progreso
+          se guarda solo en este navegador. Si quieres que te avise por correo
+          de lo que vaya saliendo —como mucho, un correo a la semana, sin
+          compromiso y sin tarjeta— apúntate a la misma lista de la newsletter.
         </p>
-        <div className="mt-5">
-          <Button href="/#newsletter">Suscríbete gratis</Button>
+        <div className="mt-5 max-w-lg">
+          <SubscribeForm source="curso" />
         </div>
       </section>
     </Container>
