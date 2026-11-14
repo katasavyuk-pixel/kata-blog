@@ -1,6 +1,7 @@
-import { getEditoriales, zonasConContenido } from "@/lib/posts";
+import { getEditoriales, sectoresConContenido, zonasConContenido } from "@/lib/posts";
 import { feeds, footerLinks, navLinks, siteConfig } from "@/config/site";
 import { ESTANTES, RUTA_POR_ESTANTE, type Estante } from "@/config/taxonomy";
+import { RUTA_SECTORES, SECTORES, rutaDeSector } from "@/config/sectores";
 import { ACTIVOS } from "@/lib/catalogo";
 import { CATALOGO_REPO_URL } from "@/config/catalogo";
 
@@ -95,6 +96,18 @@ export function GET() {
       ? [`- [${ESTANTES[estante]}](${url}${RUTA_POR_ESTANTE[estante]}): ${ZONA_DESCRIPTIONS[estante]}`]
       : [],
   );
+  const sectores = sectoresConContenido();
+  const sectorLines =
+    sectores.length > 0
+      ? [
+          `- [Por sector](${url}${RUTA_SECTORES}): lecturas agrupadas por el tipo de negocio del que hablan. Solo aparecen los sectores que ya tienen un artículo publicado.`,
+          ...sectores.map(
+            (sector) =>
+              `- [${SECTORES[sector].label}](${url}${rutaDeSector(sector)}): ${SECTORES[sector].description}`,
+          ),
+        ]
+      : [];
+
   const [primera, ...resto] = CONTENT_ORDER;
 
   const body = `# ${siteConfig.name}
@@ -105,7 +118,7 @@ Este sitio publica en español. Su audiencia es ${siteConfig.audience}: cada sis
 
 ## Contenido
 
-${[line(primera), ...zonas, ...resto.map(line)].filter(Boolean).join("\n")}
+${[line(primera), ...zonas, ...sectorLines, ...resto.map(line)].filter(Boolean).join("\n")}
 ${newestPost ? `- [Último artículo: ${newestPost.title}](${url}${newestPost.permalink}): ${newestPost.description}\n` : ""}
 ${
   ACTIVOS.length > 0

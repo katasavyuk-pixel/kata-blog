@@ -243,8 +243,9 @@ const OWN_SIGNUP_FORM_ROUTES: readonly string[] = [
 
 export function hasOwnSignupForm(pathname: string): boolean {
   if (OWN_SIGNUP_FORM_ROUTES.includes(pathname)) return true;
-  // Articles close with the form. The archive (/blog) and tag listings
-  // (/blog/tag/<tag>) do not.
+  // Articles close with the form. The archive (/blog), tag listings
+  // (/blog/tag/<tag>) and sector listings do not: they keep the footer form.
+  if (pathname === "/blog/sectores" || pathname.startsWith("/blog/sector/")) return false;
   return /^\/blog\/[^/]+$/.test(pathname);
 }
 

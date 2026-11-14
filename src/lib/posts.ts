@@ -5,6 +5,7 @@ import {
   RUTA_POR_ESTANTE,
   type Estante,
 } from "@/config/taxonomy";
+import { SECTOR_KEYS, sectorDeEtiqueta, type Sector } from "@/config/sectores";
 
 export type { Post };
 
@@ -122,4 +123,26 @@ export function getRelatedPosts(post: Post, limit = 3): Post[] {
     }))
     .sort((a, b) => b.score - a.score);
   return scored.slice(0, limit).map((s) => s.post);
+}
+
+/** The sector a post belongs to, if one of its tags names one. */
+export function sectorDePost(post: Pick<Post, "tags">): Sector | undefined {
+  for (const tag of post.tags) {
+    const sector = sectorDeEtiqueta(tag);
+    if (sector) return sector;
+  }
+  return undefined;
+}
+
+/** Published editorial posts in a sector, newest first. News editions stay out. */
+export function getPostsBySector(sector: Sector): Post[] {
+  return getEditoriales().filter((post) => sectorDePost(post) === sector);
+}
+
+/**
+ * Sectors that already have at least one published article. An empty vertical
+ * has no page — the same rule as /guias and /reflexiones.
+ */
+export function sectoresConContenido(): Sector[] {
+  return SECTOR_KEYS.filter((sector) => getPostsBySector(sector).length > 0);
 }
