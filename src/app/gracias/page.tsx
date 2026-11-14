@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { DownloadButton } from "@/components/resources/download-button";
+import { MarcaAlta } from "@/components/analytics/marca-alta";
 import { REGALO } from "@/config/regalo";
 import { siteConfig } from "@/config/site";
 
@@ -54,6 +55,7 @@ export default async function GraciasPage({
 
   return (
     <Container className="py-16 sm:py-24">
+      {sp.preview ? null : <MarcaAlta />}
       <div className="mx-auto max-w-[66ch]">
         <h1 className="text-h1">¡Suscripción confirmada!</h1>
         <p className="mt-4 text-muted">

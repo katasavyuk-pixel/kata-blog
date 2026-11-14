@@ -24,6 +24,8 @@ export default function CookiesPage() {
             Esta web no usa cookies de medición ni de publicidad, y por eso no te pide permiso con
             un aviso. Las visitas se cuentan con Vercel Web Analytics,
             que funciona sin cookies y sin guardar nada en tu navegador.
+            Algunas acciones (confirmar el alta, usar una herramienta) se cuentan
+            como eventos del mismo sistema, también sin cookies.
           </p>
           <h2>Lo que sí guarda tu navegador, y solo porque lo pides</h2>
           <p>
