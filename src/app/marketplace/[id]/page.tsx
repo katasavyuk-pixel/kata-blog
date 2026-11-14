@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/container";
 import { Icon } from "@/components/ui/icon";
 import { JsonLd } from "@/components/ui/json-ld";
 import { NotaCard } from "@/components/content/nota-card";
-import { Instalar } from "@/components/marketplace/instalar";
+import { InstalarTrasAlta } from "@/components/marketplace/instalar-tras-alta";
 import { Estado } from "@/components/sistema/estado";
 import {
   CATALOGO,
@@ -149,7 +149,7 @@ export default async function ActivoPage({ params }: { params: Promise<{ id: str
             Viene con el resto de las skills, en un solo paquete, y funciona en la aplicación de Claude, en Claude
             Code, en Codex y en cualquier agente que lea el formato Agent Skills. Elige el tuyo:
           </p>
-          <Instalar />
+          <InstalarTrasAlta />
           <p>
             En Claude Code se llama con <code className="font-mono text-[0.9375rem] text-fg">{comandoDeSkill(item.id)}</code>;
             en cualquier agente, se activa sola cuando lo que pides encaja con lo que hace.
