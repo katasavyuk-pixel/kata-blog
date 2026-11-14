@@ -226,7 +226,7 @@ describe('las páginas pintan lo que la ficha dice', () => {
     for (const fila of ['activo.paraQuien', 'activo.noEsPara', 'activo.requisitos', 'activo.lee', 'activo.escribe', 'activo.red', 'activo.pruebas', 'activo.version', 'activo.licencia', 'item.seRompio', 'item.costeMensual']) {
       assert.ok(pagina.includes(fila), `la página ya no pinta ${fila}.`);
     }
-    assert.match(pagina, /<Instalar \/>/);
+    assert.match(pagina, /<InstalarTrasAlta \/>/);
     assert.match(pagina, /softwareSourceCodeJsonLd\(/);
     assert.match(pagina, /apareceEn\(item\.id\)/);
   });

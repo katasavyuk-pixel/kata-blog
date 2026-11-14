@@ -37,6 +37,13 @@ export default function CookiesPage() {
             El formulario usa Cloudflare Turnstile para frenar a los bots. Es una medida de seguridad
             del servicio que pides al suscribirte, no una medición.
           </p>
+          <h2>Al confirmar la suscripción</h2>
+          <p>
+            Al confirmar el alta, el sitio guarda una cookie técnica (<code>nbi_subscriber</code>)
+            durante 30 días para reconocerte: sirve para darte la descarga que hayas pedido y, en
+            el marketplace, el comando de instalación. No es una cookie de medición ni de
+            publicidad. Si no confirmas, no se guarda.
+          </p>
           <h2>Vídeos de YouTube</h2>
           <p>
             Los vídeos se ven con el reproductor de YouTube en su modo de privacidad reforzada
