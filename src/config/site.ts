@@ -248,8 +248,9 @@ export function hasOwnSignupForm(pathname: string): boolean {
   // Skill sheets put the same form in the install block when the reader has
   // not confirmed yet, so the footer must not add a second one.
   if (pathname.startsWith("/marketplace/")) return true;
-  // Articles close with the form. The archive (/blog) and tag listings
-  // (/blog/tag/<tag>) do not.
+  // Articles close with the form. The archive (/blog), tag listings
+  // (/blog/tag/<tag>) and sector listings do not: they keep the footer form.
+  if (pathname === "/blog/sectores" || pathname.startsWith("/blog/sector/")) return false;
   return /^\/blog\/[^/]+$/.test(pathname);
 }
 
