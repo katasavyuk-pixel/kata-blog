@@ -4,7 +4,7 @@ import { coleccionJsonLd, datosDe } from "@/lib/jsonld";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Estado } from "@/components/sistema/estado";
-import { Instalar } from "@/components/marketplace/instalar";
+import { InstalarTrasAlta } from "@/components/marketplace/instalar-tras-alta";
 import { LogoSkill } from "@/components/marketplace/logo-skill";
 import { LOGOS_DE_SKILL } from "@/config/logos";
 import { feedAlternates, withOpenGraph } from "@/config/site";
@@ -56,7 +56,7 @@ export default function MarketplacePage() {
               Instálalas todas a la vez
             </h2>
             <div className="mt-4">
-              <Instalar />
+              <InstalarTrasAlta />
             </div>
           </section>
 

@@ -80,7 +80,7 @@ describe('estantes', () => {
 describe('un formulario de alta por página', () => {
   // Lo que pinta un formulario de alta dentro de una página. `Hero` es la
   // cabecera de la home (promesa + formulario en una sección, fase 3).
-  const CON_FORMULARIO = /<(SubscribeForm|Hero|ArticleClosing)\b/;
+  const CON_FORMULARIO = /<(SubscribeForm|Hero|ArticleClosing|InstalarTrasAlta)\b/;
 
   /** src/app/blog/[slug]/page.tsx → /blog/x */
   function rutaDe(file: string): string {

@@ -21,6 +21,8 @@
  * stays in the schema, but no surface reads it any more.
  */
 
+import { sectorDeEtiqueta, rutaDeSector } from "@/config/sectores";
+
 export const TEMA_KEYS = [
   "ia-aplicada",
   "captacion",
@@ -185,8 +187,12 @@ export const FORMATOS: Record<Formato, string> = {
  * Where a tag chip leads. `radar` is the old name of the news section: its page
  * is /noticias and /blog/tag/radar only redirects there (next.config.ts), so a
  * chip that pointed at the tag route cost every reader — and every crawler that
- * follows links — a 308 on 24 posts.
+ * follows links — a 308 on 24 posts. Tags that name a sector go to the
+ * indexable sector page, not to the noindex tag listing.
  */
 export function tagHref(tag: string): string {
-  return tag === "radar" ? "/noticias" : `/blog/tag/${encodeURIComponent(tag)}`;
+  if (tag === "radar") return "/noticias";
+  const sector = sectorDeEtiqueta(tag);
+  if (sector) return rutaDeSector(sector);
+  return `/blog/tag/${encodeURIComponent(tag)}`;
 }
