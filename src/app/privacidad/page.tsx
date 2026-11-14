@@ -105,8 +105,10 @@ export default function PrivacyPage() {
           <h2>Analítica</h2>
           <p>
             Las visitas se cuentan con Vercel Web Analytics, que da métricas agregadas sin cookies
-            y sin datos personales. No hay más medición: tu email solo se usa para enviarte la
-            newsletter y no se comparte con Meta ni con ninguna plataforma publicitaria.
+            y sin datos personales. Algunas acciones —confirmar la newsletter, usar la calculadora
+            o una herramienta— también se cuentan como eventos, igual de agregados y sin cookies.
+            No hay más medición: tu email solo se usa para enviarte la newsletter y no se comparte
+            con Meta ni con ninguna plataforma publicitaria.
           </p>
         </Prose>
       </div>
