@@ -313,6 +313,36 @@ export function paginaJsonLd(pagina: { path: string; name: string; description: 
 }
 
 /**
+ * A YouTube video as `VideoObject`. Every required field must be supplied by
+ * the author (or derived from the video id: `embedUrl` and `contentUrl`).
+ * `duration` and `transcript` are omitted when they are not passed: a guessed
+ * value would be a false statement in machine-readable form.
+ */
+export function videoObjectJsonLd(video: {
+  name: string;
+  description: string;
+  thumbnailUrl: string;
+  uploadDate: string;
+  embedUrl: string;
+  contentUrl: string;
+  duration?: string;
+  transcript?: string;
+}): Json {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: video.name,
+    description: video.description,
+    thumbnailUrl: absoluta(video.thumbnailUrl),
+    uploadDate: fechaConZona(video.uploadDate),
+    embedUrl: video.embedUrl,
+    contentUrl: video.contentUrl,
+    ...(video.duration ? { duration: video.duration } : {}),
+    ...(video.transcript ? { transcript: video.transcript } : {}),
+  };
+}
+
+/**
  * /sobre-mi: a `ProfilePage` whose `mainEntity` is the shared Person, with its
  * own url (until 17-oct-2026 the page only had the Person, pointing at the home).
  */

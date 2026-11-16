@@ -10,12 +10,13 @@
  * Seeded on 17-oct-2026 with the date of the last commit that touched each page.
  */
 export const REVISADO = {
-  "/herramientas": "2026-10-16",
+  "/herramientas": "2026-11-16",
   "/videos": "2026-10-15",
   "/sobre-mi": "2026-10-16",
   "/trabaja-con-nbi": "2026-10-11",
   "/herramientas/no-me-da-la-vida": "2026-10-14",
   "/herramientas/ficha-para-tu-ia": "2026-10-16",
+  "/herramientas/agente-whatsapp": "2026-11-16",
   "/privacidad": "2026-10-13",
   "/cookies": "2026-10-15",
 } as const satisfies Record<string, string>;
