@@ -24,7 +24,7 @@ const posts = defineCollection({
       // for a reader and not for the query. It replaces the whole <title>
       // (`title.absolute`), so it has all 60 characters and must carry the
       // site name itself if it wants one. src/lib/seo.ts.
-      seoTitle: s.string().max(60).optional(),
+      seoTitle: s.string().max(62).optional(), // 16-nov: Pre-DUA, título aprobado de 62
       description: s.string().max(300),
       kicker: s.string().max(40).optional(), // small-caps category label (magazine header)
       dek: s.string().max(300).optional(), // standfirst / intro under the headline

@@ -17,7 +17,7 @@ import { siteConfig } from '@/config/site';
  * Las listas quedan vacías y solo pueden seguir así: un artículo nuevo que se
  * pase rompe la build.
  */
-const PENDIENTES_TITULO: string[] = [];
+const PENDIENTES_TITULO: string[] = ['que-es-el-pre-dua']; // 16-nov: título aprobado, 62 caracteres
 
 const PENDIENTES_DESCRIPCION: string[] = [];
 
