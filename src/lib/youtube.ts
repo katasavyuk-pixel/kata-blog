@@ -6,6 +6,15 @@ const YOUTUBE_FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${
 const YOUTUBE_REFRESH_SECONDS = 15 * 60;
 const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{6,}$/;
 
+/** Watch URL and privacy-enhanced embed, derived from the video id only. */
+export function urlsDeVideoYoutube(id: string): { embedUrl: string; contentUrl: string } {
+  return {
+    embedUrl: `https://www.youtube-nocookie.com/embed/${id}`,
+    contentUrl: `https://www.youtube.com/watch?v=${id}`,
+  };
+}
+
+
 const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "@_",

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { REGALO } from "@/config/regalo";
+import { REGALO_AGENTE_WHATSAPP } from "@/config/regalo-agente-whatsapp";
 import { Estado } from "@/components/sistema/estado";
 import { getPublishedResources } from "@/lib/resources";
 import { resolveLibraryItem, type ResolvedLibraryItem } from "@/lib/library";
@@ -82,6 +83,7 @@ export default async function ResourcesPage({
           items: [
             { name: "No me da la vida", url: "/herramientas/no-me-da-la-vida" },
             { name: "Tu ficha para la IA", url: REGALO.ficha.href },
+            { name: REGALO_AGENTE_WHATSAPP.titulo, url: REGALO_AGENTE_WHATSAPP.href },
             ...gratuitas.map((item) => ({ name: item.title, url: item.href ?? "/herramientas" })),
           ],
         })}
@@ -124,6 +126,18 @@ export default async function ResourcesPage({
               Abrir la ficha
             </Link>
             <p className="mt-3 text-xs text-faint">Gratis · sin email y sin cuenta</p>
+          </article>
+
+          <article className="flex h-full flex-col border-t border-border pt-4">
+            <p className="font-sans text-[0.8125rem] text-muted">Plantilla · con el alta en la newsletter</p>
+            <h3 className="mt-2 font-display text-h3 font-semibold leading-tight text-fg">{REGALO_AGENTE_WHATSAPP.titulo}</h3>
+            <p className="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-muted">
+              {REGALO_AGENTE_WHATSAPP.resumen}
+            </p>
+            <Link href={REGALO_AGENTE_WHATSAPP.href} className={button}>
+              Abrir el regalo
+            </Link>
+            <p className="mt-3 text-xs text-faint">Gratis · se entrega al confirmar el alta</p>
           </article>
           {gratuitas.map((item) => (
             <article key={item.id} className="flex h-full flex-col border-t border-border pt-4">

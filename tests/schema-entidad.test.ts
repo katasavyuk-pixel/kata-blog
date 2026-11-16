@@ -82,7 +82,8 @@ describe('los listados y las páginas sueltas', () => {
       'src/app/glosario/page.tsx', 'src/app/marketplace/page.tsx', 'src/app/bitacora/page.tsx', 'src/app/videos/page.tsx',
       'src/app/herramientas/page.tsx', 'src/app/trabaja-con-nbi/page.tsx', 'src/app/privacidad/page.tsx',
       'src/app/cookies/page.tsx', 'src/app/herramientas/no-me-da-la-vida/page.tsx',
-      'src/app/herramientas/ficha-para-tu-ia/page.tsx', 'src/app/sobre-mi/page.tsx',
+      'src/app/herramientas/ficha-para-tu-ia/page.tsx', 'src/app/herramientas/agente-whatsapp/page.tsx',
+      'src/app/sobre-mi/page.tsx',
       // /guias y /reflexiones, a través del componente que las pinta.
       'src/components/content/estante-pagina.tsx',
     ];

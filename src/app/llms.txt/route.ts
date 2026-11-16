@@ -40,7 +40,7 @@ const DESCRIPTIONS: Record<string, string> = {
   "/noticias":
     "lo importante del día en IA, tecnología y negocio, filtrado y verificado contra su fuente por un pipeline en automático. Son resúmenes hechos con IA que el autor no revisa antes de publicarse, y no llevan su firma.",
   "/herramientas":
-    "herramientas listas para usar — curso, calculadora de costes, planificador, prompt de auditoría GEO y checklist de datos logísticos. Los descargables se entregan por email con doble opt-in.",
+    "herramientas listas para usar — curso, calculadora de costes, planificador, texto del agente de WhatsApp, prompt de auditoría GEO y checklist de datos logísticos. Los descargables se entregan por email con doble opt-in.",
   "/empieza-aqui":
     "lecciones gratuitas en orden, con widgets interactivos (tokenizador, sandbox de temperatura, calculadora de costes). Sin registro.",
   "/glosario":
@@ -110,6 +110,10 @@ export function GET() {
 
   const [primera, ...resto] = CONTENT_ORDER;
 
+  const regaloWhatsapp =
+    `- [Agente recepcionista para WhatsApp](${url}/herramientas/agente-whatsapp): texto para pegar en el agente de IA de WhatsApp Business y una página de pasos. Se entrega al confirmar el alta en la newsletter.`;
+
+
   const body = `# ${siteConfig.name}
 
 > ${siteConfig.tagline} — blog y newsletter en español sobre IA aplicada a un negocio: cada sistema documentado con sus números y con lo que se rompió, un curso interactivo de IA y las Noticias de IA cada día. Autor: ${siteConfig.author.alternateName}, fundador de NBI (Nexora Business Intelligence).
@@ -118,7 +122,7 @@ Este sitio publica en español. Su audiencia es ${siteConfig.audience}: cada sis
 
 ## Contenido
 
-${[line(primera), ...zonas, ...sectorLines, ...resto.map(line)].filter(Boolean).join("\n")}
+${[line(primera), ...zonas, ...sectorLines, ...resto.map(line), regaloWhatsapp].filter(Boolean).join("\n")}
 ${newestPost ? `- [Último artículo: ${newestPost.title}](${url}${newestPost.permalink}): ${newestPost.description}\n` : ""}
 ${
   ACTIVOS.length > 0

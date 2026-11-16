@@ -85,6 +85,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/trabaja-con-nbi", REVISADO["/trabaja-con-nbi"]),
     entry("/herramientas/no-me-da-la-vida", REVISADO["/herramientas/no-me-da-la-vida"]),
     entry(REGALO.ficha.href, REVISADO["/herramientas/ficha-para-tu-ia"]),
+    entry("/herramientas/agente-whatsapp", REVISADO["/herramientas/agente-whatsapp"]),
     entry("/privacidad", REVISADO["/privacidad"]),
     entry("/cookies", REVISADO["/cookies"]),
   ];

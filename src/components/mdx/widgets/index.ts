@@ -16,6 +16,7 @@ import { Term } from "./term";
 import { TokenizerPlayground } from "./tokenizer-playground";
 import { WidgetFrame } from "./widget-frame";
 import { YouTubeEmbed } from "./youtube-embed";
+import { VideoYouTube } from "./video-youtube";
 import { NoMeDaLaVida } from "@/components/tools/no-me-da-la-vida";
 import { Secuencia } from "@/components/newsletter/secuencia";
 import {
@@ -61,6 +62,7 @@ export const widgets = {
   TokenizerPlayground,
   WidgetFrame,
   YouTubeEmbed,
+  VideoYouTube,
   NoMeDaLaVida,
   // Phase 4 kit — see src/components/pieza/.
   Pieza,
