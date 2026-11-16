@@ -19,7 +19,7 @@ export const CATALOGO = {
     owner: "katasavyuk-pixel",
     name: "skills-negocio-pequeno",
     /** Tag the fichas describe. */
-    ref: "v2.1.0",
+    ref: "v2.1.1",
   },
   /** `name` of .claude-plugin/marketplace.json: what follows the `@` on install. */
   marketplace: "kata-ivanovych",
