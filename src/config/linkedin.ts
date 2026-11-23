@@ -1,28 +1,111 @@
 /**
  * Kata's LinkedIn posts shown on the site (2026-10-15: «publicaciones de
- * LinkedIn, sí, pero que no sea con vídeo vertical»). Read off his profile that
- * day, with his permission. Shown as cards in the site's own style, never the
- * LinkedIn iframe: the embed sets LinkedIn's cookies before anyone clicks, and
- * it cannot take the brand's type or colour.
+ * LinkedIn, sí, pero que no sea con vídeo vertical»). Extended on 2026-11-23
+ * with posts from 2026-10-17 to 2026-11-23, taken from Buffer's record of his
+ * profile. Shown as cards in the site's own style, never the LinkedIn iframe:
+ * the embed sets LinkedIn's cookies before anyone clicks, and it cannot take
+ * the brand's type or colour.
  *
  * `extracto` is his own words, shortened, without emoji. What is left out on
  * purpose (tests/linkedin.test.ts keeps it out):
  * - the vertical video of 4 Sept;
+ * - the 2026-10-20 post (company plural «leemos» and it names the town, which
+ *   the blog never does);
  * - posts in the plural of a company («en NBI observamos», «estamos
  *   construyendo», «tenemos una solución», «dirijo una empresa»):
  *   the site's voice is first person singular on every surface.
  *
- * The id of a LinkedIn activity carries its date (milliseconds in the bits
- * above the 22nd): the test checks `fecha` against it.
+ * The video posts kept (23 Oct, 6 Nov, 10 Nov at 4:5, 29 Oct at 16:9) are not
+ * vertical 9:16 like the 4 Sept one. LinkedIn post ids carry their date
+ * (milliseconds in the bits above the 22nd): the test checks `fecha` against it.
  */
 export type PublicacionLinkedIn = {
-  /** The number in urn:li:activity:<id>. A string: it does not fit in a JS number. */
+  /** The number in urn:li:<type>:<id>. A string: it does not fit in a JS number. */
   id: string;
+  /** LinkedIn post URLs accept these URN types; Buffer and the post's own link give share/ugcPost ids, all carrying the date the same way (ms above bit 22). */
+  urn?: "activity" | "share" | "ugcPost";
   fecha: string;
   extracto: string;
 };
 
 export const PUBLICACIONES_LINKEDIN: readonly PublicacionLinkedIn[] = [
+  {
+    urn: "share",
+    id: "7530548389550202882",
+    fecha: "2026-11-23",
+    extracto:
+      "¿Sabes cuántos programas pueden entrar en tu correo sin escribir tu contraseña? Yo tampoco lo sabía hasta que me puse a mirarlo. Mi opinión: el problema no es la contraseña. Es ese permiso que diste una vez a un proveedor o a una aplicación y que sigue ahí meses después.",
+  },
+  {
+    urn: "share",
+    id: "7529461143132725250",
+    fecha: "2026-11-20",
+    extracto:
+      "Doce reseñas de Google sin contestar y un viernes que nunca llega. Cómo usaría yo la IA para esto: no para soltar «¡Gracias por tu reseña!» doce veces, sino para preparar un borrador distinto para cada reseña y dejarte a ti lo delicado.",
+  },
+  {
+    urn: "ugcPost",
+    id: "7529098755049119744",
+    fecha: "2026-11-19",
+    extracto:
+      "Tu programa de gestión no crea datos. Los recibe. Quien los crea es una persona que abre un correo, lee un pedido escrito en prosa y lo teclea en una pantalla. El inbox ya es un sistema. Solo que no tiene dueño, no está documentado y nadie lo mide.",
+  },
+  {
+    urn: "ugcPost",
+    id: "7528800604840808448",
+    fecha: "2026-11-18",
+    extracto:
+      "La primera automatización de una empresa casi nunca debería ser la más espectacular. Debería ser la que puedas describir sin ambigüedad, medir durante unas semanas y corregir si algo sale mal.",
+  },
+  {
+    urn: "ugcPost",
+    id: "7525881525452574720",
+    fecha: "2026-11-10",
+    extracto:
+      "El 74 % de las grandes empresas en España ya usa IA. ¿Y las micropymes? Solo el 21 %. Mi lectura: el problema no es la tecnología, es que nadie se la ha explicado a la pyme con su idioma y sus números.",
+  },
+  {
+    urn: "ugcPost",
+    id: "7524437647688208384",
+    fecha: "2026-11-06",
+    extracto:
+      "Ayer Wall Street se dejó 3,2 billones de dólares en un solo día. La IA no se va a parar… pero sí se acaba la fase de «invertir sin mirar». Las empresas que ganan ahora no son las que compran humo, sino las que usan la IA en procesos reales.",
+  },
+  {
+    urn: "ugcPost",
+    id: "7521575065281527808",
+    fecha: "2026-10-29",
+    extracto:
+      "Amazon ha advertido a sus ingenieros sobre convertir el consumo de IA en un objetivo. Usar más no significa necesariamente trabajar mejor. Yo miraría tres cosas: el tiempo total, incluida la revisión; el coste; y la calidad del resultado.",
+  },
+  {
+    urn: "share",
+    id: "7520397850464256000",
+    fecha: "2026-10-26",
+    extracto:
+      "Un economista de Apollo dice que la IA ha dado «cero retorno financiero» a las grandes empresas de EE. UU. fuera de la tecnología. Yo no sé si acierta. Lo que sí sé es que, sin medir antes y después, nadie puede saberlo de tu negocio.",
+  },
+  {
+    urn: "ugcPost",
+    id: "7519396660758691840",
+    fecha: "2026-10-23",
+    extracto:
+      "Un grupo comprometió la app de copias de seguridad de ConnectWise. Con su llave probó el acceso a más de 2.250 cuentas. Ojo con la cifra: son intentos, no empresas hackeadas. No usaron la contraseña de nadie. Usaron la llave de la aplicación.",
+  },
+  {
+    urn: "share",
+    id: "7518955252931371008",
+    fecha: "2026-10-22",
+    extracto:
+      "Walmart deja que un agente de IA compre por ti. Amazon lo bloquea. Si el agente de tu cliente llega a tu tienda, ¿puede leer tu catálogo, tus precios y tu stock? Yo no sé cuál de las dos apuestas gana. Lo que sí sé es que no decidir también es una decisión.",
+  },
+  {
+    urn: "share",
+    id: "7517177837162758144",
+    fecha: "2026-10-17",
+    extracto:
+      "El CEO de Replit dice que su empresa es ahora «autónoma». Lo interesante no es la etiqueta. Es el reparto. La máquina prepara. La persona decide. Un agente sin alguien que revise lo que propone no es una empresa autónoma. Es un lío más rápido.",
+  },
   {
     id: "7516523663756566531",
     fecha: "2026-10-15",
@@ -61,6 +144,6 @@ export const PUBLICACIONES_LINKEDIN: readonly PublicacionLinkedIn[] = [
   },
 ];
 
-export function urlDePublicacion(publicacion: Pick<PublicacionLinkedIn, "id">): string {
-  return `https://www.linkedin.com/feed/update/urn:li:activity:${publicacion.id}/`;
+export function urlDePublicacion(publicacion: Pick<PublicacionLinkedIn, "id" | "urn">): string {
+  return `https://www.linkedin.com/feed/update/urn:li:${publicacion.urn ?? "activity"}:${publicacion.id}/`;
 }
