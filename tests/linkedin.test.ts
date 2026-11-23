@@ -33,10 +33,27 @@ describe('LinkedIn en el sitio', () => {
     assert.ok(!PUBLICACIONES_LINKEDIN.some((p) => p.id === '7501663818146594816'));
   });
 
+  test('la publicación del 20 de octubre no está', () => {
+    assert.ok(!PUBLICACIONES_LINKEDIN.some((p) => p.id === '7518351451333636097'));
+  });
+
+  test('ningún extracto menciona Irún', () => {
+    for (const p of PUBLICACIONES_LINKEDIN) {
+      assert.doesNotMatch(p.extracto, /Irún/i, p.id);
+    }
+  });
+
   test('cada tarjeta lleva a la publicación en LinkedIn', () => {
     assert.equal(
       urlDePublicacion({ id: '7516523663756566531' }),
       'https://www.linkedin.com/feed/update/urn:li:activity:7516523663756566531/',
+    );
+  });
+
+  test('usa el tipo de URN real de la publicación', () => {
+    assert.equal(
+      urlDePublicacion({ id: '7530548389550202882', urn: 'share' }),
+      'https://www.linkedin.com/feed/update/urn:li:share:7530548389550202882/',
     );
   });
 });
