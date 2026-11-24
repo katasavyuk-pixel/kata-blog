@@ -26,8 +26,22 @@ describe('el mural de la portada', () => {
     const skills = columnas.find((c) => c.id === 'skills');
     assert.deepEqual(skills?.piezas.map((p) => p.id), ACTIVOS.map((a) => a.id));
     const bitacora = columnas.find((c) => c.id === 'bitacora');
-    assert.equal(bitacora?.total, entradasBitacora.length);
-    assert.equal(bitacora?.piezas[0].href, entradasBitacora[0].permalink);
+    const firmadas = leerPortada().firmadas;
+    const enlaces = new Set(entradasBitacora.flatMap((entrada) => entrada.enlace.startsWith("/blog/") ? [entrada.enlace.slice("/blog/".length).split(/[?#]/)[0]] : []));
+    const postsNuevos = firmadas.filter((post) => !enlaces.has(post.slug));
+    assert.equal(bitacora?.total, entradasBitacora.length + postsNuevos.length);
+    assert.equal(bitacora?.piezas[0].id, firmadas[0].slug, "la publicación más reciente encabeza la bitácora real.");
+    assert.ok(bitacora?.piezas.some((pieza) => pieza.id === firmadas[0].slug), "la publicación más reciente aparece en la columna.");
+  });
+
+  test('combina entradas y publicaciones por día, con publicaciones primero en empate', () => {
+    const portada = leerPortada();
+    const ultimaEntrada = entradasBitacora[0];
+    const postMismoDia = { ...portada.firmadas[0], slug: "post-mismo-dia", permalink: "/blog/post-mismo-dia", date: `${ultimaEntrada.fecha.slice(0, 10)}T12:00:00.000Z`, title: "Post del mismo día" };
+    const bitacora = columnasDelMural({ ...portada, firmadas: [postMismoDia] }).find((columna) => columna.id === "bitacora");
+    assert.equal(bitacora?.piezas[0].id, "post-mismo-dia");
+    assert.equal(bitacora?.piezas[0].kicker, `${new Date(postMismoDia.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", timeZone: "UTC" }).replace(".", "")} · Publicado`);
+    assert.equal(bitacora?.total, entradasBitacora.length + 1);
   });
 
   test('cada skill lleva su línea, y su foto si la tiene existe', () => {

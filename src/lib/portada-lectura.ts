@@ -27,6 +27,11 @@ export function leerPortada(hoy: string = new Date().toISOString()): PortadaLeid
     noticias: getNoticias(),
     reflexiones: getPostsByEstante("reflexiones"),
     guias: getPostsByEstante("guias"),
+    otras: [
+      ...getPostsByEstante("sistemas"),
+      ...getPostsByEstante("pruebas"),
+      ...getPostsByEstante("notas"),
+    ],
     sistemas: getPostsByEstante("sistemas"),
     activos: ACTIVOS,
     destacados: activosDestacados(),
