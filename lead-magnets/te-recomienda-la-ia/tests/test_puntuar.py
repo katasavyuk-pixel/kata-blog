@@ -1,4 +1,4 @@
-"""Pruebas públicas del calculador de auditorías de visibilidad."""
+"""Pruebas públicas del calculador de medición mensual de recomendaciones."""
 
 import csv
 import json
@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "zip/auditoria-visibilidad-ia/scripts/puntuar.py"
+SCRIPT = ROOT / "zip/te-recomienda-la-ia/scripts/puntuar.py"
 HEADER = [
     "mes", "fecha", "asistente", "pregunta_id", "pregunta", "mencionado",
     "posicion", "competidores", "fuentes", "datos_correctos", "notas",
@@ -115,8 +115,8 @@ class PuntuarTest(unittest.TestCase):
             self.assertFalse(Path(directorio, "informe.md").exists())
 
     def test_ejemplo_generado_es_inventado_y_coincide_con_sus_numeros(self):
-        ejemplo = ROOT / "zip/auditoria-visibilidad-ia/ejemplos/registro-ejemplo.csv"
-        informe = ROOT / "zip/auditoria-visibilidad-ia/ejemplos/informe-ejemplo.md"
+        ejemplo = ROOT / "zip/te-recomienda-la-ia/ejemplos/registro-ejemplo.csv"
+        informe = ROOT / "zip/te-recomienda-la-ia/ejemplos/informe-ejemplo.md"
         with tempfile.TemporaryDirectory() as directorio:
             resultado = self.ejecutar(ejemplo, directorio)
             self.assertEqual(resultado.returncode, 0, resultado.stderr)
@@ -126,7 +126,18 @@ class PuntuarTest(unittest.TestCase):
             self.assertIn("inventad", ejemplo.read_text(encoding="utf-8").lower())
             self.assertIn("inventad", contenido.lower())
             self.assertEqual(salida["mes"]["puntuacion"], 28)
+            self.assertTrue(contenido.startswith("EJEMPLO con datos inventados\n\n"))
+            self.assertIn("# Medición mensual de recomendaciones en IA: Peluquería Lúa", contenido)
             self.assertEqual(generado, contenido)
+
+    def test_senal_de_baja_presencia_indica_comprobar_lectura_de_la_web(self):
+        filas = [self.fila(mencionado="no", posicion="")]
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio), directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            informe = Path(directorio, "informe.md").read_text(encoding="utf-8")
+            self.assertIn("Casi nunca sales, en ningún asistente", informe)
+            self.assertIn("Visibilidad en IA", informe)
 
 
 if __name__ == "__main__":

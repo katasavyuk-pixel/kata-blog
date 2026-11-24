@@ -61,7 +61,7 @@ export const PUENTE_POR_POST: Record<string, GuiaNbi> = {
   "recepcionista-ia-whatsapp-peluqueria": "agente",
   "responder-resenas-google-con-ia": "agente",
   "politica-de-uso-de-ia-en-la-empresa": "agente",
-  "auditoria-de-visibilidad-en-ia": "medir",
+  "te-recomienda-la-ia": "medir",
 };
 
 /** The guide's URL with the blog's UTM convention (`utm_medium=puente`). */

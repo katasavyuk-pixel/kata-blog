@@ -1,22 +1,27 @@
 ---
-name: auditoria-visibilidad-ia
-description: Mide si ChatGPT, Gemini y Perplexity recomiendan tu negocio y cómo cambia la visibilidad cada mes. Úsala cuando preguntes «¿me recomienda ChatGPT?», «no salgo en la IA», «auditoría de visibilidad en IA», «qué dice Perplexity de mi negocio» o «cada mes».
+name: te-recomienda-la-ia
+description: Mide cada mes si ChatGPT, Gemini y Perplexity nombran tu negocio y cómo cambia tu nota de recomendación. Úsala cuando preguntes «¿me recomienda ChatGPT?», «no salgo en la IA», «qué dice Perplexity de mi negocio» o «cada mes».
 license: MIT
 metadata:
   author: Kata Ivanovych
   version: "1.0.0"
 ---
 
-# Auditoría de visibilidad en IA
+# ¿Te recomienda la IA?
 
-Mide si ChatGPT, Gemini y Perplexity recomiendan tu negocio en preguntas reales de compra. Registra los resultados para comparar meses. No confundas esta medición con comprobar si una IA puede leer tu web.
+Mide cada mes si ChatGPT, Gemini y Perplexity nombran tu negocio en preguntas reales de compra. Registra los resultados para comparar meses.
+
+Dos preguntas distintas:
+- ¿Puede una IA leer mi web? Compruébalo con la skill gratuita Visibilidad en IA.
+- ¿Me recomienda la IA? Mide si te nombra con esta skill.
+- Primero que pueda leerte; luego, medir si te nombra.
 
 ## Flujo
 
 1. **Reúne los datos del negocio.** Pide el nombre exacto y sus variantes, sector, ciudad y zona, servicio estrella, tres competidores que ya conoce y web. Si existe `perfil-negocio.md` (de la skill «empezar»), léelo primero y confirma los datos con la persona.
 2. **Fija diez preguntas una sola vez.** Usa `references/preguntas-por-sector.md`, completa los campos y guarda los textos exactos en `preguntas.md`. No los cambies entre meses: si cambian, la comparación se rompe y debes decirlo en el informe.
 3. **Consulta cada asistente.** Pregunta a ChatGPT, Gemini y Perplexity. Cada pregunta va en un chat nuevo, temporal o de incógnito, o sin sesión cuando se pueda. Hazlo el mismo día, sin repreguntas, y copia la respuesta completa. Si tienes herramienta de navegador, puedes hacerlo; si no, entrega las preguntas una a una y pide que te peguen las respuestas. Nunca inventes ni simules una respuesta: deja vacía la que no hayas obtenido y cuenta que falta.
-4. **Registra las respuestas.** Añade una fila por mes, asistente y pregunta en `registro-visibilidad-ia.csv`. Sigue `references/registro.md`: marca mención, posición, competidores y dominios citados. P10 comprueba exactitud de los datos, no puntúa. La primera línea del CSV debe ser exactamente:
+4. **Registra las respuestas.** Añade una fila por mes, asistente y pregunta en `registro-recomendaciones-ia.csv`. Sigue `references/registro.md`: marca mención, posición, competidores y dominios citados. P10 comprueba exactitud de los datos, no puntúa. La nota de recomendación mide si te nombran; no mide si la web puede leerse. La primera línea del CSV debe ser exactamente:
 
    ```csv
    mes,fecha,asistente,pregunta_id,pregunta,mencionado,posicion,competidores,fuentes,datos_correctos,notas
@@ -25,7 +30,7 @@ Mide si ChatGPT, Gemini y Perplexity recomiendan tu negocio en preguntas reales 
 5. **Calcula el resultado.** Ejecuta:
 
    ```bash
-   python3 scripts/puntuar.py registro-visibilidad-ia.csv --negocio "NOMBRE" --salida informe-AAAA-MM.md
+   python3 scripts/puntuar.py registro-recomendaciones-ia.csv --negocio "NOMBRE" --salida informe-AAAA-MM.md
    ```
 
 6. **Entrega el informe.** Sigue el formato «Cómo contarlo» de abajo. Incluye el cambio frente al mes anterior, resultado por asistente, competidores que más aparecen y fuentes citadas cuando el negocio no aparece. Si no hay comparación válida, explícalo.
@@ -41,7 +46,7 @@ Cada pregunta puntúa de 0 a 3; P10 comprueba los datos y no puntúa. Las respue
 | 2 | Aparece en segundo o tercer lugar. |
 | 3 | Aparece en primer lugar. |
 
-La puntuación final se expresa sobre 100. Estas son sus cuatro bandas:
+La nota de recomendación final se expresa sobre 100. Estas son sus cuatro bandas:
 
 | Puntuación | Banda |
 |---|---|
@@ -52,7 +57,7 @@ La puntuación final se expresa sobre 100. Estas son sus cuatro bandas:
 
 ## Cómo contarlo
 
-Escribe el informe para la persona dueña del negocio, con palabras sencillas y sin tecnicismos. Empieza con una sola frase que diga la puntuación y la banda. Después cuenta qué cambió frente al mes anterior; si no hay una comparación válida, dilo claramente. Termina con cinco arreglos concretos basados en `references/arreglos.md`: cada uno debe nombrar la señal observada y explicar qué puede hacer la persona para mejorarla. No uses «GEO» ni «LLM» sin explicarlo.
+Escribe el informe para la persona dueña del negocio, con palabras sencillas y sin tecnicismos. Empieza con una sola frase que diga la nota de recomendación y la banda. Después cuenta qué cambió frente al mes anterior; si no hay una comparación válida, dilo claramente. Termina con cinco arreglos concretos basados en `references/arreglos.md`: cada uno debe nombrar la señal observada y explicar qué puede hacer la persona para mejorarla. No uses «GEO» ni «LLM» sin explicarlo.
 
 ## Lo que no hace
 

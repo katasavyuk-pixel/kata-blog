@@ -1,9 +1,9 @@
 EJEMPLO con datos inventados
 
-# Auditoría de visibilidad en IA: Peluquería Lúa
+# Medición mensual de recomendaciones en IA: Peluquería Lúa
 
 ## Resultado — 2026-11
-**28/100 · Aparece a veces**. 27 de 27 respuestas puntuables obtenidas.
+**Nota de recomendación: 28/100 · Aparece a veces**. 27 de 27 respuestas puntuables obtenidas.
 Presencia: 67 %. Posición media cuando aparece con posición registrada: 3.5.
 
 ## Por asistente
@@ -36,7 +36,6 @@ Cambio total: +11 puntos frente a 2026-10 (17/100). Cambios por asistente: chatg
 - no: 1 respuesta(s).
 
 ## Señales para los arreglos
-- P10 contiene datos incorrectos o parciales: corrige primero la ficha de Google y los datos estructurados LocalBusiness.
 - Aparecen competidores (Corte Norte destaca): compara reseñas recientes y pide reseñas tras cada trabajo.
 - Se citan fuentes sin mencionarte (directorio-ejemplo.test destaca): solicita presencia en esos directorios o medios locales.
 - Si faltan páginas que respondan a las consultas, crea una por servicio y ciudad con zona, horario e inclusiones.

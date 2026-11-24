@@ -16,7 +16,7 @@ Guarda una fila por combinación de mes, asistente y pregunta. Usa UTF-8, CSV se
 | `datos_correctos` | Solo P10: `si`, `no` o `parcial`; vacío en P01–P09. |
 | `notas` | Contexto breve, incluida la falta de respuesta. |
 
-La plantilla CSV está en `assets/registro-visibilidad-ia.plantilla.csv`. Si trabajas en papel o en una hoja, puedes usar esta tabla equivalente:
+La plantilla CSV está en `assets/registro-recomendaciones-ia.plantilla.csv`. Si trabajas en papel o en una hoja, puedes usar esta tabla equivalente:
 
 | mes | fecha | asistente | pregunta_id | pregunta | mencionado | posicion | competidores | fuentes | datos_correctos | notas |
 |---|---|---|---|---|---|---|---|---|---|---|

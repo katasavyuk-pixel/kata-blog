@@ -100,16 +100,16 @@ on conflict (slug) do update set
   published      = excluded.published;
 
 -- ---------------------------------------------------------------------------
--- Auditoría de visibilidad en IA: skill para medir recomendaciones
--- Source: lead-magnets/auditoria-visibilidad-ia/
--- Upload: auditoria-visibilidad-ia.zip → auditoria-visibilidad-ia/
+-- ¿Te recomienda la IA?: skill para medir recomendaciones
+-- Source: lead-magnets/te-recomienda-la-ia/
+-- Upload: te-recomienda-la-ia.zip → te-recomienda-la-ia/
 -- ---------------------------------------------------------------------------
 insert into public.resources (slug, title, description, file_path, requires_email, published)
 values (
-  'auditoria-visibilidad-ia',
-  'Auditoría de visibilidad en IA: la skill para medir si te recomiendan',
-  'Skill con diez preguntas fijas, rúbrica, registro CSV y script local para medir si ChatGPT, Gemini y Perplexity recomiendan tu negocio mes a mes.',
-  'auditoria-visibilidad-ia/auditoria-visibilidad-ia.zip',
+  'te-recomienda-la-ia',
+  '¿Te recomienda la IA? La skill para medir cada mes si te nombran',
+  'Skill con diez preguntas fijas, rúbrica, registro CSV y script local para medir si ChatGPT, Gemini y Perplexity nombran tu negocio mes a mes.',
+  'te-recomienda-la-ia/te-recomienda-la-ia.zip',
   true,
   true
 )

@@ -1,0 +1,16 @@
+¿TE RECOMIENDA LA IA?
+
+Esta medición mensual registra si ChatGPT, Gemini y Perplexity nombran tu negocio y cómo cambia el resultado de un mes a otro.
+
+Dos preguntas distintas:
+- ¿Puede una IA leer mi web? Compruébalo con la skill gratuita Visibilidad en IA.
+- ¿Me recomienda la IA? Mide si te nombra con este recurso.
+- Primero que pueda leerte; luego, medir si te nombra.
+
+Tres formas de usarlo:
+
+1. Con un agente que entiende Agent Skills (Claude Code, Claude app, Codex, Cursor…): copia la carpeta te-recomienda-la-ia/ en la carpeta de skills de tu agente. Sigue SKILL.md.
+2. Con ChatGPT u otro chat sin skills: pega SKILL.md como instrucciones y adjunta las plantillas. Si no puede ejecutar Python, calcula a mano con las referencias, en especial references/puntuacion.md.
+3. A mano, con una hoja de cálculo: abre assets/registro-recomendaciones-ia.plantilla.csv y registra una fila por asistente y pregunta.
+
+La rutina tarda unos 30 minutos al mes. No promete que tu negocio aparezca ni que ocupe una posición. Los archivos de ejemplo contienen datos inventados. No son datos de negocios reales.

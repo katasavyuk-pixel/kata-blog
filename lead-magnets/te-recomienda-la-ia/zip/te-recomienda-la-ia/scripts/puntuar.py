@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Calcula una serie mensual reproducible de visibilidad en asistentes de IA."""
+"""Calcula una serie mensual reproducible de recomendaciones en asistentes de IA."""
 
 import argparse
 import csv
@@ -135,8 +135,8 @@ def generar_informe(filas, negocio, mes):
             fuentes_ausencia.update(dominios)
     p10 = [f for f in filas if f["mes"] == mes and f["pregunta_id"] == "P10"]
     p10_respuestas = Counter(f["datos_correctos"].strip().lower() or "sin dato" for f in p10)
-    lineas = [f"# Auditoría de visibilidad en IA: {negocio}", "", f"## Resultado — {mes}",
-              f"**{resumen['puntuacion']}/100 · {resumen['banda']}**. {resumen['respuestas_obtenidas']} de 27 respuestas puntuables obtenidas.",
+    lineas = [f"# Medición mensual de recomendaciones en IA: {negocio}", "", f"## Resultado — {mes}",
+              f"**Nota de recomendación: {resumen['puntuacion']}/100 · {resumen['banda']}**. {resumen['respuestas_obtenidas']} de 27 respuestas puntuables obtenidas.",
               f"Presencia: {resumen['presencia']} %. Posición media cuando aparece con posición registrada: {resumen['posicion_media'] if resumen['posicion_media'] is not None else 'sin datos'}.", "",
               "## Por asistente"]
     for asistente, datos in resumen["por_asistente"].items():
@@ -155,9 +155,7 @@ def generar_informe(filas, negocio, mes):
     lineas.extend(["", "## Señales para los arreglos"])
     senales = []
     if resumen["presencia"] < 50:
-        senales.append("La presencia es baja: revisa Perfil de Empresa de Google y páginas citables para cada servicio y zona.")
-    if any(estado in p10_respuestas for estado in ("no", "parcial")):
-        senales.append("P10 contiene datos incorrectos o parciales: corrige primero la ficha de Google y los datos estructurados LocalBusiness.")
+        senales.append("Casi nunca sales, en ningún asistente: comprueba si la IA puede leer tu web con la skill gratuita Visibilidad en IA.")
     if competidores:
         senales.append(f"Aparecen competidores ({competidores.most_common(1)[0][0]} destaca): compara reseñas recientes y pide reseñas tras cada trabajo.")
     if fuentes_ausencia:
@@ -171,7 +169,7 @@ def generar_informe(filas, negocio, mes):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Puntúa registros mensuales de visibilidad en IA.")
+    parser = argparse.ArgumentParser(description="Calcula la nota de recomendación mensual en asistentes de IA.")
     parser.add_argument("csv", type=Path, help="ruta al registro CSV")
     parser.add_argument("--negocio", required=True, help="nombre exacto del negocio")
     parser.add_argument("--salida", required=True, type=Path, help="ruta del informe Markdown")
