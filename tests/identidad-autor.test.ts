@@ -37,14 +37,15 @@ describe('identidad del autor', () => {
   test('cada artículo escrito a mano apunta a ese mismo nodo como autor, y la página lo lleva', () => {
     // Hasta el 13-oct-2026 el autor de un artículo era un `Person` suelto, solo
     // con el nombre: el nodo con `sameAs` existía únicamente en la home, y nada
-    // unía el artículo con la persona que lo firma.
+    // unía el artículo con la persona que lo firma. Desde el 24-nov-2026 el
+    // publisher de un artículo escrito a mano es Nexora Business Intelligence.
     const person = personJsonLd() as Record<string, unknown>;
     const articulo = articleJsonLd({
       title: 't', description: 'd', date: '2026-10-13', formato: 'nota', tags: [], permalink: '/blog/x', metadata: {},
     }) as Record<string, Record<string, unknown>>;
     assert.equal(articulo.author['@id'], person['@id']);
     assert.equal(articulo.author.name, PERSONA.name);
-    assert.equal(articulo.publisher['@id'], person['@id']);
+    assert.equal(articulo.publisher['@id'], 'https://ianexora.com/#organization');
     assert.match(source('src/app/blog/[slug]/page.tsx'), /articleJsonLd\(post\),\s*personJsonLd\(\),/);
   });
 
@@ -74,21 +75,20 @@ describe('identidad del autor', () => {
       // 13-oct-2026: precios de la calculadora releídos, y las dos proporciones del texto con ellos.
       // 15-oct-2026: releídos otra vez, sin cambios; la fecha va con la de la tabla.
       ['content/posts/cuanto-cuesta-la-ia.mdx', '/precios', '2026-10-15'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/agentes/correo', '2026-11-13'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/agentes/correo', '2026-11-24'],
       // 11-oct-2026: el artículo del TMS, reencuadrado (A7 del diagnóstico AEO), apunta a las guías y al servicio vigentes.
-      // 9-nov-2026: actualización SEO (fila 9): enlaces a /transporte y /transporte-aduanas-irun.
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/guias/errores-al-teclear-pedidos', '2026-11-13'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/guias/ocr-o-ia-para-leer-pedidos', '2026-11-13'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/calculadora-coste-tareas-repetitivas', '2026-11-13'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/servicios/diagnostico-de-procesos', '2026-11-13'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/transporte', '2026-11-13'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/transporte-aduanas-irun', '2026-11-13'],
-      ['content/posts/que-es-un-agente.mdx', '/guias/que-es-un-agente-de-ia', '2026-10-11'],
+      // 24-nov-2026: se retiran del blog las menciones y el enlace a /transporte-aduanas-irun.
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/guias/errores-al-teclear-pedidos', '2026-11-24'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/guias/ocr-o-ia-para-leer-pedidos', '2026-11-24'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/calculadora-coste-tareas-repetitivas', '2026-11-24'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/servicios/diagnostico-de-procesos', '2026-11-24'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/transporte', '2026-11-24'],
+      ['content/posts/que-es-un-agente.mdx', '/guias/que-es-un-agente-de-ia', '2026-11-24'],
       // 9-nov-2026: revisión del glosario / RAG (fila 7).
-      ['content/posts/que-es-rag.mdx', '/guias/que-es-un-agente-de-ia', '2026-11-09'],
+      ['content/posts/que-es-rag.mdx', '/guias/que-es-un-agente-de-ia', '2026-11-24'],
       ['content/posts/medir-un-sistema.mdx', '/guias/como-medir-si-una-automatizacion-funciona', '2026-10-11'],
-      ['content/posts/por-que-hago-esto.mdx', '/consultoria-ia-gipuzkoa', '2026-11-13'],
-      ['content/posts/antes-del-tms-tu-inbox.mdx', '/consultoria-ia-gipuzkoa', '2026-11-13'],
+      ['content/posts/por-que-hago-esto.mdx', '/consultoria-ia-gipuzkoa', '2026-11-24'],
+      ['content/posts/antes-del-tms-tu-inbox.mdx', '/consultoria-ia-gipuzkoa', '2026-11-24'],
       ['content/posts/que-hace-y-que-no-hace-un-asistente-de-whatsapp-en-una-inmobiliaria.mdx', '/inmobiliarias', '2026-11-13'],
     ];
     for (const [file, ruta, fecha] of enlaces) {

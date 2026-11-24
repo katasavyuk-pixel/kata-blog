@@ -39,7 +39,7 @@ describe('LinkedIn en el sitio', () => {
 
   test('ningún extracto menciona Irún', () => {
     for (const p of PUBLICACIONES_LINKEDIN) {
-      assert.doesNotMatch(p.extracto, /Irún/i, p.id);
+      assert.doesNotMatch(p.extracto, /ir[uú]n/i, p.id);
     }
   });
 

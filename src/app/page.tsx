@@ -3,7 +3,7 @@ import { Hero } from "@/components/home/hero";
 import { Portada } from "@/components/portada/portada";
 import { JsonLd } from "@/components/ui/json-ld";
 import { TITULO_HOME, TITULO_HOME_TARJETA, feedAlternates, siteConfig, withOpenGraph } from "@/config/site";
-import { websiteJsonLd, personJsonLd } from "@/lib/jsonld";
+import { websiteJsonLd, personJsonLd, organizationJsonLd } from "@/lib/jsonld";
 import { leerPortada } from "@/lib/portada-lectura";
 
 /**
@@ -40,7 +40,7 @@ export default function Home() {
   const portada = leerPortada();
   return (
     <>
-      <JsonLd data={[websiteJsonLd(), personJsonLd()]} />
+      <JsonLd data={[websiteJsonLd(), personJsonLd(), organizationJsonLd()]} />
       <Portada portada={portada} cabecera={<Hero portada={portada} />} />
     </>
   );

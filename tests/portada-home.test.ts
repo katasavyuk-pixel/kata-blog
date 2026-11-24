@@ -303,7 +303,7 @@ describe('la home es la portada', () => {
 
   test('la página es el hero y la portada, con su canónica y sus datos de autor', () => {
     assert.match(pagina, /const portada = leerPortada\(\);[\s\S]*<Portada portada=\{portada\} cabecera=\{<Hero portada=\{portada\} \/>\} \/>/);
-    assert.match(pagina, /<JsonLd data=\{\[websiteJsonLd\(\), personJsonLd\(\)\]\} \/>/);
+    assert.match(pagina, /<JsonLd data=\{\[websiteJsonLd\(\), personJsonLd\(\), organizationJsonLd\(\)\]\} \/>/);
     assert.match(pagina, /canonical: "\/"/);
     assert.doesNotMatch(componente, /<Hero\b|<h1\b/, 'la promesa la pone el hero, una vez.');
     assert.match(componente, /source="home-regalo"/);

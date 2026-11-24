@@ -11,6 +11,8 @@ export type GlossaryEntry = {
   updated: string;
   /** The term inside a sentence, with its article: «Qué es un token en IA». */
   enFrase: string;
+  /** Extra related posts, after `relatedSlug`, shown on the glossary page. */
+  moreSlugs?: readonly string[];
 };
 
 export const glossary: Record<string, GlossaryEntry> = {
@@ -18,7 +20,8 @@ export const glossary: Record<string, GlossaryEntry> = {
     title: "Token",
     def: "La unidad mínima que lee un modelo de lenguaje: un trozo de texto (palabra, fragmento o signo), no una letra. Con tokens se mide lo que pagas y lo que cabe en la ventana de contexto.",
     relatedSlug: "que-es-un-token",
-    updated: "2026-11-09",
+    moreSlugs: ["cuanto-cuesta-la-ia"],
+    updated: "2026-11-24",
     enFrase: "un token",
   },
   embedding: {
@@ -44,7 +47,8 @@ export const glossary: Record<string, GlossaryEntry> = {
     title: "Agente",
     def: "Un prompt que no se queda quieto: repite un bucle de pasos y en cada vuelta decide qué hacer con sus herramientas. Más autonomía son más decisiones propias, y cada una es un punto donde puede desviarse.",
     relatedSlug: "que-es-un-agente",
-    updated: "2026-11-09",
+    moreSlugs: ["cuanto-cuesta-un-agente-de-ia"],
+    updated: "2026-11-24",
     enFrase: "un agente",
   },
   hallucination: {
