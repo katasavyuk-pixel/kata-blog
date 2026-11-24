@@ -18,8 +18,9 @@ import { ACTIVOS } from "@/lib/catalogo";
 import { formatDateShort } from "@/lib/format";
 import type { PortadaLeida } from "@/lib/portada-lectura";
 import { allPosts, type Post } from "@/lib/posts";
-import { getPublishedResources, type Resource } from "@/lib/resources";
-import { postDeRecurso, recursosDePosts } from "@/lib/portada-recursos";
+import type { Resource } from "@/lib/resources";
+import { postDeRecurso } from "@/lib/portada-recursos";
+import { datosRegaloDeLaSemana } from "@/lib/regalo-semana";
 import { esNuevo, tituloEnFrase } from "@/lib/portada-texto";
 import { getYouTubeVideos } from "@/lib/youtube";
 import { ultimaEntrada } from "@/lib/bitacora";
@@ -48,24 +49,7 @@ const MAX_FIRMADAS = 7;
 
 export async function Portada({ portada, cabecera }: { portada: PortadaLeida; cabecera: ReactNode }) {
   const { primera, breves, firmadas: piezasFirmadas } = portada;
-  let recursos: Resource[];
-  try {
-    const publicados = await getPublishedResources();
-    recursos = publicados.length > 0 ? publicados : recursosDePosts(allPosts);
-  } catch {
-    recursos = recursosDePosts(allPosts);
-  }
-  const recursoDestacado = recursos[0];
-  if (!recursos.some((recurso) => recurso.slug === REGALO.hoja.slug)) {
-    recursos = [...recursos, {
-      id: REGALO.hoja.slug,
-      slug: REGALO.hoja.slug,
-      title: REGALO.titulo,
-      description: REGALO.resumen,
-      requires_email: true,
-      download_count: 0,
-    }];
-  }
+  const { regalo: recursoDestacado, recursos } = await datosRegaloDeLaSemana();
   const activos = ACTIVOS;
   // Signed pieces, whether a triad holds them or not, newest first.
   const firmadas = [...piezasFirmadas]
@@ -191,11 +175,12 @@ function Puerta({
   );
 }
 
-function ImagenPost({ post, sizes }: { post?: Post; sizes: string }) {
+function ImagenPost({ post, sizes, imagen }: { post?: Post; sizes: string; imagen?: typeof REGALO.imagen }) {
+  const cover = post?.cover ?? imagen;
   return (
     <div className="relative aspect-video overflow-hidden bg-surface-2">
-      {post?.cover ? (
-        <Image src={post.cover.src} alt={post.coverAlt ?? ""} fill sizes={sizes} className="object-cover" />
+      {cover ? (
+        <Image src={cover.src} alt={post?.cover ? post.coverAlt ?? "" : imagen?.alt ?? ""} fill sizes={sizes} className="object-cover" />
       ) : (
         <span className="flex size-full items-center justify-center font-sans text-label text-muted">
           {post ? FORMATOS[post.formato] : "Gratis"}
@@ -235,7 +220,7 @@ function RegaloSemana({ recurso, post }: { recurso: Resource; post?: Post }) {
     <section aria-labelledby="regalo-semana" className="mt-8 border border-border bg-surface p-4 sm:p-5">
       <div className="grid gap-4 md:grid-cols-4 md:items-center">
         <Link href={post?.permalink ?? "/#newsletter"} aria-label={post?.title ?? recurso.title} className="gift-thumbnail-float block md:col-span-1">
-          <ImagenPost post={post} sizes="(min-width: 1024px) 24vw, 100vw" />
+          <ImagenPost post={post} imagen={recurso.slug === REGALO.hoja.slug ? REGALO.imagen : undefined} sizes="(min-width: 1024px) 24vw, 100vw" />
         </Link>
         <div className="min-w-0 md:col-span-3">
           <div className="flex flex-wrap items-center gap-3">
@@ -273,7 +258,7 @@ function ArchivoRegalos({ recursos }: { recursos: Resource[] }) {
           return (
             <li key={recurso.id} className="flex min-w-0 flex-col border border-border bg-panel">
               <Link href={post?.permalink ?? "/#newsletter"} aria-label={titulo} className="block">
-                <ImagenPost post={post} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
+                <ImagenPost post={post} imagen={esRegaloAlta ? REGALO.imagen : undefined} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
               </Link>
               <div className="flex flex-1 flex-col p-4">
                 <h3 className="font-display text-[1.25rem] font-medium leading-snug">

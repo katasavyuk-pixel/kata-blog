@@ -92,7 +92,7 @@ describe('la ficha', () => {
 
   test('los formularios principales dicen qué te llevas', () => {
     assert.match(siteConfig.newsletter.regalo, new RegExp(REGALO.titulo));
-    for (const fichero of ['src/components/home/hero.tsx', 'src/app/newsletter/page.tsx']) {
+    for (const fichero of ['src/components/home/hero.tsx', 'src/components/blog/article-closing.tsx', 'src/app/newsletter/page.tsx']) {
       assert.match(readFileSync(join(root, fichero), 'utf8'), /siteConfig\.newsletter\.regalo/, fichero);
     }
   });

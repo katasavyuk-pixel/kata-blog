@@ -307,12 +307,14 @@ describe('la home es la portada', () => {
     assert.match(pagina, /canonical: "\/"/);
     assert.doesNotMatch(componente, /<Hero\b|<h1\b/, 'la promesa la pone el hero, una vez.');
     assert.match(componente, /source="home-regalo"/);
-    assert.match(componente, /getPublishedResources\(\)/);
+    assert.match(componente, /datosRegaloDeLaSemana\(\)/);
     assert.match(componente, /postDeRecurso\(recurso\.slug, allPosts\)/);
     assert.match(componente, /function Destacado\(/);
     assert.match(componente, /function ArchivoRegalos\(/);
     const hero = source('src/components/home/hero.tsx');
-    assert.match(hero, /`Te mando gratis: \$\{REGALO\.titulo\}`/);
+    assert.match(hero, /`Te mando gratis: \$\{regalo\.title\}`/);
+    assert.match(hero, /resource: regalo\.slug/);
+    assert.match(componente, /imagen=\{esRegaloAlta \? REGALO\.imagen : undefined\}/);
     assert.ok(hero.indexOf('<SubscribeForm') < hero.indexOf('siteConfig.newsletter.regalo'));
     assert.ok(hasOwnSignupForm('/'));
   });

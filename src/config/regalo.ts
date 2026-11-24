@@ -15,6 +15,12 @@ export const REGALO = {
   titulo: "Recupera horas de tu semana con IA",
   resumen:
     "Una hoja que te dice cuántas horas al año te come cada tarea repetitiva y cuáles le puedes pasar ya a la IA, y una ficha para que la IA trabaje a tu manera.",
+  imagen: {
+    src: "/covers/recupera-horas.webp",
+    width: 1672,
+    height: 941,
+    alt: "Una mujer planifica su semana en la mesa de casa, con una hoja, un lápiz, un portátil y un café, bajo una lámpara encendida.",
+  },
   hoja: {
     /** `public.resources.slug`: the row and the file must exist before this is offered. */
     slug: "hoja-de-tu-semana",

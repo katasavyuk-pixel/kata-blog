@@ -4,6 +4,8 @@ import { RelatedPosts } from "@/components/blog/related-posts";
 import { CierreEstandar } from "@/components/blog/cierre-estandar";
 import { AuthorBio, OrigenAutomatico } from "@/components/blog/author-bio";
 import { siteConfig } from "@/config/site";
+import { datosRegaloDeLaSemana } from "@/lib/regalo-semana";
+import { REGALO } from "@/config/regalo";
 import { anclaDelFormulario, cuerpoConFormulario } from "@/lib/formularios";
 import { esAutomatico, getRelatedPosts, type Post } from "@/lib/posts";
 
@@ -23,8 +25,10 @@ import { esAutomatico, getRelatedPosts, type Post } from "@/lib/posts";
  * capture mode). Then the closing points to it instead of asking twice
  * (src/lib/formularios.ts).
  */
-export function ArticleClosing({ post }: { post: Post }) {
+export async function ArticleClosing({ post }: { post: Post }) {
   const formularioArriba = cuerpoConFormulario(post);
+  const { regalo } = await datosRegaloDeLaSemana();
+  const esRegaloAlta = regalo.slug === REGALO.hoja.slug;
   return (
     <>
       {esAutomatico(post) ? <OrigenAutomatico revisado={post.revisado} /> : <AuthorBio />}
@@ -36,11 +40,13 @@ export function ArticleClosing({ post }: { post: Post }) {
       >
         <p className="font-sans text-[0.8125rem] font-semibold text-accent-ink">La newsletter</p>
         <h2 id="article-newsletter" className="mt-3 max-w-[28ch] text-h2">
-          {siteConfig.newsletter.title}
+          {`Te mando gratis: ${regalo.title}`}
         </h2>
-        <p className="mt-3 max-w-[52ch] text-[0.9375rem] leading-relaxed text-muted">
-          {siteConfig.newsletter.description}
-        </p>
+        {regalo.description ? (
+          <p className="mt-3 line-clamp-4 max-w-[52ch] text-[0.9375rem] leading-relaxed text-muted">
+            {regalo.description}
+          </p>
+        ) : null}
         {formularioArriba ? (
           <p className="mt-5 text-[0.9375rem]">
             <a
@@ -55,9 +61,17 @@ export function ArticleClosing({ post }: { post: Post }) {
             <SubscribeForm
               source={`article-${post.slug}`}
               layout="stacked"
+              {...(esRegaloAlta ? {} : {
+                resource: regalo.slug,
+                submitLabel: "Enviármelo",
+                doneMessage: "Hecho. Confirma en tu correo y te llega la descarga en el mismo email.",
+              })}
             />
           </div>
         )}
+        <p className="mt-4 max-w-[64ch] text-[0.8125rem] leading-relaxed text-muted">
+          {siteConfig.newsletter.regalo} {siteConfig.newsletter.magnet}
+        </p>
         <p className="mt-4 text-[0.9375rem]">
           <Link
             href="/newsletter"
