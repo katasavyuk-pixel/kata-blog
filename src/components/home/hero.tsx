@@ -4,6 +4,7 @@ import { ANCLA_NEWSLETTER, FocoAlLlegar } from "@/components/newsletter/suscribe
 import { Container } from "@/components/ui/container";
 import { siteConfig } from "@/config/site";
 import { REGALO } from "@/config/regalo";
+import { datosRegaloDeLaSemana } from "@/lib/regalo-semana";
 import { columnasDelMural } from "@/lib/mural";
 import type { PortadaLeida } from "@/lib/portada-lectura";
 
@@ -21,8 +22,10 @@ import type { PortadaLeida } from "@/lib/portada-lectura";
  * top is the h1, with the form below the fold. This is the only form on the
  * home (the footer drops its own here via `hasOwnSignupForm`).
  */
-export function Hero({ portada }: { portada: PortadaLeida }) {
+export async function Hero({ portada }: { portada: PortadaLeida }) {
   const columnas = columnasDelMural(portada);
+  const { regalo } = await datosRegaloDeLaSemana();
+  const esRegaloAlta = regalo.slug === REGALO.hoja.slug;
 
   return (
     <section aria-labelledby="home-promise" className="overflow-hidden border-b border-border">
@@ -35,10 +38,18 @@ export function Hero({ portada }: { portada: PortadaLeida }) {
 
           <div id={ANCLA_NEWSLETTER} className="mt-8 max-w-[30rem] border border-t-[3px] border-border border-t-accent bg-panel px-5 pb-5 pt-4 font-sans">
             <FocoAlLlegar />
-            <h2 className="text-[1.0625rem] font-bold tracking-normal">{`Te mando gratis: ${REGALO.titulo}`}</h2>
-            <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">{siteConfig.newsletter.description}</p>
+            <h2 className="text-[1.0625rem] font-bold tracking-normal">{`Te mando gratis: ${regalo.title}`}</h2>
+            {regalo.description ? <p className="mt-1.5 line-clamp-4 text-[0.9375rem] leading-relaxed text-muted">{regalo.description}</p> : null}
             <div className="mt-4">
-              <SubscribeForm source="home" layout="inline" />
+              <SubscribeForm
+                source="home"
+                layout="inline"
+                {...(esRegaloAlta ? {} : {
+                  resource: regalo.slug,
+                  submitLabel: "Enviármelo",
+                  doneMessage: "Hecho. Confirma en tu correo y te llega la descarga en el mismo email.",
+                })}
+              />
             </div>
             <p className="mt-3 text-[0.8125rem] leading-relaxed text-muted">
               {siteConfig.newsletter.regalo} {siteConfig.newsletter.magnet}
