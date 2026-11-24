@@ -1,0 +1,15 @@
+.gift-thumbnail-float {
+  animation: gift-thumbnail-float 5.5s ease-in-out infinite alternate;
+}
+
+@keyframes gift-thumbnail-float {
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-thumbnail-float {
+    animation: none;
+  }
+}

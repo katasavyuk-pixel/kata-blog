@@ -2,15 +2,16 @@ import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MuralMovimiento } from "@/components/home/mural-movimiento";
+import { NuevoBadge } from "@/components/home/nuevo-badge";
 import "./mural.css";
 import { COMO_SE_HACE_HREF, ETIQUETA_IA } from "@/config/noticias";
 import { cn } from "@/lib/utils";
 import type { Columna, Pieza } from "@/lib/mural";
 
 /**
- * The home's mural (2026-10-15, «D»): the day's news, the skills and the build
- * log as three columns of cards that drift past the headline, the first and
- * last upwards and the middle one down. It sits beside the h1, never before
+ * The home's mural (2026-10-15, «D»): the day's news, the skills and signed
+ * articles as three columns of cards that drift past the headline, the first
+ * and last upwards and the middle one down. It sits beside the h1, never before
  * it (DESIGN.md rule 1), and DESIGN.md records it as the one exception to
  * «movement only as a response».
  *
@@ -126,7 +127,10 @@ function Tarjeta({ pieza, copia = false }: { pieza: Pieza; copia?: boolean }) {
           />
         </span>
         <span className="block px-3 pb-3 pt-2.5 font-sans">
-          <span className="block text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-accent-ink">{pieza.kicker}</span>
+          <span className="flex flex-wrap items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-accent-ink">
+            {pieza.kicker}
+            {pieza.nuevo ? <NuevoBadge /> : null}
+          </span>
           <span className="mt-1 block font-display text-[1rem] leading-snug text-fg">{pieza.titulo}</span>
         </span>
       </Envoltura>
@@ -166,6 +170,7 @@ function Tarjeta({ pieza, copia = false }: { pieza: Pieza; copia?: boolean }) {
       <span className={cn("flex items-center gap-2 text-[0.6875rem] font-semibold uppercase tracking-[0.06em]", pieza.estilo === "papel" && "text-accent-ink")}>
         {pieza.estilo === "tinta" ? <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-accent" /> : null}
         {pieza.kicker}
+        {pieza.nuevo ? <NuevoBadge /> : null}
       </span>
       <span className={cn("mt-2 block font-display leading-snug", pieza.estilo === "rojo" ? "text-[1.25rem] font-medium" : "text-[1.125rem]")}>
         {pieza.titulo}
