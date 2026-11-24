@@ -29,7 +29,7 @@ describe('integración de la medición mensual de recomendaciones en IA', () => 
     assert.equal(PUENTE_POR_POST[slug], 'medir');
     assert.match(article, /^title: "¿Te recomienda la IA\? Mide cada mes si ChatGPT, Gemini y Perplexity te nombran"$/m);
     assert.doesNotMatch(article.match(/^title:.*$/m)?.[0] ?? '', /auditoría/i);
-    assert.match(article, /## Dos preguntas distintas/);
+    assert.match(article, /## 🔀 Dos preguntas distintas/);
     for (const row of [
       '| Qué mira | Tu web: si responde, si los rastreadores entran, datos estructurados… | Lo que contestan ChatGPT, Gemini y Perplexity a 9 preguntas de cliente. |',
       '| Con qué | Skill gratis [Visibilidad en IA](/marketplace/visibilidad-en-ia). | Esta skill. |',
@@ -52,7 +52,7 @@ describe('integración de la medición mensual de recomendaciones en IA', () => 
 
   test('cada archivo listado en «Qué contiene el zip» existe dentro del zip', () => {
     const readme = read('lead-magnets/te-recomienda-la-ia/README.md');
-    const section = readme.split('## Qué contiene el zip')[1]?.split(/^## /m)[0] ?? '';
+    const section = readme.split('## 📦 Qué contiene el zip')[1]?.split(/^## /m)[0] ?? '';
     const listed = [...section.matchAll(/`((?:SKILL\.md|references\/[^`]+|assets\/[^`]+|scripts\/[^`]+|ejemplos\/[^`]+))`/g)]
       .map((match) => match[1]);
     assert.ok(listed.length > 0, 'No se encontraron archivos listados en la sección del zip.');
@@ -82,7 +82,7 @@ describe('integración de la medición mensual de recomendaciones en IA', () => 
     const script = read('lead-magnets/te-recomienda-la-ia/zip/te-recomienda-la-ia/scripts/puntuar.py');
     const imports = [...script.matchAll(/^\s*(?:from\s+([\w.]+)\s+import|import\s+([\w.]+))/gm)]
       .map((match) => (match[1] ?? match[2]).split('.')[0]);
-    const allowed = new Set(['argparse', 'csv', 'json', 're', 'sys', 'collections', 'datetime', 'pathlib']);
+    const allowed = new Set(['argparse', 'csv', 'io', 'json', 're', 'sys', 'collections', 'datetime', 'pathlib']);
     assert.ok(imports.length > 0);
     assert.deepEqual(imports.filter((name) => !allowed.has(name)), []);
     assert.doesNotMatch(script, /\b(?:socket|urllib|http|subprocess|requests)\b/);
