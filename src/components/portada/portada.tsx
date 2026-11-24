@@ -47,7 +47,7 @@ const enlace = "font-semibold text-accent-ink underline underline-offset-[0.18em
 const MAX_FIRMADAS = 7;
 
 export async function Portada({ portada, cabecera }: { portada: PortadaLeida; cabecera: ReactNode }) {
-  const { primera, breves, triadas, lecturas } = portada;
+  const { primera, breves, firmadas: piezasFirmadas } = portada;
   let recursos: Resource[];
   try {
     const publicados = await getPublishedResources();
@@ -68,7 +68,7 @@ export async function Portada({ portada, cabecera }: { portada: PortadaLeida; ca
   }
   const activos = ACTIVOS;
   // Signed pieces, whether a triad holds them or not, newest first.
-  const firmadas = [...triadas.map((triada) => triada.pieza), ...lecturas]
+  const firmadas = [...piezasFirmadas]
     .filter((post) => !post.protagonista && post.formato !== "radar" && post.formato !== "leccion")
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, MAX_FIRMADAS);
