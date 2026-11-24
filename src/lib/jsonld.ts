@@ -20,7 +20,7 @@
  * withholding reason expired and the node shipped on 2026-08-21.
  */
 
-import { IMAGEN_OG_POR_DEFECTO, PERSONA, siteConfig } from "@/config/site";
+import { IMAGEN_OG_POR_DEFECTO, ORGANIZACION, PERSONA, siteConfig } from "@/config/site";
 import { FORMATO_AUTOMATICO } from "@/config/taxonomy";
 
 type Json = Record<string, unknown>;
@@ -30,6 +30,7 @@ type Json = Record<string, unknown>;
  * `personJsonLd` defines it; everything else points at it.
  */
 const PERSON_ID = PERSONA.id;
+const ORG_ID = ORGANIZACION.id;
 const WEBSITE_ID = `${siteConfig.url}/#website`;
 const BLOG_ID = `${siteConfig.url}/blog#blog`;
 
@@ -40,6 +41,15 @@ const BLOG_ID = `${siteConfig.url}/blog#blog`;
  */
 function personRef(): Json {
   return { "@type": "Person", "@id": PERSON_ID, name: PERSONA.name, url: PERSONA.url };
+}
+
+function organizationRef(): Json {
+  return {
+    "@type": "Organization",
+    "@id": ORG_ID,
+    name: ORGANIZACION.name,
+    url: ORGANIZACION.url,
+  };
 }
 
 const absoluta = (ruta: string) => (/^https?:\/\//.test(ruta) ? ruta : `${siteConfig.url}${ruta}`);
@@ -102,7 +112,10 @@ export function jsonLdScript(data: Json | Json[]): string {
  * An automated news piece has a publisher and no `author`: nobody wrote it, and
  * naming the person next to a text they neither wrote nor reviewed is the same
  * false statement in machine-readable form that the visible byline stopped
- * making. An invented Organization would be no better.
+ * making. Hand-written articles are published by Nexora Business Intelligence
+ * (`ORGANIZACION`), which `PERSONA.worksFor` already names. Automated news keeps
+ * the shared Person as publisher: NBI did not report the story, and inventing a
+ * newsroom would be no better.
  */
 export function articleJsonLd(post: {
   title: string;
@@ -151,7 +164,7 @@ export function articleJsonLd(post: {
       : {}),
     ...(post.tags.length > 0 ? { keywords: post.tags.join(", ") } : {}),
     ...(post.formato === FORMATO_AUTOMATICO ? {} : { author: personRef() }),
-    publisher: personRef(),
+    publisher: post.formato === FORMATO_AUTOMATICO ? personRef() : organizationRef(),
     mainEntityOfPage: url,
     url,
     ...(post.fuente_url
@@ -173,8 +186,8 @@ export function articleJsonLd(post: {
  * The site itself.
  *
  * Name, url, description, language — and nothing else. No `SearchAction`,
- * because there is no search. The publisher's identity lives in the Person
- * node below, which the home emits alongside this one.
+ * because there is no search. The publisher of the hand-written articles is
+ * the Organization node, which the home emits alongside the Person.
  */
 export function websiteJsonLd(): Json {
   return {
@@ -221,6 +234,22 @@ export function personJsonLd(): Json {
     description: PERSONA.description,
     worksFor: { "@id": PERSONA.worksFor },
     sameAs: [...PERSONA.sameAs],
+  };
+}
+
+/**
+ * Nexora Business Intelligence, the Organization both sites already share
+ * via `PERSONA.worksFor`. Only fields that already exist in this repo.
+ */
+export function organizationJsonLd(): Json {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": ORG_ID,
+    name: ORGANIZACION.name,
+    alternateName: ORGANIZACION.alternateName,
+    url: ORGANIZACION.url,
+    founder: personRef(),
   };
 }
 

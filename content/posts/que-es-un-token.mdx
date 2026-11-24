@@ -1,7 +1,7 @@
 ---
 title: Qué es un token (y por qué la IA no sabe contar letras)
-seoTitle: "Qué es un token y por qué la IA no sabe contar letras"
-description: "Los modelos no leen palabras ni letras: leen tokens. Pruébalo con el tokenizador interactivo y entiende de una vez qué es la ventana de contexto."
+seoTitle: "Qué es un token en IA y por qué no cuenta letras"
+description: "Qué es un token en IA: mira cómo un modelo parte el texto en palabras, fragmentos o signos y por qué eso afecta al coste y al contexto."
 kicker: Fundamentos
 dek: "Los modelos no leen palabras ni letras: leen tokens. Aquí lo pruebas tú mismo con un tokenizador en vivo y entiendes de una vez qué es la ventana de contexto."
 respuesta: "Un token es un fragmento de texto que la IA procesa: puede ser una palabra, parte de ella o un signo. En inglés, un token equivale aproximadamente a cuatro caracteres; en español, una misma frase suele usar más tokens. Pagas por token y la ventana de contexto también se mide en tokens."
@@ -10,7 +10,7 @@ te_llevas:
   - "La ventana de contexto se mide en tokens: si te pasas, el modelo trunca lo que no cabe."
   - "Ante un fallo «tonto» con letras, rimas o longitudes, no busques falta de inteligencia: el modelo nunca trabaja a nivel de letra."
 date: 2026-06-25
-updated: 2026-11-23
+updated: 2026-11-24
 tema: ia-aplicada
 formato: leccion
 seccion: practica
@@ -23,6 +23,15 @@ tags:
 cta_inline:
   gancho: "Cada pieza de la IA, desmontada así"
   promesa: "Te aviso cuando publique la siguiente lección, y te llegan los sistemas que monto con lo que costaron."
+faq:
+  - q: "¿Qué es un token en IA?"
+    a: "Un token es un fragmento de texto que el modelo procesa: puede ser una palabra entera, parte de una palabra o un signo."
+  - q: "¿Un token equivale siempre a una palabra?"
+    a: "No. Puede ser una palabra, un fragmento de ella o un signo; por eso el número de tokens no coincide necesariamente con el de palabras."
+  - q: "¿Por qué importan los tokens para el coste y el contexto?"
+    a: "Pagas por token y la ventana de contexto se mide en tokens. Si el texto supera esa ventana, el modelo trunca lo que no cabe."
+  - q: "¿Por qué a una IA le cuesta contar letras?"
+    a: "Porque procesa trozos de texto llamados tokens y no trabaja a nivel de letra: nunca llega a ver los caracteres uno a uno."
 draft: false
 premium: false
 ---
@@ -37,7 +46,13 @@ La mejor forma de entenderlo es verlo. Escribe cualquier cosa y mira cómo se pa
 
 ## Por qué esto te importa
 
-- **Coste.** Pagas por token, no por palabra. Un texto en español suele costar más tokens que el mismo texto en inglés.
+| Qué mide | Qué significa |
+| --- | --- |
+| Coste | Pagas por token, no por palabra; un texto en español suele usar más tokens que el mismo texto en inglés. |
+| Ventana de contexto | Se mide en tokens; si te pasas, el modelo trunca lo que no cabe. |
+| Texto | Un token puede ser una palabra, un fragmento o un signo; el modelo no trabaja a nivel de letra. |
+
+- **Coste.** Pagas por token, no por palabra. Un texto en español suele costar más tokens que el mismo texto en inglés. Si quieres calcular esa factura, está en [cuánto cuesta la IA, con la calculadora por tokens](/blog/cuanto-cuesta-la-ia).
 - **Límite.** La <Term id="context-window">ventana de contexto</Term> se mide en tokens: si te pasas, el modelo trunca lo que no cabe.
 - **Rarezas.** Por eso falla al contar letras, al hacer rimas o al manipular texto carácter a carácter: nunca trabaja a nivel de letra.
 

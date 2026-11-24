@@ -22,7 +22,7 @@ import { Ficha } from "@/components/sistema/ficha";
 import { fichaForPost } from "@/lib/library";
 import { CourseProgressMarker } from "@/components/course/course-progress-marker";
 import { JsonLd } from "@/components/ui/json-ld";
-import { articleJsonLd, breadcrumbJsonLd, faqJsonLd, personJsonLd } from "@/lib/jsonld";
+import { articleJsonLd, breadcrumbJsonLd, faqJsonLd, organizationJsonLd, personJsonLd } from "@/lib/jsonld";
 import { allPosts, esAutomatico, estanteDe, getPost, tienePaginaViva } from "@/lib/posts";
 import { metadataDePost } from "@/lib/seo";
 import { relacionesDe } from "@/lib/relaciones";
@@ -92,14 +92,14 @@ export default async function PostPage({
   return (
     <Container className="pb-10 pt-8 sm:pb-16 sm:pt-11">
       {showProgress ? <ReadingProgress /> : null}
-      {/* Article/TechArticle by `formato`, the Person node its author and
-          publisher point at, the breadcrumb (machine-only: the format label
+      {/* Article/TechArticle by `formato`, the Person node its author points at and the Organization that publishes it, the breadcrumb (machine-only: the format label
           links to the parent shelf) and the FAQ when the post declares one.
           Escaping lives in the component. */}
       <JsonLd
         data={[
           articleJsonLd(post),
           personJsonLd(),
+          organizationJsonLd(),
           breadcrumbJsonLd([
             parent,
             { name: post.title, path: post.permalink },

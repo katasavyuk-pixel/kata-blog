@@ -69,8 +69,8 @@ export default function AboutPage() {
           <p>
             Hasta finales de mayo trabajaba de noche en un almacén. Antes,
             cuatro años de camarero. No vengo de la tecnología: desde 2024
-            aprendo IA por mi cuenta. Nací en Ucrania, llegué a España con tres
-            años y vivo en Irun.
+            aprendo IA por mi cuenta. Nací en Ucrania y llegué a España con tres
+            años.
           </p>
           <p>
             Lo que me cambió fue darle la vuelta a la pregunta. Dejé de
