@@ -3,16 +3,15 @@ import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { ANCLA_NEWSLETTER, FocoAlLlegar } from "@/components/newsletter/suscribete-link";
 import { Container } from "@/components/ui/container";
 import { siteConfig } from "@/config/site";
+import { REGALO } from "@/config/regalo";
 import { columnasDelMural } from "@/lib/mural";
-import { leerPortada } from "@/lib/portada-lectura";
+import type { PortadaLeida } from "@/lib/portada-lectura";
 
 /**
- * What the reader can do here, the one form, and beside them the mural: the
- * day's news, the skills and the build log drifting past (2026-10-15, Kata
- * chose «D» on the canvas). The h1 is still the first thing on the page for a
- * reader and for a crawler; four withdrawn redesigns put something before it
- * and every one of them was removed. The mural comes after it in the
- * document, beside it on screen.
+ * What the reader can do here, the one form, and beside them a static row from
+ * the day's news, the skills and the build log. The h1 is still the first
+ * thing on the page for a reader and for a crawler; the three cards follow it
+ * in the document and sit beside it on wider screens.
  *
  * 2026-10-14: the h1 is the home's own (`siteConfig.home.titular`), about the
  * reader; the promise and the portrait moved to /sobre-mi.
@@ -22,8 +21,8 @@ import { leerPortada } from "@/lib/portada-lectura";
  * top is the h1, with the form below the fold. This is the only form on the
  * home (the footer drops its own here via `hasOwnSignupForm`).
  */
-export function Hero() {
-  const columnas = columnasDelMural(leerPortada());
+export function Hero({ portada }: { portada: PortadaLeida }) {
+  const columnas = columnasDelMural(portada);
 
   return (
     <section aria-labelledby="home-promise" className="overflow-hidden border-b border-border">
@@ -36,7 +35,7 @@ export function Hero() {
 
           <div id={ANCLA_NEWSLETTER} className="mt-8 max-w-[30rem] border border-t-[3px] border-border border-t-accent bg-panel px-5 pb-5 pt-4 font-sans">
             <FocoAlLlegar />
-            <h2 className="text-[1.0625rem] font-bold tracking-normal">{siteConfig.newsletter.title}</h2>
+            <h2 className="text-[1.0625rem] font-bold tracking-normal">{`Te mando gratis: ${REGALO.titulo}`}</h2>
             <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">{siteConfig.newsletter.description}</p>
             <div className="mt-4">
               <SubscribeForm source="home" layout="inline" />

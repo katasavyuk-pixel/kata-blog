@@ -65,21 +65,23 @@ describe('el mural de la portada', () => {
     assert.ok(columnas.find((c) => c.id === 'noticias')?.piezas.slice(1).every((p) => p.externo));
   });
 
-  test('va después del h1, se puede parar y respeta el movimiento reducido', () => {
+  test('el top es estático, igualado, con portada y sin control de movimiento', () => {
     const hero = source('src/components/home/hero.tsx');
     assert.ok(hero.indexOf('<h1') < hero.indexOf('<Mural'), 'nada antes del h1 (DESIGN.md, regla 1).');
     const mural = source('src/components/home/mural.tsx');
-    assert.match(mural, /<ul aria-hidden>/, 'la segunda copia no se lee dos veces.');
-    assert.match(mural, /tabIndex=\{tabIndex\}/, 'ni se recorre dos veces con el tabulador.');
-    assert.match(mural, /<Link href=\{pieza\.href\} prefetch=\{false\}/, 'una tarjeta que entra y sale de la vista no precarga su página una y otra vez.');
-    assert.match(source('src/components/home/mural-movimiento.tsx'), /aria-pressed=\{pausado\}/);
-    const css = source('src/components/home/mural.css');
-    assert.match(source('src/components/home/mural.tsx'), /import "\.\/mural\.css";/);
-    assert.match(css, /\.mural:focus-within \.mural-columna/);
-    assert.match(css, /prefers-reduced-motion: reduce\)[\s\S]*?\.mural-columna \{\s*animation: none !important;/);
+    assert.match(mural, /grid items-stretch gap-3 sm:grid-cols-3/);
+    assert.match(mural, /aspect-video/);
+    assert.match(mural, /NuevoBadge/);
+    assert.match(mural, /min-w-0 flex-1 truncate/);
+    assert.match(mural, /shrink-0 whitespace-nowrap/);
+    assert.match(mural, /tituloEnFrase\(pieza\.titulo\)/);
+    assert.match(mural, /fecha=\{/);
+    assert.match(mural, /bg-surface-2/);
+    assert.doesNotMatch(mural, /MuralMovimiento|Parar el movimiento|mural-columna|animation/);
+    assert.doesNotMatch(hero, /MuralMovimiento|Parar el movimiento/);
   });
 
   test('las noticias automáticas siguen diciendo que lo son', () => {
-    assert.match(source('src/components/home/mural.tsx'), /\{ETIQUETA_IA\}/);
+    assert.match(source('src/components/portada/portada.tsx'), /primera \? etiquetaIa\(primera\.articulo\) : ETIQUETA_IA/);
   });
 });

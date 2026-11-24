@@ -102,7 +102,7 @@ describe('sin contenido no hay bloque', () => {
     for (const guarda of [
       'primera || breves ? <PuertaNoticias',
       'activos.length > 0 ? (',
-      'firmadas.length > 0 ? <PuertaLecturas',
+      'firmadas.length > 1 ? <PuertaLecturas',
       'PUBLICACIONES_LINKEDIN.length > 0 ? <PuertaLinkedIn',
       'if (!episodio) return null;',
       'primera ? (',
@@ -110,6 +110,11 @@ describe('sin contenido no hay bloque', () => {
     ]) {
       assert.ok(componente.includes(guarda), `Falta la guarda «${guarda}».`);
     }
+    assert.ok(componente.indexOf('<RegaloSemana') < componente.indexOf('<PuertaLecturas'));
+    assert.ok(componente.indexOf('<PuertaLecturas') < componente.indexOf('<div className="grid items-stretch gap-6 lg:grid-cols-2">'));
+    assert.match(componente, /const MAX_FIRMADAS = 4;/);
+    assert.match(componente, /lg:grid-cols-3/);
+    assert.match(componente, /className="lg:col-span-2"/);
   });
 });
 
@@ -281,10 +286,18 @@ describe('la home es la portada', () => {
   });
 
   test('la página es el hero y la portada, con su canónica y sus datos de autor', () => {
-    assert.match(pagina, /<Portada portada=\{leerPortada\(\)\} cabecera=\{<Hero \/>\} \/>/);
+    assert.match(pagina, /const portada = leerPortada\(\);[\s\S]*<Portada portada=\{portada\} cabecera=\{<Hero portada=\{portada\} \/>\} \/>/);
     assert.match(pagina, /<JsonLd data=\{\[websiteJsonLd\(\), personJsonLd\(\)\]\} \/>/);
     assert.match(pagina, /canonical: "\/"/);
-    assert.doesNotMatch(componente, /<SubscribeForm|<Hero\b|<h1\b/, 'la promesa y el formulario los pone el hero, una vez.');
+    assert.doesNotMatch(componente, /<Hero\b|<h1\b/, 'la promesa la pone el hero, una vez.');
+    assert.match(componente, /source="home-regalo"/);
+    assert.match(componente, /getPublishedResources\(\)/);
+    assert.match(componente, /postDeRecurso\(recurso\.slug, allPosts\)/);
+    assert.match(componente, /function Destacado\(/);
+    assert.match(componente, /function ArchivoRegalos\(/);
+    const hero = source('src/components/home/hero.tsx');
+    assert.match(hero, /`Te mando gratis: \$\{REGALO\.titulo\}`/);
+    assert.ok(hero.indexOf('<SubscribeForm') < hero.indexOf('siteConfig.newsletter.regalo'));
     assert.ok(hasOwnSignupForm('/'));
   });
 

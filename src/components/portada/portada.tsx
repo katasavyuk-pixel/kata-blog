@@ -1,20 +1,26 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { LogoSkill } from "@/components/marketplace/logo-skill";
+import { NuevoBadge } from "@/components/home/nuevo-badge";
 import { NoticiasFiltro } from "@/components/home/noticias-filtro";
 import { PlanificadorEjemplo } from "@/components/home/planificador-ejemplo";
+import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { Container } from "@/components/ui/container";
 import { RETRATO } from "@/components/ui/retrato";
 import { YouTubeFacade } from "@/components/video/youtube-facade";
 import { TarjetaLinkedIn } from "@/components/linkedin/tarjeta-linkedin";
 import { PUBLICACIONES_LINKEDIN } from "@/config/linkedin";
 import { siteConfig } from "@/config/site";
+import { REGALO } from "@/config/regalo";
 import { COMO_SE_HACE_HREF, ETIQUETA_IA, etiquetaIa } from "@/config/noticias";
 import { FORMATOS, etiquetaDeEje } from "@/config/taxonomy";
 import { ACTIVOS } from "@/lib/catalogo";
 import { formatDateShort } from "@/lib/format";
 import type { PortadaLeida } from "@/lib/portada-lectura";
 import { allPosts, type Post } from "@/lib/posts";
+import { getPublishedResources, type Resource } from "@/lib/resources";
+import { postDeRecurso } from "@/lib/portada-recursos";
+import { esNuevo, tituloEnFrase } from "@/lib/portada-texto";
 import { getYouTubeVideos } from "@/lib/youtube";
 import { ultimaEntrada } from "@/lib/bitacora";
 import Image from "next/image";
@@ -36,22 +42,31 @@ import Image from "next/image";
 
 const enlace = "font-semibold text-accent-ink underline underline-offset-[0.18em] hover:decoration-2";
 
-/** How many signed pieces the reading door shows. */
-const MAX_FIRMADAS = 3;
+/** The featured signed piece plus three reading cards. */
+const MAX_FIRMADAS = 4;
 
-export function Portada({ portada, cabecera }: { portada: PortadaLeida; cabecera: ReactNode }) {
+export async function Portada({ portada, cabecera }: { portada: PortadaLeida; cabecera: ReactNode }) {
   const { primera, breves, triadas, lecturas } = portada;
+  const [recursos] = await Promise.all([getPublishedResources()]);
   const activos = ACTIVOS;
   // Signed pieces, whether a triad holds them or not, newest first.
   const firmadas = [...triadas.map((triada) => triada.pieza), ...lecturas]
+    .filter((post) => !post.protagonista && post.formato !== "leccion")
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, MAX_FIRMADAS);
+  const destacado = firmadas[0];
+  const recursoDestacado = recursos[0];
+  const articuloRegalo = recursoDestacado ? postDeRecurso(recursoDestacado.slug, allPosts) : undefined;
 
   return (
     <>
       {cabecera}
       <Container size="wide" className="pb-16 sm:pb-24">
-        <div className="grid gap-6 lg:grid-cols-2">
+        {destacado ? <Destacado post={destacado} /> : null}
+        {recursoDestacado ? <RegaloSemana recurso={recursoDestacado} post={articuloRegalo} /> : null}
+        {firmadas.length > 1 ? <PuertaLecturas firmadas={firmadas.slice(1)} /> : null}
+
+        <div className="grid items-stretch gap-6 lg:grid-cols-2">
           {primera || breves ? <PuertaNoticias primera={primera} breves={breves} /> : null}
 
           {activos.length > 0 ? (
@@ -115,13 +130,12 @@ export function Portada({ portada, cabecera }: { portada: PortadaLeida; cabecera
             </ul>
           </Puerta>
 
-          {firmadas.length > 0 ? <PuertaLecturas firmadas={firmadas} /> : null}
-
           <PuertaVideos />
 
           {PUBLICACIONES_LINKEDIN.length > 0 ? <PuertaLinkedIn /> : null}
         </div>
 
+        {recursos.length > 0 ? <ArchivoRegalos recursos={recursos} /> : null}
         <QuienEscribe />
       </Container>
     </>
@@ -160,6 +174,105 @@ function Puerta({
   );
 }
 
+function ImagenPost({ post, sizes }: { post?: Post; sizes: string }) {
+  return (
+    <div className="relative aspect-video overflow-hidden bg-surface-2">
+      {post?.cover ? (
+        <Image src={post.cover.src} alt={post.coverAlt ?? ""} fill sizes={sizes} className="object-cover" />
+      ) : (
+        <span className="flex size-full items-center justify-center font-sans text-label text-muted">
+          {post ? FORMATOS[post.formato] : "Gratis"}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function Destacado({ post }: { post: Post }) {
+  return (
+    <article className="mt-8 border border-border bg-panel">
+      <div className="grid md:grid-cols-2">
+        <Link href={post.permalink} aria-label={post.title} className="block">
+          <ImagenPost post={post} sizes="(min-width: 1024px) 50vw, 100vw" />
+        </Link>
+        <div className="flex min-w-0 flex-col p-5 sm:p-7">
+          <p className="flex items-center justify-between gap-3 font-sans text-label font-semibold text-accent-ink">
+            <span>Destacado</span>
+            {esNuevo(post.date, new Date()) ? <NuevoBadge /> : null}
+          </p>
+          <h2 className="mt-3 font-display text-[1.75rem] font-medium leading-tight sm:text-[2rem]">
+            <Link href={post.permalink} className="hover:text-accent-ink">{post.title}</Link>
+          </h2>
+          <p className="mt-3 line-clamp-4 text-[1.125rem] leading-relaxed text-muted">{post.dek ?? post.description}</p>
+          <time dateTime={post.date} className="mt-auto pt-5 font-sans text-label text-muted">
+            {formatDateShort(post.date)}
+          </time>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function RegaloSemana({ recurso, post }: { recurso: Resource; post?: Post }) {
+  return (
+    <section aria-labelledby="regalo-semana" className="mt-8 border border-border bg-surface p-5 sm:p-7">
+      <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(18rem,1fr)] md:items-center">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 id="regalo-semana" className="font-display text-h2">El regalo de la semana</h2>
+            <span className="font-sans text-label font-semibold text-accent-ink">Gratis</span>
+          </div>
+          <h3 className="mt-3 font-display text-[1.5rem] font-medium leading-tight">{recurso.title}</h3>
+          {recurso.description ? <p className="mt-2 text-[1.0625rem] leading-relaxed text-muted">{recurso.description}</p> : null}
+          <p className="mt-3 font-sans text-[0.9375rem] text-muted">Te llega al suscribirte con tu email.</p>
+          <div className="mt-4">
+            <SubscribeForm
+              resource={recurso.slug}
+              source="home-regalo"
+              submitLabel="Enviármelo"
+              doneMessage="Hecho. Confirma en tu correo y te llega la descarga en el mismo email."
+            />
+          </div>
+          {post ? <Link href={post.permalink} className={`mt-4 inline-block font-sans text-[0.9375rem] ${enlace}`}>Ver el artículo</Link> : null}
+        </div>
+        <Link href={post?.permalink ?? "/#newsletter"} aria-label={post?.title ?? recurso.title} className="block">
+          <ImagenPost post={post} sizes="(min-width: 1024px) 45vw, 100vw" />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function ArchivoRegalos({ recursos }: { recursos: Resource[] }) {
+  return (
+    <section aria-labelledby="archivo-regalos" className="mt-14">
+      <h2 id="archivo-regalos" className="text-h2-section">Regalos</h2>
+      <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {recursos.map((recurso) => {
+          const post = postDeRecurso(recurso.slug, allPosts);
+          const esRegaloAlta = recurso.slug === REGALO.hoja.slug;
+          const titulo = esRegaloAlta ? REGALO.titulo : recurso.title;
+          const descripcion = esRegaloAlta ? REGALO.resumen : recurso.description;
+          return (
+            <li key={recurso.id} className="flex min-w-0 flex-col border border-border bg-panel">
+              <Link href={post?.permalink ?? "/#newsletter"} aria-label={titulo} className="block">
+                <ImagenPost post={post} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
+              </Link>
+              <div className="flex flex-1 flex-col p-4">
+                <h3 className="font-display text-[1.25rem] font-medium leading-snug">
+                  <Link href={post?.permalink ?? "/#newsletter"} className="hover:text-accent-ink">{titulo}</Link>
+                </h3>
+                {descripcion ? <p className="mt-2 line-clamp-4 text-[1rem] leading-relaxed text-muted">{descripcion}</p> : null}
+                {post ? <Link href={post.permalink} className={`mt-auto pt-4 font-sans text-[0.9375rem] ${enlace}`}>Ver el artículo</Link> : null}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
 function PuertaNoticias({ primera, breves }: Pick<PortadaLeida, "primera" | "breves">) {
   const fecha = breves?.edicion.date ?? primera?.articulo.date;
   return (
@@ -188,10 +301,11 @@ function PuertaNoticias({ primera, breves }: Pick<PortadaLeida, "primera" | "bre
           <p className="font-sans text-[0.8125rem] font-semibold text-accent-ink">
             {primera.alDia ? "La noticia del día" : "El último artículo completo"}
           </p>
-          <h3 className="mt-1 font-display text-[1.375rem] font-medium leading-snug">
+          <h3 className="mt-1 flex flex-wrap items-center gap-2 font-display text-[1.375rem] font-medium leading-snug">
             <Link href={primera.articulo.permalink} className="hover:text-accent-ink">
-              {primera.articulo.title}
+              {tituloEnFrase(primera.articulo.title)}
             </Link>
+            {esNuevo(primera.articulo.date, new Date()) ? <NuevoBadge /> : null}
           </h3>
         </article>
       ) : null}
@@ -218,18 +332,25 @@ function PuertaLecturas({ firmadas }: { firmadas: Post[] }) {
       titulo="Lecturas"
       icono="M12 6.5C10 5 7 4.5 4 5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z M12 6.5V19.5"
       entradilla="Guías, casos, notas y reflexiones, con sus números y con lo que falló."
+      className="mt-8"
     >
-      <ul className="mt-4">
+      <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {firmadas.map((post) => (
-          <li key={post.slug} className="border-t border-border">
-            <Link href={post.permalink} className="group block py-3.5">
-              <span className="block text-[1.1875rem] leading-snug text-fg group-hover:text-accent-ink">
-                {post.dek ?? post.description}
-              </span>
-              <span className="mt-1.5 block font-sans text-[0.8125rem] text-muted">
-                <span className="font-semibold text-fg">{post.title}</span> {FORMATOS[post.formato]}
-              </span>
+          <li key={post.slug} className="flex min-w-0 flex-col border border-border bg-bg">
+            <Link href={post.permalink} aria-label={post.title} className="block">
+              <ImagenPost post={post} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" />
             </Link>
+            <div className="flex flex-1 flex-col p-4">
+              <p className="flex items-center justify-between gap-2 font-sans text-label text-accent-ink">
+                <span>{FORMATOS[post.formato]}</span>
+                {esNuevo(post.date, new Date()) ? <NuevoBadge /> : null}
+              </p>
+              <h3 className="mt-2 font-display text-[1.25rem] font-medium leading-snug">
+                <Link href={post.permalink} className="hover:text-accent-ink">{post.title}</Link>
+              </h3>
+              <p className="mt-2 line-clamp-3 text-[1rem] leading-relaxed text-muted">{post.dek ?? post.description}</p>
+              <time dateTime={post.date} className="mt-auto pt-4 font-sans text-label text-muted">{formatDateShort(post.date)}</time>
+            </div>
           </li>
         ))}
       </ul>
@@ -265,43 +386,40 @@ async function PuertaVideos() {
       titulo="Vídeos"
       icono="M3 6h13v12H3z M16 10l5-3v10l-5-3"
       entradilla="Monto un sistema en un negocio de verdad y lo grabo de principio a fin."
-      className="lg:col-span-2"
     >
-      <div className="mt-5 grid gap-6 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <div className="min-w-0">
-          <YouTubeFacade id={episodio.id} title={episodio.title} sizes="(min-width: 1024px) 40vw, 100vw" />
-          <h3 className="mt-3 font-display text-[1.375rem] font-medium leading-snug">{episodio.title}</h3>
-          {articulo ? (
-            <p className="mt-1.5 font-sans text-[0.9375rem]">
-              <Link href={articulo.permalink} className={enlace}>
-                Léelo con sus números
-              </Link>
-            </p>
-          ) : null}
-        </div>
-        {otros.length > 0 ? (
-          <ul className="min-w-0 self-start">
-            {otros.map((video) => (
-              <li key={video.id} className="border-t border-border first:border-t-0 first:pt-0 pt-4 pb-4">
-                <Link href={`/videos#video-${video.id}`} className="group grid grid-cols-[8rem_minmax(0,1fr)] items-start gap-3">
-                  <span className="relative block aspect-video overflow-hidden bg-fg">
-                    <Image
-                      src={video.image}
-                      alt=""
-                      fill
-                      sizes="128px"
-                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  </span>
-                  <span className="font-display text-[1.0625rem] leading-snug text-fg group-hover:text-accent-ink">
-                    {video.title}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+      <div className="mt-5 min-w-0">
+        <YouTubeFacade id={episodio.id} title={episodio.title} sizes="(min-width: 1024px) 40vw, 100vw" />
+        <h3 className="mt-3 font-display text-[1.375rem] font-medium leading-snug">{episodio.title}</h3>
+        {articulo ? (
+          <p className="mt-1.5 font-sans text-[0.9375rem]">
+            <Link href={articulo.permalink} className={enlace}>
+              Léelo con sus números
+            </Link>
+          </p>
         ) : null}
       </div>
+      {otros.length > 0 ? (
+        <ul className="mt-4 grid gap-x-4 sm:grid-cols-2">
+          {otros.map((video) => (
+            <li key={video.id} className="border-t border-border py-3">
+              <Link href={`/videos#video-${video.id}`} className="group grid grid-cols-[6rem_minmax(0,1fr)] items-center gap-3">
+                <span className="relative block aspect-video overflow-hidden bg-fg">
+                  <Image
+                    src={video.image}
+                    alt=""
+                    fill
+                    sizes="96px"
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                </span>
+                <span className="font-display text-[0.9375rem] leading-snug text-fg group-hover:text-accent-ink">
+                  {video.title}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <p className="mt-5 font-sans text-[0.9375rem]">
         <Link href="/videos" className={enlace}>
           Todos los vídeos

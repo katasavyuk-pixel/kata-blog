@@ -37,10 +37,11 @@ export const revalidate = 3600;
  * tests/portada-home.test.ts fails the build otherwise.
  */
 export default function Home() {
+  const portada = leerPortada();
   return (
     <>
       <JsonLd data={[websiteJsonLd(), personJsonLd()]} />
-      <Portada portada={leerPortada()} cabecera={<Hero />} />
+      <Portada portada={portada} cabecera={<Hero portada={portada} />} />
     </>
   );
 }
