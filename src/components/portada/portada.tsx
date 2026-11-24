@@ -19,7 +19,7 @@ import { formatDateShort } from "@/lib/format";
 import type { PortadaLeida } from "@/lib/portada-lectura";
 import { allPosts, type Post } from "@/lib/posts";
 import { getPublishedResources, type Resource } from "@/lib/resources";
-import { postDeRecurso } from "@/lib/portada-recursos";
+import { postDeRecurso, recursosDePosts } from "@/lib/portada-recursos";
 import { esNuevo, tituloEnFrase } from "@/lib/portada-texto";
 import { getYouTubeVideos } from "@/lib/youtube";
 import { ultimaEntrada } from "@/lib/bitacora";
@@ -47,7 +47,24 @@ const MAX_FIRMADAS = 4;
 
 export async function Portada({ portada, cabecera }: { portada: PortadaLeida; cabecera: ReactNode }) {
   const { primera, breves, triadas, lecturas } = portada;
-  const [recursos] = await Promise.all([getPublishedResources()]);
+  let recursos: Resource[];
+  try {
+    const publicados = await getPublishedResources();
+    recursos = publicados.length > 0 ? publicados : recursosDePosts(allPosts);
+  } catch {
+    recursos = recursosDePosts(allPosts);
+  }
+  const recursoDestacado = recursos[0];
+  if (!recursos.some((recurso) => recurso.slug === REGALO.hoja.slug)) {
+    recursos = [...recursos, {
+      id: REGALO.hoja.slug,
+      slug: REGALO.hoja.slug,
+      title: REGALO.titulo,
+      description: REGALO.resumen,
+      requires_email: true,
+      download_count: 0,
+    }];
+  }
   const activos = ACTIVOS;
   // Signed pieces, whether a triad holds them or not, newest first.
   const firmadas = [...triadas.map((triada) => triada.pieza), ...lecturas]
@@ -55,7 +72,6 @@ export async function Portada({ portada, cabecera }: { portada: PortadaLeida; ca
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, MAX_FIRMADAS);
   const destacado = firmadas[0];
-  const recursoDestacado = recursos[0];
   const articuloRegalo = recursoDestacado ? postDeRecurso(recursoDestacado.slug, allPosts) : undefined;
 
   return (
