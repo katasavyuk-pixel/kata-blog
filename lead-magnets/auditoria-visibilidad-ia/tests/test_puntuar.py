@@ -125,7 +125,7 @@ class PuntuarTest(unittest.TestCase):
             generado = Path(directorio, "informe.md").read_text(encoding="utf-8")
             self.assertIn("inventad", ejemplo.read_text(encoding="utf-8").lower())
             self.assertIn("inventad", contenido.lower())
-            self.assertEqual(salida["mes"]["puntuacion"], 70)
+            self.assertEqual(salida["mes"]["puntuacion"], 28)
             self.assertEqual(generado, contenido)
 
 

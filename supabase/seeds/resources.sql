@@ -98,3 +98,24 @@ on conflict (slug) do update set
   file_path      = excluded.file_path,
   requires_email = excluded.requires_email,
   published      = excluded.published;
+
+-- ---------------------------------------------------------------------------
+-- Auditoría de visibilidad en IA: skill para medir recomendaciones
+-- Source: lead-magnets/auditoria-visibilidad-ia/
+-- Upload: auditoria-visibilidad-ia.zip → auditoria-visibilidad-ia/
+-- ---------------------------------------------------------------------------
+insert into public.resources (slug, title, description, file_path, requires_email, published)
+values (
+  'auditoria-visibilidad-ia',
+  'Auditoría de visibilidad en IA: la skill para medir si te recomiendan',
+  'Skill con diez preguntas fijas, rúbrica, registro CSV y script local para medir si ChatGPT, Gemini y Perplexity recomiendan tu negocio mes a mes.',
+  'auditoria-visibilidad-ia/auditoria-visibilidad-ia.zip',
+  true,
+  true
+)
+on conflict (slug) do update set
+  title          = excluded.title,
+  description    = excluded.description,
+  file_path      = excluded.file_path,
+  requires_email = excluded.requires_email,
+  published      = excluded.published;

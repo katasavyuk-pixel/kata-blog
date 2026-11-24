@@ -8,4 +8,4 @@ Tres formas de usarlo:
 2. Con ChatGPT u otro chat sin skills: pega SKILL.md como instrucciones y adjunta las plantillas. Si no puede ejecutar Python, calcula a mano con las referencias, en especial references/puntuacion.md.
 3. A mano, con una hoja de cálculo: abre assets/registro-visibilidad-ia.plantilla.csv y registra una fila por asistente y pregunta.
 
-La rutina tarda unos 30 minutos al mes. Los archivos de ejemplo contienen datos inventados. No son datos de negocios reales.
+La rutina tarda unos 30 minutos al mes. No promete que tu negocio aparezca ni que ocupe una posición. Los archivos de ejemplo contienen datos inventados. No son datos de negocios reales.

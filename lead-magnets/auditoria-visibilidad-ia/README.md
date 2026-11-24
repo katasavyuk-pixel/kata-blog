@@ -37,6 +37,6 @@ El orden importa: primero el archivo y después la fila que activa su descarga.
 
 1. Sube `auditoria-visibilidad-ia.zip` al bucket `lead-magnets`, en la ruta `auditoria-visibilidad-ia/auditoria-visibilidad-ia.zip`.
 2. Ejecuta el bloque correspondiente de `supabase/seeds/resources.sql`.
-3. Comprueba que `/herramientas` muestra el recurso y envía la secuencia de prueba con `resource: auditoria-visibilidad-ia`; confirma el correo y abre la descarga.
+3. Comprueba que `/herramientas` muestra el recurso y envía `POST /api/welcome-sequence/test` con `resource: auditoria-visibilidad-ia`; confirma el correo y abre la descarga desde el botón del email.
 
 Al publicar la fila, este recurso pasa automáticamente a ser el «regalo de la semana»: `src/lib/regalo-semana.ts` elige la fila publicada más reciente.
