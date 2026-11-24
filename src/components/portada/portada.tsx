@@ -217,7 +217,7 @@ function PuertaLecturas({ firmadas }: { firmadas: Post[] }) {
       id="puerta-lecturas"
       titulo="Lecturas"
       icono="M12 6.5C10 5 7 4.5 4 5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z M12 6.5V19.5"
-      entradilla="Guías, reflexiones y casos, con sus números y con lo que falló."
+      entradilla="Guías, casos, notas y reflexiones, con sus números y con lo que falló."
     >
       <ul className="mt-4">
         {firmadas.map((post) => (

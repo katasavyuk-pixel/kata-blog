@@ -1,6 +1,6 @@
 import { PROYECTOS, TIPOS_ENTRADA } from "@/config/bitacora";
 import { LOGOS_DE_SKILL } from "@/config/logos";
-import { etiquetaDeEje } from "@/config/taxonomy";
+import { FORMATOS, etiquetaDeEje } from "@/config/taxonomy";
 import { entradasBitacora } from "@/lib/bitacora";
 import { ACTIVOS } from "@/lib/catalogo";
 import type { PortadaLeida } from "@/lib/portada-lectura";
@@ -52,7 +52,7 @@ function diaCorto(iso: string): string {
   return new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short", timeZone: "UTC" }).replace(".", "");
 }
 
-export function columnasDelMural({ primera, breves }: Pick<PortadaLeida, "primera" | "breves">): Columna[] {
+export function columnasDelMural({ primera, breves, firmadas }: Pick<PortadaLeida, "primera" | "breves" | "firmadas">): Columna[] {
   const noticias: Pieza[] = [];
   if (primera) {
     const { articulo } = primera;
@@ -97,9 +97,37 @@ export function columnasDelMural({ primera, breves }: Pick<PortadaLeida, "primer
     ];
   });
 
-  const bitacora: Pieza[] = entradasBitacora.slice(0, MAX_BITACORA).map((entrada, i) => {
+  const slugsEnBitacora = new Set(
+    entradasBitacora.flatMap((entrada) => {
+      const prefijo = "/blog/";
+      if (!entrada.enlace.startsWith(prefijo)) return [];
+      return [entrada.enlace.slice(prefijo.length).split(/[?#]/)[0]];
+    }),
+  );
+  const elementosBitacora = [
+    ...entradasBitacora.map((entrada, orden) => ({ dia: entrada.fecha.slice(0, 10), tipo: "entrada" as const, orden, entrada })),
+    ...firmadas
+      .filter((post) => !slugsEnBitacora.has(post.slug))
+      .map((post, orden) => ({ dia: post.date.slice(0, 10), tipo: "post" as const, orden, post })),
+  ].sort((a, b) => b.dia.localeCompare(a.dia) || (a.tipo === b.tipo ? a.orden - b.orden : a.tipo === "post" ? -1 : 1));
+
+  const bitacora: Pieza[] = elementosBitacora.slice(0, MAX_BITACORA).map((elemento, i) => {
+    if (elemento.tipo === "post") {
+      const { post } = elemento;
+      const comun = {
+        id: post.slug,
+        href: post.permalink,
+        externo: false,
+        kicker: `${diaCorto(post.date)} · Publicado`,
+        titulo: post.title,
+        pie: FORMATOS[post.formato],
+      };
+      return post.cover ? { ...comun, estilo: "foto" as const, imagen: post.cover } : { ...comun, estilo: i % 2 === 0 ? ("tinta" as const) : ("papel" as const) };
+    }
+
+    const { entrada } = elemento;
     // An entry about a piece shows that piece's cover.
-    const post = entrada.enlace.startsWith("/blog/") ? getPost(entrada.enlace.slice("/blog/".length).split("#")[0]) : undefined;
+    const post = entrada.enlace.startsWith("/blog/") ? getPost(entrada.enlace.slice("/blog/".length).split(/[?#]/)[0]) : undefined;
     const comun = {
       id: entrada.slug,
       href: entrada.permalink,
@@ -125,6 +153,6 @@ export function columnasDelMural({ primera, breves }: Pick<PortadaLeida, "primer
   return [
     columna("noticias", "Noticias de hoy", "/noticias", "sube", noticias),
     columna("skills", "Skills", "/marketplace", "baja", skills),
-    columna("bitacora", "Bitácora", "/bitacora", "sube", bitacora, entradasBitacora.length),
+    columna("bitacora", "Bitácora", "/bitacora", "sube", bitacora, elementosBitacora.length),
   ].filter((c) => c.piezas.length > 0);
 }

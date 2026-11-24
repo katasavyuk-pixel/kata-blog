@@ -63,6 +63,7 @@ function portada(over: Partial<Parameters<typeof construirPortada<Post, Item, It
     noticias: [],
     reflexiones: [],
     guias: [],
+    otras: [],
     sistemas: [],
     activos: [],
     destacados: [],
@@ -150,6 +151,8 @@ describe('la tríada', () => {
   const deOtraPieza = post('reflexion-sobre-una-nota', '2026-10-06');
   const nota = post('una-nota', '2026-08-01');
   const guia = post('guia-con-activo', '2026-10-03');
+  const sistema = post('sistema-reciente', '2026-10-07');
+  const notaReciente = post('nota-reciente', '2026-10-06');
 
   const relaciones = (pieza: Post) => {
     if (pieza === conActivo) return { aRaizDe: [noticia], seResuelveCon: [{ id: 'calculadora' }, { id: 'otro' }] };
@@ -158,7 +161,7 @@ describe('la tríada', () => {
     if (pieza === guia) return { aRaizDe: [], seResuelveCon: [{ id: 'calculadora' }] };
     return { aRaizDe: [], seResuelveCon: [] };
   };
-  const base = { noticias: [noticia, otraNoticia], reflexiones: [deOtraPieza, suelta, sinActivo, conActivo], guias: [guia], relaciones };
+  const base = { noticias: [noticia, otraNoticia], reflexiones: [deOtraPieza, suelta, sinActivo, conActivo], guias: [guia], otras: [sistema, notaReciente], relaciones };
 
   test('nace de una noticia; la completa lo que la resuelve, y las completas van primero', () => {
     const { triadas } = portada(base);
@@ -190,12 +193,14 @@ describe('la tríada', () => {
     assert.equal(todas.lecturas.length, muchas.length - MAX_TRIADAS);
   });
 
-  test('las lecturas mezclan reflexiones y guías por fecha, con tope', () => {
+  test('las lecturas mezclan todos los formatos firmados por fecha, con tope', () => {
     const { lecturas } = portada(base);
     assert.deepEqual(
       lecturas.map((p) => p.slug),
-      ['reflexion-sobre-una-nota', 'reflexion-suelta', 'guia-con-activo'],
+      ['sistema-reciente', 'reflexion-sobre-una-nota', 'nota-reciente'],
     );
+    assert.ok(Date.parse(lecturas[0].date) > Date.parse(guia.date), 'el sistema más nuevo que la guía aparece primero.');
+    assert.ok(Date.parse(lecturas[2].date) > Date.parse(guia.date), 'la nota más nueva que la guía entra en el tope.');
     assert.equal(lecturas.length, MAX_LECTURAS);
   });
 });

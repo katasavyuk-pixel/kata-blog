@@ -54,6 +54,8 @@ export type Portada<P, I, A, S> = {
   breves: { edicion: P; items: Breve[]; alDia: boolean } | null;
   /** Complete triads first, then newest. */
   triadas: Triada<P, I>[];
+  /** Every published hand-written editorial piece, including pieces in triads. */
+  firmadas: P[];
   /** Signed reading that is not already in a triad above. */
   lecturas: P[];
   taller: { activos: A[]; totalActivos: number; sistemas: P[]; totalSistemas: number } | null;
@@ -73,6 +75,7 @@ export function construirPortada<P extends PortadaPost, I, A, S>({
   noticias,
   reflexiones,
   guias,
+  otras,
   sistemas,
   activos,
   destacados,
@@ -88,6 +91,8 @@ export function construirPortada<P extends PortadaPost, I, A, S>({
   /** Newest first, each list. */
   reflexiones: readonly P[];
   guias: readonly P[];
+  /** Signed shelves beyond reflections and guides: systems, tests and notes. */
+  otras: readonly P[];
   sistemas: readonly P[];
   /** Every installable asset, and the short sample a listing shows. */
   activos: readonly A[];
@@ -120,7 +125,7 @@ export function construirPortada<P extends PortadaPost, I, A, S>({
     : [];
   const edicion = latestEdition && items.length > 0 ? { edicion: latestEdition, items, alDia: alDia(latestEdition) } : null;
 
-  const firmadas = [...reflexiones, ...guias].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+  const firmadas = [...reflexiones, ...guias, ...otras].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
   const todas: Triada<P, I>[] = firmadas.flatMap((pieza) => {
     const { aRaizDe, seResuelveCon } = relaciones(pieza);
     const noticia = aRaizDe.find((post) => esNoticia.has(post.slug));
@@ -152,6 +157,7 @@ export function construirPortada<P extends PortadaPost, I, A, S>({
     primera,
     breves: edicion,
     triadas,
+    firmadas,
     lecturas: firmadas.filter((pieza) => !enTriada.has(pieza.slug)).slice(0, MAX_LECTURAS),
     taller:
       activos.length > 0 || sistemas.length > 0
