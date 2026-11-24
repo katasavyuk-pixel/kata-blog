@@ -31,9 +31,9 @@ Cambio total: +11 puntos frente a 2026-10 (17/100). Cambios por asistente: chatg
 - guialocal-ejemplo.test: 3 citas.
 
 ## Lo que saben de ti (P10)
-- si: 1 respuesta(s).
-- parcial: 1 respuesta(s).
-- no: 1 respuesta(s).
+- si: 1 respuesta.
+- parcial: 1 respuesta.
+- no: 1 respuesta.
 
 ## Señales para los arreglos
 - Aparecen competidores (Corte Norte destaca): compara reseñas recientes y pide reseñas tras cada trabajo.

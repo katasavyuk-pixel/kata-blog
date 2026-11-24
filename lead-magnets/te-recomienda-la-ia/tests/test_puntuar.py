@@ -139,6 +139,96 @@ class PuntuarTest(unittest.TestCase):
             self.assertIn("Casi nunca sales, en ningún asistente", informe)
             self.assertIn("Visibilidad en IA", informe)
 
+    def test_lee_csv_separado_por_punto_y_coma(self):
+        fila = self.fila()
+        with tempfile.TemporaryDirectory() as directorio:
+            ruta = Path(directorio, "registro.csv")
+            with ruta.open("w", encoding="utf-8", newline="") as archivo:
+                escritor = csv.DictWriter(archivo, fieldnames=HEADER, delimiter=";")
+                escritor.writeheader()
+                escritor.writerow(fila)
+            resultado = self.ejecutar(ruta, directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            self.assertEqual(json.loads(resultado.stdout)["mes"]["puntuacion"], 100)
+
+    def test_lee_csv_separado_por_tabulacion(self):
+        with tempfile.TemporaryDirectory() as directorio:
+            ruta = Path(directorio, "registro.csv")
+            with ruta.open("w", encoding="utf-8", newline="") as archivo:
+                escritor = csv.DictWriter(archivo, fieldnames=HEADER, delimiter="\t")
+                escritor.writeheader()
+                escritor.writerow(self.fila())
+            resultado = self.ejecutar(ruta, directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+
+    def test_lee_csv_con_bom(self):
+        fila = self.fila()
+        with tempfile.TemporaryDirectory() as directorio:
+            ruta = self.escribir_csv([fila], directorio)
+            ruta.write_bytes(ruta.read_bytes().replace(b"mes,fecha", b"\xef\xbb\xbfmes,fecha", 1))
+            resultado = self.ejecutar(ruta, directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+
+    def test_reintenta_csv_cp1252(self):
+        fila = self.fila(pregunta="¿Cuál es la mejor peluquería?")
+        with tempfile.TemporaryDirectory() as directorio:
+            ruta = Path(directorio, "registro.csv")
+            with ruta.open("w", encoding="cp1252", newline="") as archivo:
+                escritor = csv.DictWriter(archivo, fieldnames=HEADER)
+                escritor.writeheader()
+                escritor.writerow(fila)
+            resultado = self.ejecutar(ruta, directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+
+    def test_normaliza_valores_escritos_a_mano(self):
+        filas = [
+            self.fila(asistente=" ChatGPT ", pregunta_id="p01", mencionado="Sí", posicion="1º"),
+            self.fila(asistente="Perplexity", pregunta_id="p02", mencionado="SI", posicion="1."),
+            self.fila(asistente=" Gemini ", pregunta_id="p03", mencionado="sí", posicion=" 2 "),
+            self.fila(pregunta_id="p10", pregunta="¿Qué sabes?", mencionado="No", posicion="", datos_correctos="Parcial"),
+        ]
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio), directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            self.assertEqual(json.loads(resultado.stdout)["mes"]["puntuacion"], 89)
+
+    def test_archivo_inexistente_termina_sin_traceback(self):
+        with tempfile.TemporaryDirectory() as directorio:
+            ruta = Path(directorio, "no-existe.csv")
+            resultado = self.ejecutar(ruta, directorio)
+            self.assertEqual(resultado.returncode, 1)
+            self.assertIn(f"Error: no encuentro el archivo {ruta}", resultado.stderr)
+            self.assertNotIn("Traceback", resultado.stderr)
+
+    def test_plantilla_vacia_termina_sin_traceback(self):
+        with tempfile.TemporaryDirectory() as directorio:
+            ruta = self.escribir_csv([], directorio)
+            resultado = self.ejecutar(ruta, directorio)
+            self.assertEqual(resultado.returncode, 1)
+            self.assertIn("El registro está vacío: añade una fila por asistente y pregunta (mira ejemplos/registro-ejemplo.csv) y vuelve a ejecutarlo.", resultado.stderr)
+            self.assertNotIn("Traceback", resultado.stderr)
+
+    def test_informe_usa_singular_para_un_elemento(self):
+        fila = self.fila(competidores="Otro negocio", fuentes="ejemplo.test")
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(self.escribir_csv([fila], directorio), directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            informe = Path(directorio, "informe.md").read_text(encoding="utf-8")
+            self.assertIn("1 respuesta)", informe)
+            self.assertIn("1 mención.", informe)
+            self.assertIn("1 cita.", informe)
+            self.assertNotIn("1 respuesta(s)", informe)
+
+    def test_presencia_usa_redondeo_half_up(self):
+        filas = [self.fila(posicion="1")] + [
+            self.fila(pregunta_id=f"P{indice:02d}", mencionado="no", posicion="")
+            for indice in range(2, 9)
+        ]
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio), directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            self.assertEqual(json.loads(resultado.stdout)["mes"]["presencia"], 13)
+
 
 if __name__ == "__main__":
     unittest.main()

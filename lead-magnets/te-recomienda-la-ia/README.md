@@ -6,7 +6,7 @@ Skill descargable de medición mensual para saber si ChatGPT, Gemini y Perplexit
 |---|---|---|
 | **¿Te recomienda la IA?** (`te-recomienda-la-ia.zip`) | Bucket privado `lead-magnets`, ruta `te-recomienda-la-ia/te-recomienda-la-ia.zip`, fila `te-recomienda-la-ia` en `public.resources` | Formulario del artículo → doble opt-in → descarga en el correo confirmado, o desde `/herramientas`. |
 
-## Qué contiene el zip
+## 📦 Qué contiene el zip
 
 En la raíz del zip, `LEEME.txt` explica las tres formas de usar el recurso, la duración aproximada y que los ejemplos son inventados. La carpeta `te-recomienda-la-ia/` contiene:
 
@@ -21,7 +21,7 @@ En la raíz del zip, `LEEME.txt` explica las tres formas de usar el recurso, la 
 - `ejemplos/registro-ejemplo.csv`: 60 filas de dos meses con datos inventados.
 - `ejemplos/informe-ejemplo.md`: informe generado por el script a partir del CSV de ejemplo.
 
-## Cómo reconstruir el zip
+## 🧰 Cómo reconstruir el zip
 
 Desde la carpeta `zip/`:
 
@@ -31,7 +31,7 @@ cd zip && zip -q -r ../te-recomienda-la-ia.zip . -x '.*'
 
 El zip es un artefacto, no se versiona en el repositorio.
 
-## Publicar
+## 🚀 Publicar
 
 El orden importa: primero el archivo y después la fila que activa su descarga.
 

@@ -3,6 +3,7 @@
 
 import argparse
 import csv
+import io
 import json
 import re
 import sys
@@ -15,6 +16,22 @@ COLUMNAS = (
     "mes", "fecha", "asistente", "pregunta_id", "pregunta", "mencionado",
     "posicion", "competidores", "fuentes", "datos_correctos", "notas",
 )
+
+
+def normalizar_filas(filas):
+    """Normaliza los valores escritos a mano antes de validarlos."""
+    for fila in filas:
+        for campo in ("mes", "fecha", "pregunta", "competidores", "fuentes", "notas"):
+            fila[campo] = fila.get(campo, "").strip()
+        fila["asistente"] = fila.get("asistente", "").strip().lower()
+        fila["pregunta_id"] = fila.get("pregunta_id", "").strip().upper()
+        for campo in ("mencionado", "datos_correctos"):
+            valor = fila.get(campo, "").strip().lower()
+            fila[campo] = valor.replace("í", "i")
+        posicion = fila.get("posicion", "").strip()
+        coincidencia = re.fullmatch(r"\s*(\d+)\s*[º°ª.]?\s*", posicion)
+        fila["posicion"] = coincidencia.group(1) if coincidencia else posicion
+    return filas
 
 
 def validar(filas):
@@ -30,18 +47,18 @@ def validar(filas):
             date.fromisoformat(fecha)
         except ValueError:
             problemas.append("fecha debe tener formato AAAA-MM-DD")
-        asistente = fila.get("asistente", "").strip().lower()
+        asistente = fila.get("asistente", "")
         if asistente not in ASISTENTES:
             problemas.append("asistente desconocido (usa chatgpt, gemini o perplexity)")
-        if fila.get("pregunta_id", "").strip() not in {f"P{i:02d}" for i in range(1, 11)}:
+        if fila.get("pregunta_id", "") not in {f"P{i:02d}" for i in range(1, 11)}:
             problemas.append("pregunta_id debe estar entre P01 y P10")
-        mencionado = fila.get("mencionado", "").strip().lower()
+        mencionado = fila.get("mencionado", "")
         if mencionado not in {"", "si", "no"}:
             problemas.append("mencionado debe ser si o no (o vacío si falta la respuesta)")
-        posicion = fila.get("posicion", "").strip()
+        posicion = fila.get("posicion", "")
         if posicion and (not posicion.isdigit() or int(posicion) < 1):
             problemas.append("posicion debe ser un entero positivo o estar vacía")
-        if fila.get("datos_correctos", "").strip().lower() not in {"", "si", "no", "parcial"}:
+        if fila.get("datos_correctos", "") not in {"", "si", "no", "parcial"}:
             problemas.append("datos_correctos debe ser si, no o parcial")
         if problemas:
             errores.append(f"Fila {numero}: " + "; ".join(problemas))
@@ -89,12 +106,12 @@ def resumir(filas, mes):
             "puntos": subtotal,
             "respuestas_obtenidas": len(grupo),
             "puntuacion": redondear(100 * subtotal / (3 * len(grupo))) if grupo else None,
-            "presencia": round(100 * sum(f["mencionado"].strip().lower() == "si" for f in grupo) / len(grupo)) if grupo else None,
+            "presencia": redondear(100 * sum(f["mencionado"] == "si" for f in grupo) / len(grupo)) if grupo else None,
         }
     return {
         "mes": mes, "puntos": puntos, "respuestas_obtenidas": len(respondidas),
         "respuestas_esperadas": 27, "puntuacion": puntuacion, "banda": banda(puntuacion),
-        "presencia": round(100 * mencionadas / len(respondidas)) if respondidas else 0,
+        "presencia": redondear(100 * mencionadas / len(respondidas)) if respondidas else 0,
         "posicion_media": round(sum(posiciones) / len(posiciones), 2) if posiciones else None,
         "por_asistente": por_asistente,
     }
@@ -140,18 +157,19 @@ def generar_informe(filas, negocio, mes):
               f"Presencia: {resumen['presencia']} %. Posición media cuando aparece con posición registrada: {resumen['posicion_media'] if resumen['posicion_media'] is not None else 'sin datos'}.", "",
               "## Por asistente"]
     for asistente, datos in resumen["por_asistente"].items():
-        nota = "sin respuestas" if datos["puntuacion"] is None else f"{datos['puntuacion']}/100; presencia {datos['presencia']} % ({datos['respuestas_obtenidas']} respuestas)"
+        respuestas = datos["respuestas_obtenidas"]
+        nota = "sin respuestas" if datos["puntuacion"] is None else f"{datos['puntuacion']}/100; presencia {datos['presencia']} % ({respuestas} {'respuesta' if respuestas == 1 else 'respuestas'})"
         lineas.append(f"- **{asistente}**: {nota}.")
     lineas.extend(["", "## Comparado con el mes anterior"])
     lineas.append(aviso or f"Cambio total: {cambio['delta']:+} puntos frente a {cambio['mes_anterior']} ({cambio['puntuacion_anterior']}/100). Cambios por asistente: " + ", ".join(f"{a} {d:+}" for a, d in cambio["delta_por_asistente"].items()) + ".")
     lineas.extend(["", "## Quién sale en tu lugar"])
-    lineas.extend([f"- {nombre}: {cantidad} menciones." for nombre, cantidad in competidores.most_common(5)] or ["- No se registraron competidores."])
+    lineas.extend([f"- {nombre}: {cantidad} {'mención' if cantidad == 1 else 'menciones'}." for nombre, cantidad in competidores.most_common(5)] or ["- No se registraron competidores."])
     lineas.extend(["", "## Fuentes que citan"])
-    lineas.extend([f"- {dominio}: {cantidad} citas." for dominio, cantidad in fuentes.most_common(10)] or ["- No se registraron fuentes."])
+    lineas.extend([f"- {dominio}: {cantidad} {'cita' if cantidad == 1 else 'citas'}." for dominio, cantidad in fuentes.most_common(10)] or ["- No se registraron fuentes."])
     lineas.extend(["", "### Fuentes en respuestas donde no apareces"])
-    lineas.extend([f"- {dominio}: {cantidad} citas." for dominio, cantidad in fuentes_ausencia.most_common(10)] or ["- No se registraron fuentes en esas respuestas."])
+    lineas.extend([f"- {dominio}: {cantidad} {'cita' if cantidad == 1 else 'citas'}." for dominio, cantidad in fuentes_ausencia.most_common(10)] or ["- No se registraron fuentes en esas respuestas."])
     lineas.extend(["", "## Lo que saben de ti (P10)"])
-    lineas.extend([f"- {estado}: {cantidad} respuesta(s)." for estado, cantidad in p10_respuestas.items()] or ["- No hay respuestas P10."])
+    lineas.extend([f"- {estado}: {cantidad} {'respuesta' if cantidad == 1 else 'respuestas'}." for estado, cantidad in p10_respuestas.items()] or ["- No hay respuestas P10."])
     lineas.extend(["", "## Señales para los arreglos"])
     senales = []
     if resumen["presencia"] < 50:
@@ -176,17 +194,27 @@ def main(argv=None):
     parser.add_argument("--mes", help="mes AAAA-MM; por defecto usa el último mes del registro")
     args = parser.parse_args(argv)
     try:
-        with args.csv.open(encoding="utf-8-sig", newline="") as archivo:
-            lector = csv.DictReader(archivo)
-            if lector.fieldnames is None or not set(COLUMNAS).issubset(lector.fieldnames):
-                raise ValueError("El CSV debe incluir las columnas: " + ", ".join(COLUMNAS))
-            filas = list(lector)
-    except (OSError, csv.Error) as error:
-        print(f"Error al leer el CSV: {error}", file=sys.stderr)
+        try:
+            contenido = args.csv.read_text(encoding="utf-8-sig")
+        except UnicodeDecodeError:
+            contenido = args.csv.read_text(encoding="cp1252")
+        primera_linea = contenido.splitlines()[0] if contenido.splitlines() else ""
+        delimitador = csv.Sniffer().sniff(primera_linea, delimiters=",;\t").delimiter
+        lector = csv.DictReader(io.StringIO(contenido, newline=""), delimiter=delimitador)
+        if lector.fieldnames is None or not set(COLUMNAS).issubset(lector.fieldnames):
+            raise ValueError("El CSV debe incluir las columnas: " + ", ".join(COLUMNAS))
+        filas = normalizar_filas(list(lector))
+        if not filas:
+            raise ValueError("El registro está vacío: añade una fila por asistente y pregunta (mira ejemplos/registro-ejemplo.csv) y vuelve a ejecutarlo.")
+        errores = validar(filas)
+    except FileNotFoundError:
+        print(f"Error: no encuentro el archivo {args.csv}", file=sys.stderr)
         return 1
-    errores = validar(filas)
+    except (ValueError, OSError, UnicodeError, csv.Error) as error:
+        print(f"Error: {error}", file=sys.stderr)
+        return 1
     if errores:
-        print("Errores de validación:\n" + "\n".join(errores), file=sys.stderr)
+        print("Error: Errores de validación:\n" + "\n".join(errores), file=sys.stderr)
         return 1
     meses = sorted({f["mes"].strip() for f in filas})
     if not meses:
@@ -196,12 +224,12 @@ def main(argv=None):
     if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", mes) or mes not in meses:
         print(f"Error: no hay registros válidos para el mes {mes}.", file=sys.stderr)
         return 1
-    resumen, informe = generar_informe(filas, args.negocio, mes)
     try:
+        resumen, informe = generar_informe(filas, args.negocio, mes)
         args.salida.parent.mkdir(parents=True, exist_ok=True)
         args.salida.write_text(informe, encoding="utf-8")
-    except OSError as error:
-        print(f"Error al escribir el informe: {error}", file=sys.stderr)
+    except (ValueError, OSError, UnicodeError) as error:
+        print(f"Error: no se pudo generar el informe: {error}", file=sys.stderr)
         return 1
     print(json.dumps({"mes": resumen}, ensure_ascii=False, sort_keys=True))
     return 0

@@ -2,15 +2,17 @@
 
 Esta medición mensual registra si ChatGPT, Gemini y Perplexity nombran tu negocio y cómo cambia el resultado de un mes a otro.
 
-Dos preguntas distintas:
-- ¿Puede una IA leer mi web? Compruébalo con la skill gratuita Visibilidad en IA.
+🔀 Dos preguntas distintas:
+- ¿Puede una IA leer mi web? Compruébalo con la skill gratuita [Visibilidad en IA](https://kata.ianexora.com/marketplace/visibilidad-en-ia).
 - ¿Me recomienda la IA? Mide si te nombra con este recurso.
 - Primero que pueda leerte; luego, medir si te nombra.
 
-Tres formas de usarlo:
+🧭 Tres formas de usarlo:
 
 1. Con un agente que entiende Agent Skills (Claude Code, Claude app, Codex, Cursor…): copia la carpeta te-recomienda-la-ia/ en la carpeta de skills de tu agente. Sigue SKILL.md.
-2. Con ChatGPT u otro chat sin skills: pega SKILL.md como instrucciones y adjunta las plantillas. Si no puede ejecutar Python, calcula a mano con las referencias, en especial references/puntuacion.md.
+2. Con ChatGPT u otro chat sin skills: pega SKILL.md como instrucciones y adjunta las plantillas. Si no puede ejecutar Python, calcula a mano con las referencias, en especial [references/puntuacion.md](te-recomienda-la-ia/references/puntuacion.md).
 3. A mano, con una hoja de cálculo: abre assets/registro-recomendaciones-ia.plantilla.csv y registra una fila por asistente y pregunta.
+
+⚙️ Requisitos: Python 3.9 o posterior, sin instalar nada (solo biblioteca estándar); en Windows el comando puede ser `python` o `py` en vez de `python3`. Ejecuta desde la carpeta de la skill. Ayuda: `python3 scripts/puntuar.py --help`. El CSV acepta comas o punto y coma, y «si/sí/no» en cualquier combinación de mayúsculas y minúsculas.
 
 La rutina tarda unos 30 minutos al mes. No promete que tu negocio aparezca ni que ocupe una posición. Los archivos de ejemplo contienen datos inventados. No son datos de negocios reales.
