@@ -60,6 +60,7 @@ export const PUENTE_POR_POST: Record<string, GuiaNbi> = {
   "como-configurar-meta-business-agent-whatsapp-business": "agente",
   "recepcionista-ia-whatsapp-peluqueria": "agente",
   "responder-resenas-google-con-ia": "agente",
+  "politica-de-uso-de-ia-en-la-empresa": "agente",
 };
 
 /** The guide's URL with the blog's UTM convention (`utm_medium=puente`). */

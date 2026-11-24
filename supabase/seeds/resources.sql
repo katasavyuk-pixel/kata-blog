@@ -77,3 +77,24 @@ on conflict (slug) do update set
   file_path      = excluded.file_path,
   requires_email = excluded.requires_email,
   published      = excluded.published;
+
+-- ---------------------------------------------------------------------------
+-- Kit de política de uso de IA (normas de IA para tu equipo)
+-- Source: lead-magnets/kit-politica-uso-ia/
+-- Upload: kit-politica-uso-ia.zip → lead-magnets/kit-politica-uso-ia/
+-- ---------------------------------------------------------------------------
+insert into public.resources (slug, title, description, file_path, requires_email, published)
+values (
+  'kit-politica-uso-ia',
+  'Kit de política de uso de IA para tu equipo',
+  'La política de uso de IA en una página (Word), el semáforo de datos para imprimir, el guion de una charla de 20 minutos y el registro de herramientas, formación e incidencias (Excel).',
+  'kit-politica-uso-ia/kit-politica-uso-ia.zip',
+  true,
+  true
+)
+on conflict (slug) do update set
+  title          = excluded.title,
+  description    = excluded.description,
+  file_path      = excluded.file_path,
+  requires_email = excluded.requires_email,
+  published      = excluded.published;
