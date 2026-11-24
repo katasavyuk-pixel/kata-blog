@@ -1,0 +1,11 @@
+AUDITORÍA DE VISIBILIDAD EN IA
+
+Este recurso mide si ChatGPT, Gemini y Perplexity recomiendan tu negocio, y cómo cambia el resultado de un mes a otro. No mide si una IA puede leer tu web.
+
+Tres formas de usarlo:
+
+1. Con un agente que entiende Agent Skills (Claude Code, Claude app, Codex, Cursor…): copia la carpeta auditoria-visibilidad-ia/ en la carpeta de skills de tu agente. Sigue SKILL.md.
+2. Con ChatGPT u otro chat sin skills: pega SKILL.md como instrucciones y adjunta las plantillas. Si no puede ejecutar Python, calcula a mano con las referencias, en especial references/puntuacion.md.
+3. A mano, con una hoja de cálculo: abre assets/registro-visibilidad-ia.plantilla.csv y registra una fila por asistente y pregunta.
+
+La rutina tarda unos 30 minutos al mes. Los archivos de ejemplo contienen datos inventados. No son datos de negocios reales.
