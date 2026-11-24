@@ -1,16 +1,13 @@
-import { PROYECTOS, TIPOS_ENTRADA } from "@/config/bitacora";
 import { LOGOS_DE_SKILL } from "@/config/logos";
 import { FORMATOS, etiquetaDeEje } from "@/config/taxonomy";
-import { entradasBitacora } from "@/lib/bitacora";
 import { ACTIVOS } from "@/lib/catalogo";
 import type { PortadaLeida } from "@/lib/portada-lectura";
-import { getPost } from "@/lib/posts";
+import { esNuevo, tituloEnFrase } from "@/lib/portada-texto";
 
 /**
- * What the home's mural shows (2026-10-15, Kata chose «D»: the three running
- * things of the site as moving columns of cards). Everything comes from what
- * is published: the day's edition, the marketplace and the build log, so the
- * mural changes when the site does and nobody keeps it by hand.
+ * What the home's mural shows (2026-10-15, Kata chose «D»: three moving
+ * columns of cards). Everything comes from published content: the day's
+ * edition, the marketplace and the latest signed articles.
  *
  * Pure apart from the collections: the hero passes the front page it already
  * read, and tests/mural.test.ts runs it against the real content.
@@ -26,6 +23,7 @@ export type Pieza = {
   kicker: string;
   titulo: string;
   pie?: string;
+  nuevo?: boolean;
 } & (
   | { estilo: "foto"; imagen: Imagen }
   | { estilo: "tinta" | "papel" | "rojo" }
@@ -33,7 +31,7 @@ export type Pieza = {
 );
 
 export type Columna = {
-  id: "noticias" | "skills" | "bitacora";
+  id: "noticias" | "skills" | "articulos";
   etiqueta: string;
   href: string;
   total: number;
@@ -45,14 +43,17 @@ export type Columna = {
 
 /** How long each card stays on its way through, in seconds. */
 const SEGUNDOS_POR_PIEZA = 11;
-const MAX_BITACORA = 9;
+const MAX_ARTICULOS = 9;
 
 /** «2026-10-15T…» → «15 oct». */
 function diaCorto(iso: string): string {
   return new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short", timeZone: "UTC" }).replace(".", "");
 }
 
-export function columnasDelMural({ primera, breves, firmadas }: Pick<PortadaLeida, "primera" | "breves" | "firmadas">): Columna[] {
+export function columnasDelMural(
+  { primera, breves, firmadas }: Pick<PortadaLeida, "primera" | "breves" | "firmadas">,
+  ahora = new Date(),
+): Columna[] {
   const noticias: Pieza[] = [];
   if (primera) {
     const { articulo } = primera;
@@ -61,7 +62,7 @@ export function columnasDelMural({ primera, breves, firmadas }: Pick<PortadaLeid
       href: articulo.permalink,
       externo: false,
       kicker: primera.alDia ? "La noticia del día" : "La última noticia",
-      titulo: articulo.title,
+      titulo: tituloEnFrase(articulo.title),
       pie: articulo.fuente_medio,
     };
     noticias.push(articulo.cover ? { ...comun, estilo: "foto", imagen: articulo.cover } : { ...comun, estilo: "tinta" });
@@ -97,23 +98,11 @@ export function columnasDelMural({ primera, breves, firmadas }: Pick<PortadaLeid
     ];
   });
 
-  const slugsEnBitacora = new Set(
-    entradasBitacora.flatMap((entrada) => {
-      const prefijo = "/blog/";
-      if (!entrada.enlace.startsWith(prefijo)) return [];
-      return [entrada.enlace.slice(prefijo.length).split(/[?#]/)[0]];
-    }),
-  );
-  const elementosBitacora = [
-    ...entradasBitacora.map((entrada, orden) => ({ dia: entrada.fecha.slice(0, 10), tipo: "entrada" as const, orden, entrada })),
-    ...firmadas
-      .filter((post) => !slugsEnBitacora.has(post.slug))
-      .map((post, orden) => ({ dia: post.date.slice(0, 10), tipo: "post" as const, orden, post })),
-  ].sort((a, b) => b.dia.localeCompare(a.dia) || (a.tipo === b.tipo ? a.orden - b.orden : a.tipo === "post" ? -1 : 1));
-
-  const bitacora: Pieza[] = elementosBitacora.slice(0, MAX_BITACORA).map((elemento, i) => {
-    if (elemento.tipo === "post") {
-      const { post } = elemento;
+  const articulos: Pieza[] = [...firmadas]
+    .filter((post) => post.formato !== "radar" && post.formato !== "leccion")
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, MAX_ARTICULOS)
+    .map((post, i) => {
       const comun = {
         id: post.slug,
         href: post.permalink,
@@ -121,25 +110,10 @@ export function columnasDelMural({ primera, breves, firmadas }: Pick<PortadaLeid
         kicker: `${diaCorto(post.date)} · Publicado`,
         titulo: post.title,
         pie: FORMATOS[post.formato],
+        nuevo: esNuevo(post.date, ahora),
       };
       return post.cover ? { ...comun, estilo: "foto" as const, imagen: post.cover } : { ...comun, estilo: i % 2 === 0 ? ("tinta" as const) : ("papel" as const) };
-    }
-
-    const { entrada } = elemento;
-    // An entry about a piece shows that piece's cover.
-    const post = entrada.enlace.startsWith("/blog/") ? getPost(entrada.enlace.slice("/blog/".length).split(/[?#]/)[0]) : undefined;
-    const comun = {
-      id: entrada.slug,
-      href: entrada.permalink,
-      externo: false,
-      kicker: `${diaCorto(entrada.fecha)} · ${TIPOS_ENTRADA[entrada.tipo].label}`,
-      titulo: entrada.titulo,
-      pie: PROYECTOS[entrada.proyecto],
-    };
-    if (post?.cover) return { ...comun, estilo: "foto" as const, imagen: post.cover };
-    if (entrada.tipo === "hito") return { ...comun, estilo: "rojo" as const };
-    return { ...comun, estilo: i % 2 === 0 ? ("tinta" as const) : ("papel" as const) };
-  });
+    });
 
   const columna = (
     id: Columna["id"],
@@ -153,6 +127,6 @@ export function columnasDelMural({ primera, breves, firmadas }: Pick<PortadaLeid
   return [
     columna("noticias", "Noticias de hoy", "/noticias", "sube", noticias),
     columna("skills", "Skills", "/marketplace", "baja", skills),
-    columna("bitacora", "Bitácora", "/bitacora", "sube", bitacora, elementosBitacora.length),
+    columna("articulos", "Artículos", "/blog", "sube", articulos),
   ].filter((c) => c.piezas.length > 0);
 }

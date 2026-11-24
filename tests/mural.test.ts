@@ -4,7 +4,6 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { LOGOS_DE_SKILL } from '@/config/logos';
-import { entradasBitacora } from '@/lib/bitacora';
 import { ACTIVOS } from '@/lib/catalogo';
 import { columnasDelMural } from '@/lib/mural';
 import { leerPortada } from '@/lib/portada-lectura';
@@ -21,27 +20,32 @@ const source = (file: string) => readFileSync(join(root, file), 'utf8');
 describe('el mural de la portada', () => {
   const columnas = columnasDelMural(leerPortada());
 
-  test('sale de lo publicado: noticias, skills y bitácora, en ese orden', () => {
-    assert.deepEqual(columnas.map((c) => c.id), ['noticias', 'skills', 'bitacora']);
+  test('sale de lo publicado: Noticias, Skills y Artículos, en ese orden', () => {
+    assert.deepEqual(columnas.map((c) => c.id), ['noticias', 'skills', 'articulos']);
     const skills = columnas.find((c) => c.id === 'skills');
     assert.deepEqual(skills?.piezas.map((p) => p.id), ACTIVOS.map((a) => a.id));
-    const bitacora = columnas.find((c) => c.id === 'bitacora');
-    const firmadas = leerPortada().firmadas;
-    const enlaces = new Set(entradasBitacora.flatMap((entrada) => entrada.enlace.startsWith("/blog/") ? [entrada.enlace.slice("/blog/".length).split(/[?#]/)[0]] : []));
-    const postsNuevos = firmadas.filter((post) => !enlaces.has(post.slug));
-    assert.equal(bitacora?.total, entradasBitacora.length + postsNuevos.length);
-    assert.equal(bitacora?.piezas[0].id, firmadas[0].slug, "la publicación más reciente encabeza la bitácora real.");
-    assert.ok(bitacora?.piezas.some((pieza) => pieza.id === firmadas[0].slug), "la publicación más reciente aparece en la columna.");
+    const articulos = columnas.find((c) => c.id === 'articulos');
+    const firmadas = leerPortada().firmadas.filter((post) => post.formato !== 'radar' && post.formato !== 'leccion');
+    const esperadas = [...firmadas].sort((a, b) => Date.parse(b.date) - Date.parse(a.date)).slice(0, 9);
+    assert.equal(articulos?.href, '/blog');
+    assert.equal(articulos?.total, esperadas.length);
+    assert.deepEqual(articulos?.piezas.map((pieza) => pieza.id), esperadas.map((post) => post.slug));
+    assert.equal(articulos?.piezas[0].id, firmadas.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))[0].slug, 'el artículo más reciente encabeza la columna.');
+    assert.ok(articulos?.piezas.some((pieza) => pieza.id === firmadas[0].slug), 'el artículo más reciente aparece en la columna.');
+    assert.ok(articulos?.piezas.every((pieza) => !leerPortada().firmadas.find((post) => post.slug === pieza.id)?.formato.match(/^(radar|leccion)$/)));
   });
 
-  test('combina entradas y publicaciones por día, con publicaciones primero en empate', () => {
+  test('marca Nuevo hasta siete días y aplica la frase al titular de la primera noticia', () => {
     const portada = leerPortada();
-    const ultimaEntrada = entradasBitacora[0];
-    const postMismoDia = { ...portada.firmadas[0], slug: "post-mismo-dia", permalink: "/blog/post-mismo-dia", date: `${ultimaEntrada.fecha.slice(0, 10)}T12:00:00.000Z`, title: "Post del mismo día" };
-    const bitacora = columnasDelMural({ ...portada, firmadas: [postMismoDia] }).find((columna) => columna.id === "bitacora");
-    assert.equal(bitacora?.piezas[0].id, "post-mismo-dia");
-    assert.equal(bitacora?.piezas[0].kicker, `${new Date(postMismoDia.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", timeZone: "UTC" }).replace(".", "")} · Publicado`);
-    assert.equal(bitacora?.total, entradasBitacora.length + 1);
+    const ahora = new Date('2026-10-30T12:00:00.000Z');
+    const nuevo = { ...portada.firmadas[0], slug: 'post-nuevo', permalink: '/blog/post-nuevo', date: '2026-10-24T12:00:00.000Z' };
+    const antiguo = { ...portada.firmadas[0], slug: 'post-antiguo', permalink: '/blog/post-antiguo', date: '2026-10-22T11:59:59.999Z' };
+    const articulos = columnasDelMural({ ...portada, firmadas: [antiguo, nuevo] }, ahora).find((columna) => columna.id === 'articulos');
+    assert.equal(articulos?.piezas.find((pieza) => pieza.id === 'post-nuevo')?.nuevo, true);
+    assert.equal(articulos?.piezas.find((pieza) => pieza.id === 'post-antiguo')?.nuevo, false);
+
+    const noticias = columnasDelMural({ ...portada, primera: portada.primera ? { ...portada.primera, articulo: { ...portada.primera.articulo, title: 'Este Titular Debería Estar En Frase' } } : null }).find((columna) => columna.id === 'noticias');
+    assert.equal(noticias?.piezas[0].titulo, 'Este titular debería estar en frase');
   });
 
   test('cada skill lleva su línea, y su foto si la tiene existe', () => {
@@ -65,23 +69,21 @@ describe('el mural de la portada', () => {
     assert.ok(columnas.find((c) => c.id === 'noticias')?.piezas.slice(1).every((p) => p.externo));
   });
 
-  test('el top es estático, igualado, con portada y sin control de movimiento', () => {
+  test('va después del h1, se puede parar y respeta el movimiento reducido', () => {
     const hero = source('src/components/home/hero.tsx');
     assert.ok(hero.indexOf('<h1') < hero.indexOf('<Mural'), 'nada antes del h1 (DESIGN.md, regla 1).');
     const mural = source('src/components/home/mural.tsx');
-    assert.match(mural, /grid items-stretch gap-3 sm:grid-cols-3/);
-    assert.match(mural, /aspect-video/);
-    assert.match(mural, /NuevoBadge/);
-    assert.match(mural, /min-w-0 flex-1 truncate/);
-    assert.match(mural, /shrink-0 whitespace-nowrap/);
-    assert.match(mural, /tituloEnFrase\(pieza\.titulo\)/);
-    assert.match(mural, /fecha=\{/);
-    assert.match(mural, /bg-surface-2/);
-    assert.doesNotMatch(mural, /MuralMovimiento|Parar el movimiento|mural-columna|animation/);
-    assert.doesNotMatch(hero, /MuralMovimiento|Parar el movimiento/);
+    assert.match(mural, /<ul aria-hidden>/, 'la segunda copia no se lee dos veces.');
+    assert.match(mural, /tabIndex=\{tabIndex\}/, 'ni se recorre dos veces con el tabulador.');
+    assert.match(mural, /<Link href=\{pieza\.href\} prefetch=\{false\}/, 'una tarjeta que entra y sale de la vista no precarga su página una y otra vez.');
+    assert.match(source('src/components/home/mural-movimiento.tsx'), /aria-pressed=\{pausado\}/);
+    const css = source('src/components/home/mural.css');
+    assert.match(source('src/components/home/mural.tsx'), /import "\.\/mural\.css";/);
+    assert.match(css, /\.mural:focus-within \.mural-columna/);
+    assert.match(css, /prefers-reduced-motion: reduce\)[\s\S]*?\.mural-columna \{\s*animation: none !important;/);
   });
 
   test('las noticias automáticas siguen diciendo que lo son', () => {
-    assert.match(source('src/components/portada/portada.tsx'), /primera \? etiquetaIa\(primera\.articulo\) : ETIQUETA_IA/);
+    assert.match(source('src/components/home/mural.tsx'), /\{ETIQUETA_IA\}/);
   });
 });

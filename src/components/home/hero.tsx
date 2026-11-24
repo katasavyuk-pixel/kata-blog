@@ -8,10 +8,10 @@ import { columnasDelMural } from "@/lib/mural";
 import type { PortadaLeida } from "@/lib/portada-lectura";
 
 /**
- * What the reader can do here, the one form, and beside them a static row from
- * the day's news, the skills and the build log. The h1 is still the first
- * thing on the page for a reader and for a crawler; the three cards follow it
- * in the document and sit beside it on wider screens.
+ * What the reader can do here, the one form, and beside them the moving mural
+ * of the day's news, the skills and the latest signed articles. The h1 is
+ * still the first thing on the page for a reader and for a crawler; the mural
+ * follows it in the document and sits beside it on wider screens.
  *
  * 2026-10-14: the h1 is the home's own (`siteConfig.home.titular`), about the
  * reader; the promise and the portrait moved to /sobre-mi.

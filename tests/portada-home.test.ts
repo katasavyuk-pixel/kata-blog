@@ -110,11 +110,27 @@ describe('sin contenido no hay bloque', () => {
     ]) {
       assert.ok(componente.includes(guarda), `Falta la guarda «${guarda}».`);
     }
+    assert.ok(componente.indexOf('<Destacado') < componente.indexOf('<RegaloSemana'));
     assert.ok(componente.indexOf('<RegaloSemana') < componente.indexOf('<PuertaLecturas'));
     assert.ok(componente.indexOf('<PuertaLecturas') < componente.indexOf('<div className="grid items-stretch gap-6 lg:grid-cols-2">'));
-    assert.match(componente, /const MAX_FIRMADAS = 4;/);
+    assert.ok(componente.indexOf('<ArchivoRegalos') < componente.indexOf('<QuienEscribe'));
+    assert.match(componente, /const MAX_FIRMADAS = 7;/);
+    assert.match(componente, /firmadas\.slice\(1, 7\)/);
+    assert.match(componente, /<span>Primicia<\/span>/);
+    assert.match(componente, /titulo="Catálogo"/);
+    assert.match(componente, /entradilla="Guías, casos, notas y reflexiones, con sus números y con lo que falló\."/);
+    assert.match(componente, /El regalo de esta semana/);
+    assert.match(componente, /line-clamp-2/);
+    assert.match(componente, /gift-thumbnail-float/);
     assert.match(componente, /lg:grid-cols-3/);
+    assert.match(componente, /lg:grid-cols-4/);
     assert.match(componente, /className="lg:col-span-2"/);
+    const regaloCss = source('src/components/portada/portada.css');
+    assert.match(regaloCss, /translateY\(-4px\)/);
+    assert.match(regaloCss, /prefers-reduced-motion: reduce/);
+    assert.match(regaloCss, /animation: none/);
+    const mural = source('src/components/home/mural.tsx');
+    assert.match(mural, /h-\[460px\][\s\S]*sm:h-\[600px\]/);
   });
 });
 

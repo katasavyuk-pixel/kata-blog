@@ -24,6 +24,7 @@ import { esNuevo, tituloEnFrase } from "@/lib/portada-texto";
 import { getYouTubeVideos } from "@/lib/youtube";
 import { ultimaEntrada } from "@/lib/bitacora";
 import Image from "next/image";
+import "@/components/portada/portada.css";
 
 /**
  * The home as the map of what a reader can do here (2026-10-14): four doors,
@@ -43,7 +44,7 @@ import Image from "next/image";
 const enlace = "font-semibold text-accent-ink underline underline-offset-[0.18em] hover:decoration-2";
 
 /** The featured signed piece plus three reading cards. */
-const MAX_FIRMADAS = 4;
+const MAX_FIRMADAS = 7;
 
 export async function Portada({ portada, cabecera }: { portada: PortadaLeida; cabecera: ReactNode }) {
   const { primera, breves, triadas, lecturas } = portada;
@@ -68,7 +69,7 @@ export async function Portada({ portada, cabecera }: { portada: PortadaLeida; ca
   const activos = ACTIVOS;
   // Signed pieces, whether a triad holds them or not, newest first.
   const firmadas = [...triadas.map((triada) => triada.pieza), ...lecturas]
-    .filter((post) => !post.protagonista && post.formato !== "leccion")
+    .filter((post) => !post.protagonista && post.formato !== "radar" && post.formato !== "leccion")
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, MAX_FIRMADAS);
   const destacado = firmadas[0];
@@ -80,7 +81,7 @@ export async function Portada({ portada, cabecera }: { portada: PortadaLeida; ca
       <Container size="wide" className="pb-16 sm:pb-24">
         {destacado ? <Destacado post={destacado} /> : null}
         {recursoDestacado ? <RegaloSemana recurso={recursoDestacado} post={articuloRegalo} /> : null}
-        {firmadas.length > 1 ? <PuertaLecturas firmadas={firmadas.slice(1)} /> : null}
+        {firmadas.length > 1 ? <PuertaLecturas firmadas={firmadas.slice(1, 7)} /> : null}
 
         <div className="grid items-stretch gap-6 lg:grid-cols-2">
           {primera || breves ? <PuertaNoticias primera={primera} breves={breves} /> : null}
@@ -213,10 +214,10 @@ function Destacado({ post }: { post: Post }) {
         </Link>
         <div className="flex min-w-0 flex-col p-5 sm:p-7">
           <p className="flex items-center justify-between gap-3 font-sans text-label font-semibold text-accent-ink">
-            <span>Destacado</span>
+            <span>Primicia</span>
             {esNuevo(post.date, new Date()) ? <NuevoBadge /> : null}
           </p>
-          <h2 className="mt-3 font-display text-[1.75rem] font-medium leading-tight sm:text-[2rem]">
+          <h2 className="mt-3 font-display text-[1.75rem] font-semibold leading-tight sm:text-[2rem]">
             <Link href={post.permalink} className="hover:text-accent-ink">{post.title}</Link>
           </h2>
           <p className="mt-3 line-clamp-4 text-[1.125rem] leading-relaxed text-muted">{post.dek ?? post.description}</p>
@@ -231,17 +232,20 @@ function Destacado({ post }: { post: Post }) {
 
 function RegaloSemana({ recurso, post }: { recurso: Resource; post?: Post }) {
   return (
-    <section aria-labelledby="regalo-semana" className="mt-8 border border-border bg-surface p-5 sm:p-7">
-      <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(18rem,1fr)] md:items-center">
-        <div>
+    <section aria-labelledby="regalo-semana" className="mt-8 border border-border bg-surface p-4 sm:p-5">
+      <div className="grid gap-4 md:grid-cols-4 md:items-center">
+        <Link href={post?.permalink ?? "/#newsletter"} aria-label={post?.title ?? recurso.title} className="gift-thumbnail-float block md:col-span-1">
+          <ImagenPost post={post} sizes="(min-width: 1024px) 24vw, 100vw" />
+        </Link>
+        <div className="min-w-0 md:col-span-3">
           <div className="flex flex-wrap items-center gap-3">
-            <h2 id="regalo-semana" className="font-display text-h2">El regalo de la semana</h2>
+            <h2 id="regalo-semana" className="font-display text-h2">El regalo de esta semana</h2>
             <span className="font-sans text-label font-semibold text-accent-ink">Gratis</span>
           </div>
-          <h3 className="mt-3 font-display text-[1.5rem] font-medium leading-tight">{recurso.title}</h3>
-          {recurso.description ? <p className="mt-2 text-[1.0625rem] leading-relaxed text-muted">{recurso.description}</p> : null}
-          <p className="mt-3 font-sans text-[0.9375rem] text-muted">Te llega al suscribirte con tu email.</p>
-          <div className="mt-4">
+          <h3 className="mt-2 font-display text-[1.375rem] font-medium leading-tight">{recurso.title}</h3>
+          {recurso.description ? <p className="mt-1.5 line-clamp-2 text-[1rem] leading-relaxed text-muted">{recurso.description}</p> : null}
+          <p className="mt-2 font-sans text-[0.875rem] text-muted">Te llega al suscribirte con tu email.</p>
+          <div className="mt-3">
             <SubscribeForm
               resource={recurso.slug}
               source="home-regalo"
@@ -249,11 +253,8 @@ function RegaloSemana({ recurso, post }: { recurso: Resource; post?: Post }) {
               doneMessage="Hecho. Confirma en tu correo y te llega la descarga en el mismo email."
             />
           </div>
-          {post ? <Link href={post.permalink} className={`mt-4 inline-block font-sans text-[0.9375rem] ${enlace}`}>Ver el artículo</Link> : null}
+          {post ? <Link href={post.permalink} className={`mt-3 inline-block font-sans text-[0.9375rem] ${enlace}`}>Ver el artículo</Link> : null}
         </div>
-        <Link href={post?.permalink ?? "/#newsletter"} aria-label={post?.title ?? recurso.title} className="block">
-          <ImagenPost post={post} sizes="(min-width: 1024px) 45vw, 100vw" />
-        </Link>
       </div>
     </section>
   );
@@ -263,7 +264,7 @@ function ArchivoRegalos({ recursos }: { recursos: Resource[] }) {
   return (
     <section aria-labelledby="archivo-regalos" className="mt-14">
       <h2 id="archivo-regalos" className="text-h2-section">Regalos</h2>
-      <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {recursos.map((recurso) => {
           const post = postDeRecurso(recurso.slug, allPosts);
           const esRegaloAlta = recurso.slug === REGALO.hoja.slug;
@@ -344,11 +345,11 @@ function PuertaNoticias({ primera, breves }: Pick<PortadaLeida, "primera" | "bre
 function PuertaLecturas({ firmadas }: { firmadas: Post[] }) {
   return (
     <Puerta
-      id="puerta-lecturas"
-      titulo="Lecturas"
+      id="puerta-catalogo"
+      titulo="Catálogo"
       icono="M12 6.5C10 5 7 4.5 4 5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5z M12 6.5V19.5"
       entradilla="Guías, casos, notas y reflexiones, con sus números y con lo que falló."
-      className="mt-8"
+      className="mt-8 lg:col-span-2"
     >
       <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {firmadas.map((post) => (
@@ -361,7 +362,7 @@ function PuertaLecturas({ firmadas }: { firmadas: Post[] }) {
                 <span>{FORMATOS[post.formato]}</span>
                 {esNuevo(post.date, new Date()) ? <NuevoBadge /> : null}
               </p>
-              <h3 className="mt-2 font-display text-[1.25rem] font-medium leading-snug">
+              <h3 className="mt-2 font-display text-[1.375rem] font-semibold leading-snug">
                 <Link href={post.permalink} className="hover:text-accent-ink">{post.title}</Link>
               </h3>
               <p className="mt-2 line-clamp-3 text-[1rem] leading-relaxed text-muted">{post.dek ?? post.description}</p>
