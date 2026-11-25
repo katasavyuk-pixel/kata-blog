@@ -62,6 +62,17 @@ describe('portada: noticia protagonista y novedades', () => {
     assert.equal(p.latestEdition?.slug, 'noticias-2026-10-08');
   });
 
+  test('en el mismo día gana la marcada con destacada y mayor importancia', () => {
+    const normal = post('noticia-2026-10-09-b', '2026-10-09', { protagonista: true, destacada: false, importancia: 9 });
+    const destacada = post('noticia-2026-10-09', '2026-10-09', { protagonista: true, destacada: true, importancia: 6 });
+    const p = buildPortada([normal, destacada]);
+    assert.equal(p.lead?.slug, 'noticia-2026-10-09');
+
+    const menor = post('noticia-2026-10-10-a', '2026-10-10', { protagonista: true, destacada: true, importancia: 4 });
+    const mayor = post('noticia-2026-10-10-b', '2026-10-10', { protagonista: true, destacada: true, importancia: 8 });
+    assert.equal(buildPortada([menor, mayor]).lead?.slug, 'noticia-2026-10-10-b');
+  });
+
   test('sin nada publicado', () => {
     const p = buildPortada([]);
     assert.deepEqual([p.lead, p.latestEdition, p.lastEditedAt, p.archive], [null, null, null, []]);

@@ -110,6 +110,10 @@ describe('sin contenido no hay bloque', () => {
     ]) {
       assert.ok(componente.includes(guarda), `Falta la guarda «${guarda}».`);
     }
+    assert.ok(componente.indexOf('<NoticiaDelDia') < componente.indexOf('<Destacado'));
+    assert.match(componente, /function NoticiaDelDia\(/);
+    assert.match(componente, /Noticia del día/);
+    assert.match(componente, /Última noticia destacada/);
     assert.ok(componente.indexOf('<Destacado') < componente.indexOf('<RegaloSemana'));
     assert.ok(componente.indexOf('<RegaloSemana') < componente.indexOf('<PuertaLecturas'));
     assert.ok(componente.indexOf('<PuertaLecturas') < componente.indexOf('<div className="grid items-stretch gap-6 lg:grid-cols-2">'));

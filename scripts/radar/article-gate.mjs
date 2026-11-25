@@ -161,6 +161,17 @@ export function articleErrors(
 
   // --- Frontmatter: identity and source metadata.
   if (fieldValue(yaml, "protagonista") !== "true") errors.push('frontmatter protagonista must be "true"');
+  const destacada = fieldValue(yaml, "destacada");
+  if (destacada !== undefined && destacada !== "true" && destacada !== "false") {
+    errors.push(`frontmatter destacada must be true or false (got: ${destacada})`);
+  }
+  const importancia = fieldValue(yaml, "importancia");
+  if (importancia !== undefined) {
+    const score = Number(importancia);
+    if (!Number.isInteger(score) || score < 0 || score > 100) {
+      errors.push(`frontmatter importancia must be an integer 0..100 (got: ${importancia})`);
+    }
+  }
   if (fieldValue(yaml, "formato") !== "radar") errors.push('frontmatter formato must be "radar"');
   if (fieldValue(yaml, "draft") !== "false") errors.push('frontmatter draft must be "false"');
   const hasImpactExplorer = fieldValue(yaml, "impacto_interactivo") === "true";

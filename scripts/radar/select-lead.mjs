@@ -1,7 +1,7 @@
 /**
  * Picks today's lead story from scratch/radar-candidates.json and writes
- * scratch/lead.json: either { status: "lead", lead, themes } or
- * { status: "insufficient", reason }. Always exits 0 on a readable input — an
+ * scratch/lead.json: either { status: "lead", lead, themes, importancia, senales }
+ * or { status: "insufficient", reason }. Always exits 0 on a readable input — an
  * insufficient day is a normal outcome, not a failure: the workflow then keeps
  * the last full article and publishes only the brief edition.
  *
@@ -23,7 +23,10 @@ await writeFile(LEAD_PATH, JSON.stringify(result, null, 2));
 if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `lead_status=${result.status}\n`);
 
 if (result.status === "lead") {
-  console.log(`lead: ${result.lead.source} — ${result.lead.title} (${result.lead.textWords} words, themes: ${result.themes.join(", ")})`);
+  const senales = result.senales?.length ? `, signals: ${result.senales.join(", ")}` : "";
+  console.log(
+    `lead: ${result.lead.source} — ${result.lead.title} (${result.lead.textWords} words, score: ${result.importancia}, themes: ${result.themes.join(", ")}${senales})`,
+  );
 } else {
   console.log(`no lead article today: ${result.reason}. The last full article stays; only the brief edition is published.`);
 }

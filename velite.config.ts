@@ -65,6 +65,8 @@ const posts = defineCollection({
       // YAML parser. The `.refine` below makes the build fail if a lead article
       // lacks its source metadata, whatever wrote it.
       protagonista: s.boolean().default(false),
+      destacada: s.boolean().default(false),
+      importancia: s.number().int().min(0).max(100).optional(),
       impacto_interactivo: s.boolean().default(false),
       relevancia: s.enum(["ia", "trabajo", "negocio", "economia"]).optional(),
       fuente_titulo: s.string().max(300).optional(),

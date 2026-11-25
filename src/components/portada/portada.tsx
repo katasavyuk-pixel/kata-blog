@@ -63,6 +63,7 @@ export async function Portada({ portada, cabecera }: { portada: PortadaLeida; ca
     <>
       {cabecera}
       <Container size="wide" className="pb-16 sm:pb-24">
+        {primera ? <NoticiaDelDia primera={primera} /> : null}
         {destacado ? <Destacado post={destacado} /> : null}
         {recursoDestacado ? <RegaloSemana recurso={recursoDestacado} post={articuloRegalo} /> : null}
         {firmadas.length > 1 ? <PuertaLecturas firmadas={firmadas.slice(1, 7)} /> : null}
@@ -187,6 +188,93 @@ function ImagenPost({ post, sizes, imagen }: { post?: Post; sizes: string; image
         </span>
       )}
     </div>
+  );
+}
+
+function NoticiaDelDia({ primera }: { primera: NonNullable<PortadaLeida["primera"]> }) {
+  const { articulo, lecturas, alDia } = primera;
+  const avisoIa = etiquetaIa(articulo);
+
+  return (
+    <section
+      aria-labelledby="noticia-del-dia"
+      className="mt-8 border border-t-[3px] border-border border-t-accent bg-panel p-5 sm:p-7"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3 font-sans text-label">
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted">
+          <span className="font-semibold text-accent-ink">
+            {alDia ? "📰 Noticia del día" : "📰 Última noticia destacada"}
+          </span>
+          <span aria-hidden className="text-faint">·</span>
+          <time dateTime={articulo.date}>{formatDateShort(articulo.date)}</time>
+          {avisoIa ? (
+            <>
+              <span aria-hidden className="text-faint">·</span>
+              <Link href={COMO_SE_HACE_HREF} className="hover:text-fg hover:underline">
+                {avisoIa}
+              </Link>
+            </>
+          ) : null}
+        </p>
+        {esNuevo(articulo.date, new Date()) ? <NuevoBadge /> : null}
+      </div>
+
+      <div
+        className={
+          lecturas
+            ? "mt-4 grid gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:items-start"
+            : "mt-4"
+        }
+      >
+        <div className="min-w-0">
+          <h2 id="noticia-del-dia" className="font-display text-[1.5625rem] font-semibold leading-tight sm:text-[1.875rem]">
+            <Link href={articulo.permalink} className="hover:text-accent-ink">
+              {tituloEnFrase(articulo.title)}
+            </Link>
+          </h2>
+          <p className="mt-3 max-w-[62ch] text-[1.0625rem] leading-relaxed text-muted">
+            {articulo.dek ?? articulo.description}
+          </p>
+          {!alDia ? (
+            <p className="mt-2.5 font-sans text-[0.875rem] text-amber">
+              Hoy todavía no hay análisis largo nuevo; aquí tienes la última noticia destacada.
+            </p>
+          ) : null}
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 font-sans text-[0.9375rem]">
+            <Link href={articulo.permalink} className={enlace}>
+              📖 Leer análisis completo
+            </Link>
+            {articulo.fuente_url && articulo.fuente_medio ? (
+              <a
+                href={articulo.fuente_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted hover:text-accent-ink hover:underline"
+              >
+                🔗 Fuente: {articulo.fuente_medio}
+              </a>
+            ) : null}
+            <Link href="/noticias" className="text-muted hover:text-fg hover:underline">
+              🗞️ Todas las noticias
+            </Link>
+          </div>
+        </div>
+
+        {lecturas ? (
+          <div className="border-t border-border pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+            <p className="font-sans text-[0.8125rem] font-semibold uppercase tracking-[0.05em] text-muted">
+              🧭 Clave para tu negocio
+            </p>
+            <p className="mt-2 line-clamp-4 text-[0.9375rem] leading-relaxed text-muted">
+              {lecturas.direccion}
+            </p>
+            <p className="mt-3 font-sans text-[0.8125rem] text-faint">
+              Incluye lectura para Dirección, Operaciones y Tecnología.
+            </p>
+          </div>
+        ) : null}
+      </div>
+    </section>
   );
 }
 
