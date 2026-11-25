@@ -13,7 +13,7 @@ import { ACTIVOS } from "@/lib/catalogo";
 export const metadata: Metadata = withOpenGraph("/marketplace", {
   title: "Marketplace de skills para Claude, Codex y otros agentes",
   description:
-    "Seis skills en español para Claude, Codex y otros agentes: reclamar facturas, prever la caja, cerrar el trimestre. Cada una con su ficha y cómo se instala.",
+    "Siete skills en español: seis para Claude, Codex y otros agentes, y «¿Te recomienda la IA?», para medir cada mes si te nombran. Cada una con su ficha.",
   alternates: { ...feedAlternates, canonical: "/marketplace" },
 });
 
@@ -34,8 +34,9 @@ export default function MarketplacePage() {
         <div className="min-w-0 max-w-[42rem] flex-[1_1_30rem]">
           <h1 className="max-w-[20ch] text-h1 font-medium">Skills para Claude, Codex y otros agentes, pensadas para tu negocio</h1>
           <p className="mt-5 text-muted sm:text-[1.25rem]">
-            {ACTIVOS.length} skills que se instalan juntas. La primera pregunta por tu negocio una vez: a qué te dedicas, a
-            quién vendes y cómo cobras. Las demás leen esas respuestas y se adaptan.
+            {ACTIVOS.length} skills. Seis se instalan juntas: la primera pregunta por tu negocio una vez (a qué te
+            dedicas, a quién vendes y cómo cobras) y las demás leen esas respuestas. «¿Te recomienda la IA?» se descarga
+            con tu correo, con su artículo.
           </p>
         </div>
         <ul aria-label="Las skills" className="grid grid-cols-3 gap-2.5">
@@ -53,7 +54,7 @@ export default function MarketplacePage() {
         <>
           <section aria-labelledby="instalar" className="mt-12 border border-t-[3px] border-border border-t-accent bg-panel px-6 pb-6 pt-5">
             <h2 id="instalar" className="font-sans text-[1.25rem] font-bold tracking-normal">
-              Instálalas todas a la vez
+              Instala las seis del paquete a la vez
             </h2>
             <div className="mt-4">
               <InstalarTrasAlta />

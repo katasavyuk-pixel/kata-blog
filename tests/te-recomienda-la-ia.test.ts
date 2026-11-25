@@ -4,6 +4,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { PUENTE_POR_POST } from '@/config/puentes';
+import { getActivo } from '@/lib/catalogo';
+import { LOGOS_DE_SKILL } from '@/config/logos';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const read = (file: string) => readFileSync(join(root, file), 'utf8');
@@ -93,5 +95,23 @@ describe('integración de la medición mensual de recomendaciones en IA', () => 
     const report = read('lead-magnets/te-recomienda-la-ia/zip/te-recomienda-la-ia/ejemplos/informe-ejemplo.md');
     assert.match(csv, /datos de ejemplo|inventad/i);
     assert.match(report, /ejemplo|inventad/i);
+  });
+
+  test('está en el marketplace, con logo, descarga por correo y enlace al artículo', () => {
+    const item = getActivo(slug);
+    assert.ok(item, 'no está en ACTIVOS.');
+    assert.equal(item.title, '¿Te recomienda la IA?');
+    assert.equal(item.href, `/marketplace/${slug}`);
+    assert.equal(item.descarga?.slug, resource);
+    assert.equal(item.descarga?.articulo, `/blog/${slug}`);
+    assert.ok(LOGOS_DE_SKILL[slug], 'no tiene logo.');
+    assert.equal(LOGOS_DE_SKILL[slug].foto, undefined);
+    const ficha = read('src/app/marketplace/[id]/page.tsx');
+    assert.match(ficha, /resource=\{item\.descarga\.slug\}/);
+    assert.match(ficha, /href=\{item\.descarga\.articulo\}/);
+    const listado = read('src/app/marketplace/page.tsx');
+    assert.match(listado, /LogoSkill/);
+    assert.doesNotMatch(listado + ficha + (item.queHace + item.activo.paraQuien + item.activo.noEsPara + item.activo.pruebas), /irún/i);
+    assert.doesNotMatch(item.queHace + item.activo.paraQuien + item.activo.noEsPara, /\bNexora(?! Business Intelligence)\b/i);
   });
 });

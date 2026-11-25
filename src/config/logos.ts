@@ -46,6 +46,12 @@ export const LOGOS_DE_SKILL: Record<string, LogoDeSkill> = {
     lema: "Si un asistente de IA encuentra y lee tu web.",
     foto: "/skills/visibilidad-en-ia.webp",
   },
+  // Three assistants and a rising line: whether they name you, month after month.
+  "te-recomienda-la-ia": {
+    color: "#4d6a1f",
+    icono: "M5 8a1.5 1.5 0 1 0 0.01 0 M12 8a1.5 1.5 0 1 0 0.01 0 M19 8a1.5 1.5 0 1 0 0.01 0 M5 19l5-6 4 3 5-8",
+    lema: "Si ChatGPT, Gemini y Perplexity nombran tu negocio.",
+  },
   // A document becoming a table.
   "datos-de-documentos": {
     color: "#1f5fbf",
