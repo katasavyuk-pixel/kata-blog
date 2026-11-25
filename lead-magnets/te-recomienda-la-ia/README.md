@@ -15,10 +15,11 @@ En la raíz del zip, `LEEME.txt` explica las tres formas de usar el recurso, la 
 - `references/puntuacion.md`: rúbrica, bandas y ejemplo aritmético.
 - `references/registro.md`: columnas CSV y modelo de tabla manual.
 - `references/arreglos.md`: señales observadas y acciones concretas.
-- `assets/registro-recomendaciones-ia.plantilla.csv`: cabecera para iniciar el registro.
+- `assets/registro-recomendaciones-ia.plantilla.csv`: cabecera para iniciar el registro, con la columna `archivo_respuesta`.
 - `assets/preguntas.plantilla.md`: hoja para conservar las diez preguntas exactas.
-- `scripts/puntuar.py`: validador y calculador local que genera resumen JSON e informe Markdown.
-- `ejemplos/registro-ejemplo.csv`: 60 filas de dos meses con datos inventados.
+- `scripts/puntuar.py`: validador y calculador local que genera resumen JSON e informe Markdown. Con `--rescore` prepara un documento para volver a puntuar el histórico sin repetir las consultas.
+- `ejemplos/registro-ejemplo.csv`: 60 filas de dos meses con datos inventados, incluida la ruta de cada respuesta.
+- `ejemplos/respuestas/`: texto completo inventado de cada fila, en `AAAA-MM/<asistente>-Pxx.md`.
 - `ejemplos/informe-ejemplo.md`: informe generado por el script a partir del CSV de ejemplo.
 
 ## 🧰 Cómo reconstruir el zip

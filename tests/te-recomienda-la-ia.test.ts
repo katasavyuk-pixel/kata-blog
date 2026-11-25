@@ -77,7 +77,7 @@ describe('integración de la medición mensual de recomendaciones en IA', () => 
     assert.ok(frontmatter, 'SKILL.md no tiene frontmatter YAML.');
     assert.match(frontmatter[1], /^name: te-recomienda-la-ia$/m);
     assert.doesNotMatch(skill.match(/^# .*$/m)?.[0] ?? '', /auditoría/i);
-    assert.match(frontmatter[1], /^  version: ["']?1\.0\.0["']?$/m);
+    assert.match(frontmatter[1], /^  version: ["']?1\.1\.0["']?$/m);
   });
 
   test('el script de puntuación solo importa módulos permitidos de la biblioteca estándar', () => {
