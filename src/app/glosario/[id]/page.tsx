@@ -42,6 +42,9 @@ export default async function GlossaryEntryPage({
   if (!entry) notFound();
 
   const relatedPost = entry.relatedSlug ? getPost(entry.relatedSlug) : undefined;
+  const morePosts = (entry.moreSlugs ?? [])
+    .map((slug) => getPost(slug))
+    .filter((post): post is NonNullable<typeof post> => Boolean(post));
 
   return (
     <Container className="py-10 sm:py-14">
@@ -82,6 +85,17 @@ export default async function GlossaryEntryPage({
                 <Icon name="chevron-right" />
               </Button>
             </div>
+            {morePosts.length > 0 ? (
+              <ul className="mt-6 space-y-2 text-[0.9375rem]">
+                {morePosts.map((post) => (
+                  <li key={post.slug}>
+                    <Link href={post.permalink} className="text-accent-ink underline decoration-accent-ink/45 underline-offset-[0.18em] hover:decoration-current">
+                      {post.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </section>
         ) : null}
         <PuenteNbi guia="agente" campana="glosario" />

@@ -54,7 +54,7 @@ const CHUNKS: { text: string; source: string }[] = [
     source: "glosario",
   },
   {
-    text: "MaitreAI atiende reservas por WhatsApp y voz en un restaurante real de Irun.",
+    text: "MaitreAI atiende reservas por WhatsApp y voz en un restaurante real.",
     source: "como-hice-maitreai",
   },
   {

@@ -7,7 +7,7 @@ te_llevas:
   - "Lo que decide si funciona es la recuperación: sin fragmentos que coincidan no hay contexto, y el modelo responde de memoria."
   - "Úsalo para respuestas ancladas en información específica y verificable: documentación, catálogos, normativa. Para redacción genérica, quizá no haga falta."
 date: 2026-06-20
-updated: 2026-11-09
+updated: 2026-11-24
 tema: ia-aplicada
 formato: leccion
 seccion: practica
@@ -17,6 +17,15 @@ tags:
   - rag
   - fundamentos
   - técnico
+faq:
+  - q: "¿Qué significa RAG?"
+    a: "RAG significa Retrieval-Augmented Generation: buscar fragmentos relevantes en tus propios datos y pasárselos al modelo antes de que responda."
+  - q: "¿Cuáles son los pasos de RAG?"
+    a: "Convierte los textos en vectores con embeddings, recupera los fragmentos más parecidos a la pregunta y genera una respuesta usando solo ese contexto."
+  - q: "¿Qué pasa si RAG no recupera fragmentos relevantes?"
+    a: "No hay contexto que ayude al modelo; entonces responde de memoria, y puede inventarse la respuesta."
+  - q: "¿Cuándo conviene usar RAG?"
+    a: "Cuando necesitas respuestas ancladas en información específica y verificable, como documentación, catálogos o normativa. Para redacción genérica quizá no haga falta."
 draft: false
 premium: false
 ---
@@ -34,6 +43,12 @@ cambia cada día. Si le preguntas por ellos, **se lo inventa** (<Term id="halluc
 resuelve esto buscando la información relevante y pasándosela al modelo.
 
 ## Cómo funciona RAG
+
+| Paso | Qué ocurre |
+| --- | --- |
+| Embeddings | Conviertes tus textos en vectores numéricos. |
+| Recuperación | Ante una pregunta, buscas los fragmentos más parecidos. |
+| Generación | El modelo responde usando solo ese contexto recuperado. |
 
 1. **<Term id="embedding">Embeddings</Term>**: conviertes tus textos en vectores numéricos.
 2. **Recuperación**: ante una pregunta, buscas los fragmentos más parecidos.

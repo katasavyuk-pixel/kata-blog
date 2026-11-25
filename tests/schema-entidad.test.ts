@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
-import { PERSONA, siteConfig } from '@/config/site';
-import { articleJsonLd, coleccionJsonLd, fechaConZona, personJsonLd } from '@/lib/jsonld';
+import { ORGANIZACION, PERSONA, siteConfig } from '@/config/site';
+import { articleJsonLd, coleccionJsonLd, fechaConZona, organizationJsonLd, personJsonLd } from '@/lib/jsonld';
 
 /**
  * Lo que el blog declara de sí mismo a una máquina (auditoría del 17-oct-2026).
@@ -38,6 +38,28 @@ describe('la persona', () => {
   test('ninguna página declara otra persona', () => {
     assert.doesNotMatch(source('src/lib/jsonld.ts'), /\/#person`/);
     assert.equal(PERSONA.id, person['@id']);
+  });
+});
+
+
+describe('la organización', () => {
+  const org = organizationJsonLd() as Record<string, unknown>;
+
+  test('es Nexora Business Intelligence, con el @id que ya declara PERSONA.worksFor', () => {
+    assert.equal(org['@type'], 'Organization');
+    assert.equal(org['@id'], ORGANIZACION.id);
+    assert.equal(org.name, 'Nexora Business Intelligence');
+    assert.equal(org.alternateName, 'NBI');
+    assert.equal(org.url, 'https://ianexora.com');
+    assert.deepEqual(org.founder, { '@type': 'Person', '@id': PERSONA.id, name: PERSONA.name, url: PERSONA.url });
+    assert.equal(PERSONA.worksFor, ORGANIZACION.id);
+  });
+
+  test('un artículo escrito a mano la declara como publisher; una pieza automática, no', () => {
+    const nota = articleJsonLd({ ...base, formato: 'nota' });
+    assert.equal((nota.publisher as Record<string, unknown>)['@id'], ORGANIZACION.id);
+    const automatica = articleJsonLd({ ...base, formato: 'radar' });
+    assert.equal((automatica.publisher as Record<string, unknown>)['@id'], PERSONA.id);
   });
 });
 

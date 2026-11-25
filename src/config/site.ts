@@ -274,13 +274,24 @@ export const PERSONA = {
   image: "https://ianexora.com/images/katalin-donostia.jpg",
   jobTitle: "Fundador de NBI",
   description:
-    "Katalin (Kata) Savyuk es el fundador de NBI (Nexora Business Intelligence), en Irún (Gipuzkoa), y escribe el blog kata.ianexora.com.",
+    "Katalin (Kata) Savyuk es el fundador de NBI (Nexora Business Intelligence) y escribe el blog kata.ianexora.com.",
   worksFor: "https://ianexora.com/#organization",
   /**
    * The profiles the footer links, and this blog — written out, not
    * `siteConfig.url`, which a preview deploy overrides. The same list on ianexora.com.
    */
   sameAs: [...siteConfig.social.map((link) => link.href), "https://kata.ianexora.com"],
+} as const;
+
+/**
+ * The company both sites already point at via `PERSONA.worksFor`.
+ * Name, alternateName and url only: no invented logo, address or founding date.
+ */
+export const ORGANIZACION = {
+  id: "https://ianexora.com/#organization",
+  name: "Nexora Business Intelligence",
+  alternateName: "NBI",
+  url: "https://ianexora.com",
 } as const;
 
 /**
