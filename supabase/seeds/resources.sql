@@ -98,3 +98,24 @@ on conflict (slug) do update set
   file_path      = excluded.file_path,
   requires_email = excluded.requires_email,
   published      = excluded.published;
+
+-- ---------------------------------------------------------------------------
+-- ¿Te recomienda la IA?: skill para medir recomendaciones
+-- Source: lead-magnets/te-recomienda-la-ia/
+-- Upload: te-recomienda-la-ia.zip → te-recomienda-la-ia/
+-- ---------------------------------------------------------------------------
+insert into public.resources (slug, title, description, file_path, requires_email, published)
+values (
+  'te-recomienda-la-ia',
+  '¿Te recomienda la IA? La skill para medir cada mes si te nombran',
+  'Skill con diez preguntas fijas, rúbrica, registro CSV y script local para medir si ChatGPT, Gemini y Perplexity nombran tu negocio mes a mes.',
+  'te-recomienda-la-ia/te-recomienda-la-ia.zip',
+  true,
+  true
+)
+on conflict (slug) do update set
+  title          = excluded.title,
+  description    = excluded.description,
+  file_path      = excluded.file_path,
+  requires_email = excluded.requires_email,
+  published      = excluded.published;
