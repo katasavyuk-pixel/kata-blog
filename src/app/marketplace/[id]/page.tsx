@@ -7,6 +7,7 @@ import { Icon } from "@/components/ui/icon";
 import { JsonLd } from "@/components/ui/json-ld";
 import { NotaCard } from "@/components/content/nota-card";
 import { InstalarTrasAlta } from "@/components/marketplace/instalar-tras-alta";
+import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { Estado } from "@/components/sistema/estado";
 import {
   CATALOGO,
@@ -18,7 +19,7 @@ import {
 import { feedAlternates, siteConfig, withOpenGraph } from "@/config/site";
 import { TEMAS } from "@/config/taxonomy";
 import { LogoSkill } from "@/components/marketplace/logo-skill";
-import { ACTIVOS, TIPO_ACTIVO, getActivo, rutaDeActivo } from "@/lib/catalogo";
+import { ACTIVOS, TIPO_ACTIVO, esSkillDelPaquete, getActivo, rutaDeActivo } from "@/lib/catalogo";
 import { formatDate } from "@/lib/format";
 import { breadcrumbJsonLd, personJsonLd, softwareSourceCodeJsonLd } from "@/lib/jsonld";
 import { apareceEn } from "@/lib/relaciones";
@@ -103,15 +104,19 @@ export default async function ActivoPage({ params }: { params: Promise<{ id: str
     <Container className="py-10 sm:py-14">
       <JsonLd
         data={[
-          softwareSourceCodeJsonLd({
-            nombre: item.title,
-            descripcion: item.queHace,
-            path,
-            codeRepository: CATALOGO_REPO_URL,
-            version: activo.version,
-            publicado: activo.publicado,
-            licencia: activo.licencia,
-          }),
+          ...(esSkillDelPaquete(item)
+            ? [
+                softwareSourceCodeJsonLd({
+                  nombre: item.title,
+                  descripcion: item.queHace,
+                  path,
+                  codeRepository: CATALOGO_REPO_URL,
+                  version: activo.version,
+                  publicado: activo.publicado,
+                  licencia: activo.licencia,
+                }),
+              ]
+            : []),
           personJsonLd(),
           breadcrumbJsonLd([
             { name: "Marketplace", path: "/marketplace" },
@@ -144,6 +149,39 @@ export default async function ActivoPage({ params }: { params: Promise<{ id: str
           </div>
         </header>
 
+        {item.descarga ? (
+          <Apartado id="instalar" titulo="Cómo se instala">
+            <p>
+              No va en el paquete de las otras seis. Déjame tu correo, confírmalo y te llega la descarga en ese mismo
+              email. El método está explicado en el{" "}
+              <Link href={item.descarga.articulo} className={linkClass}>
+                artículo
+              </Link>
+              .
+            </p>
+            <SubscribeForm
+              source="marketplace-ficha"
+              resource={item.descarga.slug}
+              submitLabel="Enviármelo"
+              doneMessage="Hecho. Confirma en tu correo y te llega la descarga."
+            />
+            <p>Tres formas de usarlo, una vez lo tengas:</p>
+            <ul className="list-disc space-y-1.5 pl-5">
+              <li>
+                Con un agente que entiende Agent Skills (Claude Code, la aplicación de Claude, Codex, Cursor…): copia la
+                carpeta te-recomienda-la-ia/ en la carpeta de skills de tu agente. Sigue SKILL.md.
+              </li>
+              <li>
+                Con ChatGPT u otro chat sin skills: pega SKILL.md como instrucciones y adjunta las plantillas. Si no
+                puede ejecutar Python, calcula a mano con las referencias, en especial puntuacion.md.
+              </li>
+              <li>
+                A mano, con una hoja de cálculo: abre assets/registro-recomendaciones-ia.plantilla.csv y registra una
+                fila por asistente y pregunta.
+              </li>
+            </ul>
+          </Apartado>
+        ) : (
         <Apartado id="instalar" titulo="Cómo se instala">
           <p>
             Viene con el resto de las skills, en un solo paquete, y funciona en la aplicación de Claude, en Claude
@@ -180,6 +218,7 @@ export default async function ActivoPage({ params }: { params: Promise<{ id: str
             .
           </p>
         </Apartado>
+        )}
 
         <Apartado id="para-quien" titulo="Para quién es, y para quién no">
           <p>
@@ -234,7 +273,7 @@ export default async function ActivoPage({ params }: { params: Promise<{ id: str
 
         <Apartado id="pruebas" titulo="Cómo se ha probado">
           <p>{activo.pruebas}</p>
-          {item.evidencia.tipo === "reproducible" ? (
+          {item.evidencia.tipo === "reproducible" && esSkillDelPaquete(item) ? (
             <p>
               Puedes verlo antes de instalar nada:{" "}
               <a
@@ -251,6 +290,14 @@ export default async function ActivoPage({ params }: { params: Promise<{ id: str
               </a>{" "}
               está en el repositorio.
             </p>
+          ) : item.evidencia.tipo === "reproducible" && item.descarga ? (
+            <p>
+              Los ejemplos van en el zip, después de confirmar tu correo. El método está en el{" "}
+              <Link href={item.descarga.articulo} className={linkClass}>
+                artículo
+              </Link>
+              .
+            </p>
           ) : null}
         </Apartado>
 
@@ -259,17 +306,27 @@ export default async function ActivoPage({ params }: { params: Promise<{ id: str
             Versión {activo.version}, del {formatDate(activo.publicado)}. Licencia {activo.licencia}:
             puedes usarla, cambiarla y adaptarla a tu negocio.
           </p>
-          <p>
-            Repositorio:{" "}
-            <a href={CATALOGO_REPO_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
-              {CATALOGO.repo.owner}/{CATALOGO.repo.name}
-            </a>
-            . Si hace algo que no debería, abre una incidencia allí o escríbeme a{" "}
-            <a href={`mailto:${siteConfig.replyEmail}`} className={linkClass}>
-              {siteConfig.replyEmail}
-            </a>
-            .
-          </p>
+          {esSkillDelPaquete(item) ? (
+            <p>
+              Repositorio:{" "}
+              <a href={CATALOGO_REPO_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                {CATALOGO.repo.owner}/{CATALOGO.repo.name}
+              </a>
+              . Si hace algo que no debería, abre una incidencia allí o escríbeme a{" "}
+              <a href={`mailto:${siteConfig.replyEmail}`} className={linkClass}>
+                {siteConfig.replyEmail}
+              </a>
+              .
+            </p>
+          ) : (
+            <p>
+              Si hace algo que no debería, escríbeme a{" "}
+              <a href={`mailto:${siteConfig.replyEmail}`} className={linkClass}>
+                {siteConfig.replyEmail}
+              </a>
+              .
+            </p>
+          )}
         </Apartado>
 
         {menciones.length > 0 ? (

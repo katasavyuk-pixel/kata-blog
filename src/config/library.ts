@@ -66,6 +66,11 @@ export type LibraryItem = {
    * sheet, and `assertActivo` fails the build if a row of it is blank.
    */
   activo?: Activo;
+  /**
+   * When set, this skill is not in the plugin pack: the reader gets it
+   * through the email-gated download (`/api/download`) and its article.
+   */
+  descarga?: { slug: string; articulo: string };
 };
 
 /** Announced work reads as "en el taller"; everything else is shippable today. */
@@ -136,6 +141,45 @@ const skill = ({ id, title, tema, queHace, necesita, red = SIN_RED, ejemplo, seR
   activo: { ...ACTIVO_COMUN, ...activo, red, ruta: `skills/${id}`, requisitos: [AGENTE, PYTHON, necesita] },
 });
 
+/** A skill distributed as an email-gated zip in this repo, not via the plugin pack. */
+const skillDescargable = ({
+  id,
+  title,
+  tema,
+  queHace,
+  requisitos,
+  red = SIN_RED,
+  seRompio = [],
+  version,
+  publicado,
+  ruta,
+  evidenciaRuta,
+  descarga,
+  costeMotivo,
+  ...activo
+}: Omit<Skill, "necesita"> & {
+  requisitos: string[];
+  version: string;
+  publicado: string;
+  ruta: string;
+  evidenciaRuta: string;
+  descarga: { slug: string; articulo: string };
+  costeMotivo: string;
+}): LibraryItem => ({
+  ...SKILL_COMUN,
+  id,
+  title,
+  blurb: queHace,
+  href: `/marketplace/${id}`,
+  tema,
+  queHace,
+  seRompio,
+  costeMensual: { medido: false, motivo: costeMotivo },
+  evidencia: { tipo: "reproducible", ruta: evidenciaRuta },
+  descarga,
+  activo: { ...activo, tipo: "skill", version, publicado, ruta, licencia: "MIT", red, requisitos: requisitos },
+});
+
 const SKILLS: LibraryItem[] = [
   skill({
     id: "empezar",
@@ -195,6 +239,36 @@ const SKILLS: LibraryItem[] = [
       "Exigía un «www» delante de un subdominio, que nadie escribe. Salió al ejecutarla contra esta web.",
       "No reconocía una marca personal como identidad: avisaba de que la web no decía quién era el negocio.",
     ],
+  }),
+  skillDescargable({
+    id: "te-recomienda-la-ia",
+    title: "¿Te recomienda la IA?",
+    tituloBusqueda: "¿Te recomienda ChatGPT? Mide si la IA te nombra",
+    tema: "captacion",
+    queHace:
+      "Mide cada mes si ChatGPT, Gemini y Perplexity nombran tu negocio: diez preguntas fijas, un registro y una nota de recomendación que comparar.",
+    paraQuien: "Quien quiere medir cada mes si ChatGPT, Gemini y Perplexity nombran su negocio.",
+    noEsPara:
+      "No promete que el negocio vaya a aparecer. Tampoco sustituye comprobar si una IA puede leer tu web: eso lo hace la skill Visibilidad en IA.",
+    requisitos: [
+      "Python 3.9 o posterior si quieres que el script calcule la nota: no hace falta instalar nada más (solo la biblioteca estándar). En Windows el comando puede ser python o py.",
+      "El nombre exacto del negocio y sus variantes, sector, ciudad y zona, el servicio estrella y las diez preguntas fijas.",
+      "Un agente compatible con Agent Skills, un chat donde pegar las instrucciones, o una hoja de cálculo, según cómo la uses.",
+    ],
+    lee: [
+      "Las respuestas que copies de ChatGPT, Gemini y Perplexity.",
+      "El registro CSV y las diez preguntas fijas.",
+    ],
+    escribe: ["El informe Markdown con la nota de recomendación, generado por el script a partir del CSV."],
+    red: "Nada por su cuenta. Su script usa solo la biblioteca estándar de Python y no abre conexiones: no consulta APIs de pago, no publica ni envía nada.",
+    pruebas:
+      "El script se comprueba con pruebas locales. Los archivos de ejemplo contienen datos inventados. No son datos de negocios reales.",
+    version: "1.0.0",
+    publicado: "2026-11-25",
+    ruta: "lead-magnets/te-recomienda-la-ia/zip/te-recomienda-la-ia",
+    evidenciaRuta: "lead-magnets/te-recomienda-la-ia/tests/test_puntuar.py",
+    descarga: { slug: "te-recomienda-la-ia", articulo: "/blog/te-recomienda-la-ia" },
+    costeMotivo: "el script corre en tu ordenador y no consulta APIs de pago",
   }),
   skill({
     id: "datos-de-documentos",

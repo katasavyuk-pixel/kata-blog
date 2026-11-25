@@ -2,7 +2,7 @@ import { getEditoriales, sectoresConContenido, zonasConContenido } from "@/lib/p
 import { feeds, footerLinks, navLinks, siteConfig } from "@/config/site";
 import { ESTANTES, RUTA_POR_ESTANTE, type Estante } from "@/config/taxonomy";
 import { RUTA_SECTORES, SECTORES, rutaDeSector } from "@/config/sectores";
-import { ACTIVOS } from "@/lib/catalogo";
+import { ACTIVOS, esSkillDelPaquete } from "@/lib/catalogo";
 import { CATALOGO_REPO_URL } from "@/config/catalogo";
 
 /**
@@ -124,10 +124,20 @@ ${
   ACTIVOS.length > 0
     ? `## Skills instalables
 
-Skills en español (formato Agent Skills, licencia MIT) que hacen trabajo de oficina de un negocio con un agente de IA (la aplicación de Claude, Claude Code, Codex, OpenCode o cualquiera que lea Agent Skills): cada una lleva sus instrucciones y un script en Python sin dependencias, y las que hacen cuentas dejan una hoja de cálculo. Repositorio: ${CATALOGO_REPO_URL}
+Skills en español (formato Agent Skills, licencia MIT) que hacen trabajo de oficina de un negocio con un agente de IA (la aplicación de Claude, Claude Code, Codex, OpenCode o cualquiera que lea Agent Skills): cada una lleva sus instrucciones y un script en Python sin dependencias, y las que hacen cuentas dejan una hoja de cálculo. Repositorio del paquete: ${CATALOGO_REPO_URL}
 
-${ACTIVOS.map((item) => `- [${item.title}](${url}${item.href}): ${item.queHace}`).join("\n")}
+${ACTIVOS.filter(esSkillDelPaquete).map((item) => `- [${item.title}](${url}${item.href}): ${item.queHace}`).join("\n")}
+${
+  ACTIVOS.some((item) => !esSkillDelPaquete(item))
+    ? `
+## Skills para descargar
 
+Se consiguen con el correo, en su artículo, no van en el paquete de arriba.
+
+${ACTIVOS.filter((item) => !esSkillDelPaquete(item)).map((item) => `- [${item.title}](${url}${item.href}): ${item.queHace}`).join("\n")}
+`
+    : ""
+}
 `
     : ""
 }## Identidad

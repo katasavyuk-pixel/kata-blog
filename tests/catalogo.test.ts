@@ -19,7 +19,7 @@ import {
 } from '@/config/catalogo';
 import { LIBRARY_ITEMS } from '@/config/library';
 import { PERSONA, siteConfig } from '@/config/site';
-import { ACTIVOS, activosDestacados, getActivo, rutaDeActivo } from '@/lib/catalogo';
+import { ACTIVOS, activosDestacados, esSkillDelPaquete, getActivo, rutaDeActivo } from '@/lib/catalogo';
 import { TITULO_BUSQUEDA_MAX, assertActivo, type Activo } from '@/lib/evidence';
 import { softwareSourceCodeJsonLd } from '@/lib/jsonld';
 import { DESCRIPCION_MAX } from '@/lib/seo';
@@ -36,6 +36,8 @@ import { DESCRIPCION_MAX } from '@/lib/seo';
  */
 const root = fileURLToPath(new URL('..', import.meta.url));
 const source = (file: string) => readFileSync(join(root, file), 'utf8');
+const DEL_PAQUETE = ACTIVOS.filter(esSkillDelPaquete);
+const DESCARGABLES = ACTIVOS.filter((item) => !esSkillDelPaquete(item));
 
 const activo = (over: Partial<Activo> = {}): Activo => ({
   tipo: 'skill',
@@ -99,6 +101,8 @@ describe('lo publicado en el catálogo', () => {
     for (const item of ACTIVOS) {
       assert.match(item.id, /^[a-z0-9]+(-[a-z0-9]+)*$/, item.id);
       assert.ok(item.id.length <= 64, item.id);
+    }
+    for (const item of DEL_PAQUETE) {
       assert.equal(item.activo.ruta, `skills/${item.id}`, `${item.id}: la ruta no es la carpeta de la skill.`);
     }
     assert.equal(new Set(ACTIVOS.map((item) => item.id)).size, ACTIVOS.length, 'hay ids repetidos');
@@ -130,9 +134,16 @@ describe('lo publicado en el catálogo', () => {
     // hay es un ejemplo resuelto o unas pruebas en el repositorio, y la ficha lo enlaza.
     for (const item of ACTIVOS) {
       assert.equal(item.evidencia.tipo, 'reproducible', item.id);
+    }
+    for (const item of DEL_PAQUETE) {
       if (item.evidencia.tipo !== 'reproducible') continue;
       assert.match(item.evidencia.ruta, new RegExp(`^(skills/${item.id}/|tests/)`), item.id);
       assert.match(item.activo.pruebas, /Sin uso todavía/, `${item.id}: la ficha tiene que decir que no se ha usado aún.`);
+    }
+    for (const item of DESCARGABLES) {
+      if (item.evidencia.tipo !== 'reproducible') continue;
+      assert.match(item.evidencia.ruta, /^lead-magnets\//, item.id);
+      assert.match(item.activo.pruebas, /inventad/i, `${item.id}: los ejemplos tienen que decir que no son de negocios reales.`);
     }
   });
 
@@ -208,11 +219,11 @@ describe('cómo se instala', () => {
     assert.match(CATALOGO.repo.ref, /^v\d+\.\d+\.\d+$/, 'la ficha describe una versión etiquetada, no una rama');
   });
 
-  test('la versión de cada ficha es la etiqueta que enlaza', () => {
+  test('la versión de cada ficha del paquete es la etiqueta que enlaza', () => {
     // La 1.0.0 se etiquetó con cinco skills que un instalador se saltaba. Si la
     // ficha dijera una versión y el enlace abriera otra, describiría un fichero
     // distinto del que el lector se instala.
-    for (const item of ACTIVOS) {
+    for (const item of DEL_PAQUETE) {
       assert.equal(`v${item.activo.version}`, CATALOGO.repo.ref, `${item.id}: la ficha dice ${item.activo.version}.`);
     }
   });
@@ -263,5 +274,41 @@ describe('las páginas pintan lo que la ficha dice', () => {
     assert.equal(data.license, `https://spdx.org/licenses/${item.activo.licencia}.html`);
     // 17-oct-2026: the author is the person both sites share (PERSONA), not a node of this domain.
     assert.equal((data.author as Record<string, unknown>)['@id'], PERSONA.id);
+  });
+});
+
+describe('la skill que se descarga con el correo', () => {
+  test('está en el marketplace y no finge ser del paquete', () => {
+    const skill = getActivo('te-recomienda-la-ia');
+    assert.ok(skill, 'te-recomienda-la-ia no es un activo del marketplace.');
+    assert.equal(skill.href, '/marketplace/te-recomienda-la-ia');
+    assert.ok(skill.descarga, 'le falta el campo descarga.');
+    assert.equal(skill.descarga.slug, 'te-recomienda-la-ia');
+    assert.equal(skill.descarga.articulo, '/blog/te-recomienda-la-ia');
+    assert.equal(skill.activo.version, '1.0.0');
+    assert.equal(skill.activo.publicado, '2026-11-25');
+    assert.ok(esSkillDelPaquete(getActivo('visibilidad-en-ia')!));
+    assert.equal(esSkillDelPaquete(skill), false);
+    assert.equal(DEL_PAQUETE.length, 6);
+    assert.equal(ACTIVOS.length, 7);
+  });
+
+  test('la ficha ofrece el formulario de descarga y el artículo, no el instalador del paquete', () => {
+    const pagina = source('src/app/marketplace/[id]/page.tsx');
+    assert.match(pagina, /item\.descarga/);
+    assert.match(pagina, /<SubscribeForm/);
+    assert.match(pagina, /resource=\{item\.descarga\.slug\}/);
+    assert.match(pagina, /href=\{item\.descarga\.articulo\}/);
+    // The download branch must not point the reader at the plugin repo.
+    const rama = pagina.split('{item.descarga ? (')[1]?.split(') : (')[0] ?? '';
+    assert.ok(rama, 'no está la rama de la skill descargable.');
+    assert.doesNotMatch(rama, /comandoDeSkill|InstalarTrasAlta|CATALOGO_REPO_URL|skills-negocio-pequeno/);
+  });
+
+  test('el índice no dice que las siete se instalan juntas', () => {
+    const pagina = source('src/app/marketplace/page.tsx');
+    assert.match(pagina, /se descarga/);
+    assert.doesNotMatch(pagina, /\{ACTIVOS\.length\} skills que se instalan juntas/);
+    assert.match(pagina, /Instala las seis del paquete a la vez/);
   });
 });

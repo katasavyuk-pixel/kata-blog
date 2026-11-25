@@ -13,6 +13,11 @@ import { resolveLibraryItem, type ResolvedLibraryItem } from "@/lib/library";
  */
 export type ActivoResuelto = ResolvedLibraryItem & { activo: Activo; href: string };
 
+/** Skills that install together from the plugin pack, not the email-gated zip. */
+export function esSkillDelPaquete(item: { descarga?: unknown }): boolean {
+  return !item.descarga;
+}
+
 export const ACTIVOS: ActivoResuelto[] = LIBRARY_ITEMS.flatMap((item) => {
   if (!item.activo) return [];
   const resuelto = resolveLibraryItem(item);
