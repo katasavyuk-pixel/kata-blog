@@ -4,7 +4,7 @@ description: Mide cada mes si ChatGPT, Gemini y Perplexity nombran tu negocio y 
 license: MIT
 metadata:
   author: Kata Ivanovych
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # ¿Te recomienda la IA?
@@ -21,10 +21,12 @@ Mide cada mes si ChatGPT, Gemini y Perplexity nombran tu negocio en preguntas re
 1. **Reúne los datos del negocio.** Pide el nombre exacto y sus variantes, sector, ciudad y zona, servicio estrella, tres competidores que ya conoce y web. Si existe `perfil-negocio.md` (de la skill «empezar»), léelo primero y confirma los datos con la persona.
 2. **Fija diez preguntas una sola vez.** Copia `assets/preguntas.plantilla.md` como `preguntas.md` y rellénala. Usa [references/preguntas-por-sector.md](references/preguntas-por-sector.md) para completar los campos y guardar los textos exactos. No los cambies entre meses: si cambian, la comparación se rompe y debes decirlo en el informe.
 3. **Consulta cada asistente.** Pregunta a ChatGPT, Gemini y Perplexity. Cada pregunta va en un chat nuevo, temporal o de incógnito, o sin sesión cuando se pueda. Hazlo el mismo día, sin repreguntas, y copia la respuesta completa. Si tienes herramienta de navegador, puedes hacerlo; si no, entrega las preguntas una a una y pide que te peguen las respuestas. Nunca inventes ni simules una respuesta: deja vacía la que no hayas obtenido y cuenta que falta.
-4. **Registra las respuestas.** Copia `assets/registro-recomendaciones-ia.plantilla.csv` como `registro-recomendaciones-ia.csv`. El script acepta CSV separado por comas o punto y coma; escribe «si/sí/no» en cualquier combinación de mayúsculas y minúsculas. Añade una fila por mes, asistente y pregunta. Sigue [references/registro.md](references/registro.md): marca mención, posición, competidores y dominios citados. P10 comprueba exactitud de los datos, no puntúa. La nota de recomendación mide si te nombran; no mide si la web puede leerse. La primera línea del CSV debe ser exactamente:
+4. **Registra las respuestas.** Copia `assets/registro-recomendaciones-ia.plantilla.csv` como `registro-recomendaciones-ia.csv`. El script acepta CSV separado por comas o punto y coma; escribe «si/sí/no» en cualquier combinación de mayúsculas y minúsculas. Añade una fila por mes, asistente y pregunta. Sigue [references/registro.md](references/registro.md): marca mención, posición, competidores y dominios citados. P10 comprueba exactitud de los datos, no puntúa. La nota de recomendación mide si te nombran; no mide si la web puede leerse.
+
+   Guarda el texto completo de cada respuesta en `respuestas/AAAA-MM/<asistente>-Pxx.md` (por ejemplo, `respuestas/2026-11/chatgpt-P01.md`) y anota esa ruta en la columna `archivo_respuesta`. No pegues el texto entero en el CSV: Excel recorta las celdas a 32.767 caracteres y los saltos de línea suelen romperse al abrir o guardar la hoja. Si una consulta no obtuvo respuesta, deja `archivo_respuesta` vacío. La primera línea del CSV debe ser exactamente:
 
    ```csv
-   mes,fecha,asistente,pregunta_id,pregunta,mencionado,posicion,competidores,fuentes,datos_correctos,notas
+   mes,fecha,asistente,pregunta_id,pregunta,mencionado,posicion,competidores,fuentes,datos_correctos,notas,archivo_respuesta
    ```
 
 5. **Calcula el resultado.** Ejecuta:
@@ -34,6 +36,27 @@ Mide cada mes si ChatGPT, Gemini y Perplexity nombran tu negocio en preguntas re
    ```
 
 6. **Entrega el informe.** Sigue el formato «Cómo contarlo» de abajo. Incluye el cambio frente al mes anterior, resultado por asistente, competidores que más aparecen y fuentes citadas cuando el negocio no aparece. Si no hay comparación válida, explícalo.
+
+## 🔄 Cómo volver a puntuar el histórico
+
+Si cambia la rúbrica, no hace falta repetir las consultas. El texto de cada respuesta ya está en `respuestas/AAAA-MM/<asistente>-Pxx.md`.
+
+1. Abre el CSV de entonces y comprueba que cada fila con respuesta tiene su archivo (o, en un CSV antiguo, una columna `respuesta` con el texto).
+2. Genera el documento de re-puntuación, sin volver a preguntar a los asistentes:
+
+   ```bash
+   python3 scripts/puntuar.py registro-recomendaciones-ia.csv --negocio "NOMBRE" --rescore --salida re-puntuacion-AAAA-MM.md
+   ```
+
+   Con `--mes AAAA-MM` se limita a ese mes; si lo omites, incluye todo el histórico del archivo.
+3. Relee cada respuesta en ese documento, aplica la rúbrica nueva y actualiza en el CSV `mencionado`, `posicion`, `competidores`, `fuentes` y `datos_correctos`.
+4. Vuelve a calcular el informe, ya sin `--rescore`:
+
+   ```bash
+   python3 scripts/puntuar.py registro-recomendaciones-ia.csv --negocio "NOMBRE" --salida informe-AAAA-MM.md
+   ```
+
+Los CSV anteriores a esta versión, sin `archivo_respuesta` y sin el texto de la respuesta, siguen sirviendo para calcular la nota con las columnas de siempre. No se puede volver a puntuar ese histórico si no se guardó el texto.
 
 ## 📊 Cómo se puntúa
 

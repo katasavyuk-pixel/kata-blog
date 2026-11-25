@@ -17,10 +17,11 @@ HEADER = [
 
 
 class PuntuarTest(unittest.TestCase):
-    def escribir_csv(self, filas, directorio):
+    def escribir_csv(self, filas, directorio, campos=None):
         ruta = Path(directorio) / "registro.csv"
+        cabecera = list(campos or HEADER)
         with ruta.open("w", encoding="utf-8", newline="") as archivo:
-            escritor = csv.DictWriter(archivo, fieldnames=HEADER)
+            escritor = csv.DictWriter(archivo, fieldnames=cabecera, extrasaction="ignore")
             escritor.writeheader()
             escritor.writerows(filas)
         return ruta
@@ -228,6 +229,105 @@ class PuntuarTest(unittest.TestCase):
             resultado = self.ejecutar(self.escribir_csv(filas, directorio), directorio)
             self.assertEqual(resultado.returncode, 0, resultado.stderr)
             self.assertEqual(json.loads(resultado.stdout)["mes"]["presencia"], 13)
+
+    def test_csv_antiguo_sin_archivo_respuesta_sigue_puntuando(self):
+        filas = [self.fila(posicion="1"), self.fila(pregunta_id="P02", mencionado="no", posicion="")]
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio), directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            self.assertEqual(json.loads(resultado.stdout)["mes"]["puntuacion"], 50)
+
+    def test_csv_nuevo_con_archivo_respuesta_puntua_igual(self):
+        filas = [
+            self.fila(posicion="1", archivo_respuesta="respuestas/2026-11/chatgpt-P01.md"),
+            self.fila(pregunta_id="P02", mencionado="no", posicion="", archivo_respuesta="respuestas/2026-11/chatgpt-P02.md"),
+        ]
+        campos = HEADER + ["archivo_respuesta"]
+        with tempfile.TemporaryDirectory() as directorio:
+            base = Path(directorio)
+            (base / "respuestas/2026-11").mkdir(parents=True)
+            (base / "respuestas/2026-11/chatgpt-P01.md").write_text("Respuesta de ejemplo inventada: aparece primero.\n", encoding="utf-8")
+            (base / "respuestas/2026-11/chatgpt-P02.md").write_text("Respuesta de ejemplo inventada: no aparece.\n", encoding="utf-8")
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio, campos), directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            self.assertEqual(json.loads(resultado.stdout)["mes"]["puntuacion"], 50)
+
+    def test_rescore_exige_el_texto_en_un_csv_antiguo(self):
+        filas = [self.fila(posicion="1")]
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio), directorio, "--rescore")
+            self.assertEqual(resultado.returncode, 1)
+            self.assertIn("falta el texto de la respuesta", resultado.stderr)
+            self.assertFalse(Path(directorio, "informe.md").exists())
+
+    def test_rescore_usa_archivos_y_no_repite_consultas(self):
+        filas = [self.fila(posicion="2", archivo_respuesta="respuestas/2026-11/chatgpt-P01.md", notas="DATOS DE EJEMPLO, INVENTADOS")]
+        campos = HEADER + ["archivo_respuesta"]
+        cuerpo = "En Villaejemplo, Peluquería Lúa aparece en segundo lugar, después de Salón Brisa.\n\nDATOS DE EJEMPLO, INVENTADOS\n"
+        with tempfile.TemporaryDirectory() as directorio:
+            base = Path(directorio)
+            (base / "respuestas/2026-11").mkdir(parents=True)
+            (base / "respuestas/2026-11/chatgpt-P01.md").write_text(cuerpo, encoding="utf-8")
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio, campos), directorio, "--rescore")
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            salida = json.loads(resultado.stdout)
+            self.assertTrue(salida["rescore"])
+            self.assertEqual(salida["filas"], 1)
+            self.assertEqual(salida["meses"], ["2026-11"])
+            pack = Path(directorio, "informe.md").read_text(encoding="utf-8")
+            self.assertIn("EJEMPLO con datos inventados", pack)
+            self.assertIn("Re-puntuación del histórico: Peluquería Lúa", pack)
+            self.assertIn("sin repetir las consultas", pack)
+            self.assertIn("Peluquería Lúa aparece en segundo lugar", pack)
+            self.assertIn("mencionado=si, posicion=2", pack)
+            self.assertIn("respuestas/2026-11/chatgpt-P01.md", pack)
+            self.assertIn("| 3 | Aparece en primer lugar o es el único recomendado. |", pack)
+
+    def test_rescore_acepta_columna_respuesta_en_csv_antiguo(self):
+        texto = "Respuesta inventada con saltos:\n\n- Primer párrafo\n- Segundo párrafo"
+        filas = [self.fila(posicion="1", respuesta=texto)]
+        campos = HEADER + ["respuesta"]
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio, campos), directorio, "--rescore")
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            pack = Path(directorio, "informe.md").read_text(encoding="utf-8")
+            self.assertIn("Primer párrafo", pack)
+            self.assertIn("Segundo párrafo", pack)
+            self.assertIn("columna respuesta", pack)
+
+    def test_rescore_rechaza_ruta_fuera_del_directorio(self):
+        filas = [self.fila(posicion="1", archivo_respuesta="../fuera.md")]
+        campos = HEADER + ["archivo_respuesta"]
+        with tempfile.TemporaryDirectory() as directorio:
+            Path(directorio, "fuera.md").write_text("no debería leerse", encoding="utf-8")
+            # The relative path is resolved from the CSV directory (directorio),
+            # so ../fuera.md escapes it. Place the bait as a sibling of directorio.
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio, campos), directorio, "--rescore")
+            self.assertEqual(resultado.returncode, 1)
+            self.assertIn("fuera del directorio de trabajo", resultado.stderr)
+
+    def test_puntuacion_no_exige_los_archivos_de_respuesta(self):
+        filas = [self.fila(posicion="1", archivo_respuesta="respuestas/2026-11/chatgpt-P01.md")]
+        campos = HEADER + ["archivo_respuesta"]
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(self.escribir_csv(filas, directorio, campos), directorio)
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            self.assertEqual(json.loads(resultado.stdout)["mes"]["puntuacion"], 100)
+
+    def test_ejemplo_se_puede_volver_a_puntuar_con_rescore(self):
+        ejemplo = ROOT / "zip/te-recomienda-la-ia/ejemplos/registro-ejemplo.csv"
+        with tempfile.TemporaryDirectory() as directorio:
+            resultado = self.ejecutar(ejemplo, directorio, "--rescore")
+            self.assertEqual(resultado.returncode, 0, resultado.stderr)
+            pack = Path(directorio, "informe.md").read_text(encoding="utf-8")
+            self.assertIn("EJEMPLO con datos inventados", pack)
+            self.assertIn("DATOS DE EJEMPLO, INVENTADOS", pack)
+            self.assertIn("## Respuestas de 2026-10", pack)
+            self.assertIn("## Respuestas de 2026-11", pack)
+            self.assertIn("chatgpt · P01", pack)
+            self.assertGreater(pack.count("### "), 50)
+
+
 
 
 if __name__ == "__main__":

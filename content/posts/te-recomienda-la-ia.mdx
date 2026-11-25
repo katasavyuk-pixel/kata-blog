@@ -95,15 +95,15 @@ Las respuestas que faltan reducen la confianza, no bajan la puntuación: el info
 
 ## 🗂️ El registro
 
-Apunta una fila por mes, asistente y pregunta. Guarda la fecha, si apareces, la posición, los competidores que menciona la respuesta y los dominios que cita. En P10 indica si los datos son correctos, incorrectos o parciales. El archivo usa CSV estándar, con comas y comillas cuando hacen falta.
+Apunta una fila por mes, asistente y pregunta. Guarda la fecha, si apareces, la posición, los competidores que menciona la respuesta y los dominios que cita. En P10 indica si los datos son correctos, incorrectos o parciales. El texto completo de cada respuesta se guarda en un archivo `respuestas/AAAA-MM/<asistente>-Pxx.md`; el CSV solo anota esa ruta en `archivo_respuesta`, para que Excel no recorte el texto ni rompa los saltos de línea. El archivo de registro usa CSV estándar, con comas y comillas cuando hacen falta.
 
 **Ejemplo inventado:** estas tres filas solo ilustran el formato; no describen resultados reales.
 
 ```csv
-mes,fecha,asistente,pregunta_id,pregunta,mencionado,posicion,competidores,fuentes,datos_correctos,notas
-2026-11,2026-11-12,chatgpt,P01,¿Cuál es la mejor peluquería en Villaejemplo?,si,2,Salón Brisa,directorio-ejemplo.test,,Ejemplo inventado
-2026-11,2026-11-12,gemini,P01,¿Cuál es la mejor peluquería en Villaejemplo?,no,,Estudio Trenza,guialocal-ejemplo.test,,Ejemplo inventado
-2026-11,2026-11-12,perplexity,P10,¿Qué sabes de Peluquería Lúa en Villaejemplo?,si,,,opiniones-ejemplo.test,parcial,Ejemplo inventado
+mes,fecha,asistente,pregunta_id,pregunta,mencionado,posicion,competidores,fuentes,datos_correctos,notas,archivo_respuesta
+2026-11,2026-11-12,chatgpt,P01,¿Cuál es la mejor peluquería en Villaejemplo?,si,2,Salón Brisa,directorio-ejemplo.test,,Ejemplo inventado,respuestas/2026-11/chatgpt-P01.md
+2026-11,2026-11-12,gemini,P01,¿Cuál es la mejor peluquería en Villaejemplo?,no,,Estudio Trenza,guialocal-ejemplo.test,,Ejemplo inventado,respuestas/2026-11/gemini-P01.md
+2026-11,2026-11-12,perplexity,P10,¿Qué sabes de Peluquería Lúa en Villaejemplo?,si,,,opiniones-ejemplo.test,parcial,Ejemplo inventado,respuestas/2026-11/perplexity-P10.md
 ```
 
 La herramienta descargable valida el CSV y calcula el informe en tu ordenador. No necesita conectar con servicios externos. Además del resultado, recoge qué competidores salen más, qué dominios se citan cuando no apareces y qué sabe el asistente de tu negocio en P10.

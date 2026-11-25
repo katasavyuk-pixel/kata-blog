@@ -263,7 +263,7 @@ const SKILLS: LibraryItem[] = [
     red: "Nada por su cuenta. Su script usa solo la biblioteca estándar de Python y no abre conexiones: no consulta APIs de pago, no publica ni envía nada.",
     pruebas:
       "El script se comprueba con pruebas locales. Los archivos de ejemplo contienen datos inventados. No son datos de negocios reales.",
-    version: "1.0.0",
+    version: "1.1.0",
     publicado: "2026-11-25",
     ruta: "lead-magnets/te-recomienda-la-ia/zip/te-recomienda-la-ia",
     evidenciaRuta: "lead-magnets/te-recomienda-la-ia/tests/test_puntuar.py",

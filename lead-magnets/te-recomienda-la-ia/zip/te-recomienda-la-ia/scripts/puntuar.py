@@ -16,19 +16,34 @@ COLUMNAS = (
     "mes", "fecha", "asistente", "pregunta_id", "pregunta", "mencionado",
     "posicion", "competidores", "fuentes", "datos_correctos", "notas",
 )
+COLUMNA_ARCHIVO = "archivo_respuesta"
+COLUMNA_TEXTO = "respuesta"
+CAMPOS_LIBRES = (
+    "mes", "fecha", "pregunta", "competidores", "fuentes", "notas",
+    COLUMNA_ARCHIVO, COLUMNA_TEXTO,
+)
+RUBRICA_ACTUAL = """Cada pregunta puntúa de 0 a 3; P10 comprueba los datos y no puntúa. Las respuestas no obtenidas se dejan vacías y no entran en el cálculo.
+
+| Puntos | Qué significa |
+|---|---|
+| 0 | El negocio no aparece en la respuesta. |
+| 1 | Aparece, pero no está entre los tres primeros; también si no se puede determinar su posición. |
+| 2 | Aparece en segundo o tercer lugar. |
+| 3 | Aparece en primer lugar o es el único recomendado. |
+"""
 
 
 def normalizar_filas(filas):
     """Normaliza los valores escritos a mano antes de validarlos."""
     for fila in filas:
-        for campo in ("mes", "fecha", "pregunta", "competidores", "fuentes", "notas"):
-            fila[campo] = fila.get(campo, "").strip()
-        fila["asistente"] = fila.get("asistente", "").strip().lower()
-        fila["pregunta_id"] = fila.get("pregunta_id", "").strip().upper()
+        for campo in CAMPOS_LIBRES:
+            fila[campo] = (fila.get(campo) or "").strip()
+        fila["asistente"] = (fila.get("asistente") or "").strip().lower()
+        fila["pregunta_id"] = (fila.get("pregunta_id") or "").strip().upper()
         for campo in ("mencionado", "datos_correctos"):
-            valor = fila.get(campo, "").strip().lower()
+            valor = (fila.get(campo) or "").strip().lower()
             fila[campo] = valor.replace("í", "i")
-        posicion = fila.get("posicion", "").strip()
+        posicion = (fila.get("posicion") or "").strip()
         coincidencia = re.fullmatch(r"\s*(\d+)\s*[º°ª.]?\s*", posicion)
         fila["posicion"] = coincidencia.group(1) if coincidencia else posicion
     return filas
@@ -63,6 +78,119 @@ def validar(filas):
         if problemas:
             errores.append(f"Fila {numero}: " + "; ".join(problemas))
     return errores
+
+
+def _dentro_de(ruta, raiz):
+    try:
+        ruta.resolve().relative_to(raiz.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def ruta_archivo_respuesta(fila, base):
+    """Resuelve archivo_respuesta respecto al CSV o al directorio de trabajo."""
+    relativo = (fila.get(COLUMNA_ARCHIVO) or "").strip()
+    if not relativo:
+        return None
+    bruto = Path(relativo)
+    if bruto.is_absolute():
+        candidato = bruto.resolve()
+    else:
+        por_csv = (base / relativo).resolve()
+        por_cwd = (Path.cwd() / relativo).resolve()
+        candidato = por_csv if por_csv.is_file() or not por_cwd.is_file() else por_cwd
+    bases = (Path(base).resolve(), Path.cwd().resolve())
+    if not any(_dentro_de(candidato, raiz) for raiz in bases):
+        raise ValueError(
+            f"La ruta de archivo_respuesta queda fuera del directorio de trabajo: {relativo}"
+        )
+    return candidato
+
+
+def texto_respuesta(fila, base):
+    """Devuelve el texto completo desde el archivo o, si no hay, desde la columna respuesta."""
+    ruta = ruta_archivo_respuesta(fila, base)
+    if ruta is not None:
+        if not ruta.is_file():
+            raise FileNotFoundError(
+                f"no encuentro el archivo de respuesta {fila.get(COLUMNA_ARCHIVO)}"
+            )
+        return ruta.read_text(encoding="utf-8")
+    return (fila.get(COLUMNA_TEXTO) or "").strip()
+
+
+def fila_tiene_respuesta_obtenida(fila):
+    return fila.get("mencionado", "") in {"si", "no"} or fila.get("datos_correctos", "") in {"si", "no", "parcial"}
+
+
+def errores_rescore(filas, base, mes=None):
+    """Exige el texto de cada respuesta obtenida para poder volver a puntuar."""
+    errores = []
+    for numero, fila in enumerate(filas, start=2):
+        if mes and fila.get("mes") != mes:
+            continue
+        if not fila_tiene_respuesta_obtenida(fila):
+            continue
+        try:
+            texto = texto_respuesta(fila, base)
+        except (FileNotFoundError, ValueError, OSError, UnicodeError) as error:
+            errores.append(f"Fila {numero}: {error}")
+            continue
+        if not texto:
+            errores.append(
+                f"Fila {numero}: falta el texto de la respuesta "
+                f"(columna {COLUMNA_ARCHIVO} o {COLUMNA_TEXTO}) y no se puede volver a puntuar sin él"
+            )
+    return errores
+
+
+def generar_pack_rescore(filas, negocio, mes, base):
+    """Prepara un documento con la rúbrica actual y el texto de cada respuesta."""
+    if mes:
+        meses = [mes]
+        seleccion = [fila for fila in filas if fila["mes"] == mes]
+    else:
+        meses = sorted({fila["mes"] for fila in filas})
+        seleccion = list(filas)
+    lineas = [
+        f"# Re-puntuación del histórico: {negocio}",
+        "",
+        "Este documento sirve para volver a aplicar la rúbrica **sin repetir las consultas**.",
+        "Revisa cada respuesta, actualiza en el CSV las columnas `mencionado`, `posicion`, `competidores`, `fuentes` y `datos_correctos`, y después ejecuta `scripts/puntuar.py` sin `--rescore`.",
+        "",
+        "## Rúbrica actual",
+        "",
+        RUBRICA_ACTUAL.strip(),
+        "",
+    ]
+    for mes_actual in meses:
+        lineas.extend([f"## Respuestas de {mes_actual}", ""])
+        for fila in (item for item in seleccion if item["mes"] == mes_actual):
+            archivo = (fila.get(COLUMNA_ARCHIVO) or "").strip() or "columna respuesta"
+            lineas.extend([
+                f"### {fila['asistente']} · {fila['pregunta_id']} · {fila['fecha']}",
+                "",
+                f"- Pregunta: {fila['pregunta']}",
+            ])
+            if not fila_tiene_respuesta_obtenida(fila):
+                lineas.extend([
+                    "- Sin respuesta obtenida en esta medición; no hay texto que volver a puntuar.",
+                    "",
+                ])
+                continue
+            texto = texto_respuesta(fila, base)
+            lineas.extend([
+                f"- Puntuación actual: mencionado={fila['mencionado'] or 'vacío'}, posicion={fila['posicion'] or 'vacía'}, competidores={fila['competidores'] or '—'}, fuentes={fila['fuentes'] or '—'}, datos_correctos={fila['datos_correctos'] or 'vacío'}, notas={fila['notas'] or '—'}.",
+                f"- Archivo: {archivo}",
+                "",
+                texto.rstrip(),
+                "",
+            ])
+    pack = "\n".join(lineas).rstrip() + "\n"
+    if any("DATOS DE EJEMPLO" in (fila.get("notas") or "").upper() for fila in seleccion):
+        pack = "EJEMPLO con datos inventados\n\n" + pack
+    return pack
 
 
 def puntos_respuesta(fila):
@@ -186,27 +314,39 @@ def generar_informe(filas, negocio, mes):
     return resumen, informe
 
 
+def leer_registro(ruta):
+    try:
+        contenido = ruta.read_text(encoding="utf-8-sig")
+    except UnicodeDecodeError:
+        contenido = ruta.read_text(encoding="cp1252")
+    primera_linea = contenido.splitlines()[0] if contenido.splitlines() else ""
+    delimitador = csv.Sniffer().sniff(primera_linea, delimiters=",;\t").delimiter
+    lector = csv.DictReader(io.StringIO(contenido, newline=""), delimiter=delimitador)
+    if lector.fieldnames is None or not set(COLUMNAS).issubset(lector.fieldnames):
+        raise ValueError("El CSV debe incluir las columnas: " + ", ".join(COLUMNAS))
+    filas = normalizar_filas(list(lector))
+    if not filas:
+        raise ValueError("El registro está vacío: añade una fila por asistente y pregunta (mira ejemplos/registro-ejemplo.csv) y vuelve a ejecutarlo.")
+    return filas
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Calcula la nota de recomendación mensual en asistentes de IA.")
     parser.add_argument("csv", type=Path, help="ruta al registro CSV")
     parser.add_argument("--negocio", required=True, help="nombre exacto del negocio")
-    parser.add_argument("--salida", required=True, type=Path, help="ruta del informe Markdown")
-    parser.add_argument("--mes", help="mes AAAA-MM; por defecto usa el último mes del registro")
+    parser.add_argument("--salida", required=True, type=Path, help="ruta del informe Markdown o, con --rescore, del documento de re-puntuación")
+    parser.add_argument("--mes", help="mes AAAA-MM; por defecto, el último mes del registro (o todos, con --rescore)")
+    parser.add_argument(
+        "--rescore",
+        action="store_true",
+        help="genera un documento para volver a puntuar el histórico con la rúbrica actual, usando las respuestas guardadas, sin repetir las consultas",
+    )
     args = parser.parse_args(argv)
     try:
-        try:
-            contenido = args.csv.read_text(encoding="utf-8-sig")
-        except UnicodeDecodeError:
-            contenido = args.csv.read_text(encoding="cp1252")
-        primera_linea = contenido.splitlines()[0] if contenido.splitlines() else ""
-        delimitador = csv.Sniffer().sniff(primera_linea, delimiters=",;\t").delimiter
-        lector = csv.DictReader(io.StringIO(contenido, newline=""), delimiter=delimitador)
-        if lector.fieldnames is None or not set(COLUMNAS).issubset(lector.fieldnames):
-            raise ValueError("El CSV debe incluir las columnas: " + ", ".join(COLUMNAS))
-        filas = normalizar_filas(list(lector))
-        if not filas:
-            raise ValueError("El registro está vacío: añade una fila por asistente y pregunta (mira ejemplos/registro-ejemplo.csv) y vuelve a ejecutarlo.")
+        filas = leer_registro(args.csv)
         errores = validar(filas)
+        if args.rescore:
+            errores.extend(errores_rescore(filas, args.csv.parent, args.mes))
     except FileNotFoundError:
         print(f"Error: no encuentro el archivo {args.csv}", file=sys.stderr)
         return 1
@@ -220,6 +360,24 @@ def main(argv=None):
     if not meses:
         print("Error: el CSV no contiene filas.", file=sys.stderr)
         return 1
+    if args.rescore:
+        if args.mes:
+            if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", args.mes) or args.mes not in meses:
+                print(f"Error: no hay registros válidos para el mes {args.mes}.", file=sys.stderr)
+                return 1
+            meses_salida = [args.mes]
+        else:
+            meses_salida = meses
+        try:
+            pack = generar_pack_rescore(filas, args.negocio, args.mes, args.csv.parent)
+            args.salida.parent.mkdir(parents=True, exist_ok=True)
+            args.salida.write_text(pack, encoding="utf-8")
+        except (ValueError, OSError, UnicodeError, FileNotFoundError) as error:
+            print(f"Error: no se pudo generar el documento de re-puntuación: {error}", file=sys.stderr)
+            return 1
+        filas_pack = sum(1 for fila in filas if (args.mes is None or fila["mes"] == args.mes) and fila_tiene_respuesta_obtenida(fila))
+        print(json.dumps({"filas": filas_pack, "meses": meses_salida, "rescore": True, "salida": str(args.salida)}, ensure_ascii=False, sort_keys=True))
+        return 0
     mes = args.mes or meses[-1]
     if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", mes) or mes not in meses:
         print(f"Error: no hay registros válidos para el mes {mes}.", file=sys.stderr)
