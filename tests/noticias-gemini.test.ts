@@ -64,6 +64,7 @@ describe('escritura con Gemini', () => {
       '---\ntitle: "Titular propio"\nrelevancia: ia\ndate: 1999-01-01\nprotagonista: true\n---\n\n## Qué pasó\n\nTexto.\n',
       lead,
       '2026-11-10',
+      { importancia: 7 },
     );
     assert.match(stamped, /date: 2026-11-10/);
     assert.match(stamped, /fuente_titulo: "A \\"quoted\\" title"/);
@@ -71,6 +72,8 @@ describe('escritura con Gemini', () => {
     assert.match(stamped, /fuente_medio: "The Decoder"/);
     assert.match(stamped, /fuente_fecha: 2026-11-09/);
     assert.match(stamped, /fuente_palabras: 612/);
+    assert.match(stamped, /destacada: true/);
+    assert.match(stamped, /importancia: 7/);
     assert.match(stamped, /impacto_interactivo: true/);
     assert.match(stamped, /title: "Titular propio"/);
   });

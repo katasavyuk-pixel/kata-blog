@@ -95,7 +95,7 @@ function replaceField(yaml, name, replacementLine) {
  * Stamp the lead article's source metadata from lead.json, so a mistyped
  * fuente_* field cannot drop an otherwise good article.
  */
-export function stampLeadFrontmatter(mdx, lead, date) {
+export function stampLeadFrontmatter(mdx, lead, date, meta = {}) {
   const parts = mdx.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
   if (!parts) throw new Error("lead article has no YAML frontmatter to stamp");
   let yaml = parts[1];
@@ -110,6 +110,10 @@ export function stampLeadFrontmatter(mdx, lead, date) {
     ["coverAlt", 'coverAlt: "Vigía observa el horizonte al amanecer desde un puesto de costa, con una luz roja de señal."'],
     ["kicker", 'kicker: "Noticia"'],
     ["protagonista", "protagonista: true"],
+    ["destacada", "destacada: true"],
+    ...(Number.isFinite(meta.importancia ?? lead.importancia)
+      ? [["importancia", `importancia: ${Math.max(0, Math.min(100, Math.round(meta.importancia ?? lead.importancia)))}`]]
+      : []),
     ["impacto_interactivo", "impacto_interactivo: true"],
     ["fuente_titulo", `fuente_titulo: ${yamlQuote(lead.title)}`],
     ["fuente_url", `fuente_url: ${lead.url}`],
@@ -423,7 +427,7 @@ async function main(argv, env) {
     const raw = await generateContent({ apiKey, model, prompt });
     let mdx = extractMdx(raw);
     if (kind === "lead") {
-      mdx = stampLeadFrontmatter(mdx, selection.lead, date);
+      mdx = stampLeadFrontmatter(mdx, selection.lead, date, { importancia: selection.importancia });
       mdx = ensureSourceLink(mdx, selection.lead);
     }
     // Paths are relative to the repo root (cwd in the workflow and in a local ensayo).

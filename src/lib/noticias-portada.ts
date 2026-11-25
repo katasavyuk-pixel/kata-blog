@@ -22,6 +22,8 @@ export interface PortadaPost {
   date: string;
   updated?: string;
   protagonista?: boolean;
+  destacada?: boolean;
+  importancia?: number;
 }
 
 export interface Portada<T extends PortadaPost> {
@@ -40,13 +42,17 @@ export interface Portada<T extends PortadaPost> {
 const time = (value: string) => Date.parse(value);
 const editedAt = (post: PortadaPost) => post.updated ?? post.date;
 const newestFirst = (a: PortadaPost, b: PortadaPost) => time(b.date) - time(a.date);
+const leadPriorityFirst = (a: PortadaPost, b: PortadaPost) =>
+  time(b.date) - time(a.date) ||
+  Number(Boolean(b.destacada)) - Number(Boolean(a.destacada)) ||
+  (b.importancia ?? 0) - (a.importancia ?? 0);
 
 export function isLeadArticle(post: Pick<PortadaPost, "protagonista">): boolean {
   return post.protagonista === true;
 }
 
 export function buildPortada<T extends PortadaPost>(posts: T[]): Portada<T> {
-  const articles = posts.filter(isLeadArticle).sort(newestFirst);
+  const articles = posts.filter(isLeadArticle).sort(leadPriorityFirst);
   const editions = posts.filter((post) => !isLeadArticle(post)).sort(newestFirst);
   const lead = articles[0] ?? null;
   const latestEdition = editions[0] ?? null;

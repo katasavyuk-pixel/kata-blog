@@ -144,6 +144,26 @@ describe('elección del protagonista', () => {
     assert.equal(pickLead([item({ title: 'Local football derby ends in a draw', axis: 'geopolitica' })]).status, 'insufficient');
   });
 
+  test('una noticia de IA y controversia supera a una general de economía aunque la segunda toque más ejes', () => {
+    const general = item({
+      title: 'La empresa pide reducir cargas al trabajo y reformar pensiones en la economía',
+      axis: 'economia',
+      publishedAt: '2026-11-24T08:00:00.000Z',
+    });
+    const iaControvertida = item({
+      title: 'Regulators investigate AI firm over copyright lawsuit and data breach',
+      axis: 'geopolitica',
+      publishedAt: '2026-11-24T05:00:00.000Z',
+    });
+    const picked = pickLead([general, iaControvertida]);
+    assert.equal(picked.status, 'lead');
+    if (picked.status === 'lead') {
+      assert.equal(picked.lead, iaControvertida);
+      assert.ok(picked.importancia > relevanceScore(general));
+      assert.ok(picked.senales.length >= 2);
+    }
+  });
+
   test('sin candidatas', () => {
     const result = pickLead([]);
     assert.equal(result.status, 'insufficient');
