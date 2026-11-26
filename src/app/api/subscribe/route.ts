@@ -20,7 +20,7 @@ const BodySchema = z.object({
   resource: z.string().max(80).optional(),
   utmSource: z.string().max(80).optional(),
   turnstileToken: z.string().optional(),
-  /** Literal route the signup happened on, e.g. "/blog/que-es-rag". */
+  /** Literal route the signup happened on, e.g. "/que-es-rag". */
   signupPath: z
     .string()
     .max(120)
@@ -168,13 +168,13 @@ export async function POST(request: NextRequest) {
       // set it, so the two emails that arrive before it were silent dead ends.
       replyTo: REPLY_TO,
       subject: ASUNTOS.confirmacion,
-      react: ConfirmOptInEmail({ confirmUrl, brand: siteConfig.name }),
+      react: ConfirmOptInEmail({ confirmUrl, brand: siteConfig.newsletter.nombre }),
       // The one email in the system that was still HTML-only. That is a
       // bulk-mail signal — this message was landing in spam — and a client that
       // blocks HTML saw a blank page with no way to complete the opt-in. Every
       // other send here has carried a text part since 0d03ffe; this one was
       // missed, and it is the message the whole funnel rests on.
-      text: confirmOptInText(confirmUrl, siteConfig.name),
+      text: confirmOptInText(confirmUrl, siteConfig.newsletter.nombre),
     });
     if (error) {
       console.error("[subscribe] resend error:", error);

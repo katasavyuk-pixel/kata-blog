@@ -23,15 +23,15 @@ const pieza = {
 
 describe('el contenido de cada ítem del feed', () => {
   test('portada, respuesta corta, lo que te llevas y el enlace, escapados', () => {
-    const html = contenidoDelItem(pieza, 'https://kata.ianexora.com/blog/x');
-    assert.match(html, /<img src="https:\/\/kata\.ianexora\.com\/static\/portada\.webp" alt="Una &quot;portada&quot;" width="1672" height="941" \/>/);
+    const html = contenidoDelItem(pieza, 'https://ianexora.com/blog/x');
+    assert.match(html, /<img src="https:\/\/ianexora\.com\/blog\/static\/portada\.webp" alt="Una &quot;portada&quot;" width="1672" height="941" \/>/);
     assert.match(html, /<p>La respuesta &lt;corta&gt; &amp; clara<\/p>/);
     assert.match(html, /<ul><li>Una idea<\/li><li>Otra idea<\/li><\/ul>/);
-    assert.match(html, /<a href="https:\/\/kata\.ianexora\.com\/blog\/x">Sigue leyendo en /);
+    assert.match(html, /<a href="https:\/\/ianexora\.com\/blog\/x">Sigue leyendo en /);
   });
 
   test('sin respuesta corta ni portada, el extracto y el enlace', () => {
-    const html = contenidoDelItem({ ...pieza, respuesta: undefined, te_llevas: [], cover: undefined }, 'https://kata.ianexora.com/blog/x');
+    const html = contenidoDelItem({ ...pieza, respuesta: undefined, te_llevas: [], cover: undefined }, 'https://ianexora.com/blog/x');
     assert.doesNotMatch(html, /<img|<ul>/);
     assert.match(html, /<p>El extracto<\/p>/);
   });

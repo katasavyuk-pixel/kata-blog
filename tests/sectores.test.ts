@@ -4,6 +4,7 @@ import { tagHref } from '@/config/taxonomy';
 import { SECTOR_KEYS, SECTORES, esSector, rutaDeSector, RUTA_SECTORES } from '@/config/sectores';
 import { getPostsBySector, sectoresConContenido } from '@/lib/posts';
 import sitemap from '@/app/sitemap';
+import { siteConfig } from '@/config/site';
 
 describe('las páginas por sector', () => {
   test('solo existen los sectores que ya tienen un artículo editorial publicado', () => {
@@ -29,20 +30,20 @@ describe('las páginas por sector', () => {
   });
 
   test('las etiquetas de sector van a la página del sector, no al tag noindex', () => {
-    assert.equal(tagHref('inmobiliarias'), '/blog/sector/inmobiliarias');
-    assert.equal(tagHref('peluqueria'), '/blog/sector/peluquerias');
-    assert.equal(tagHref('hosteleria'), '/blog/sector/hosteleria');
-    assert.equal(tagHref('restaurantes'), '/blog/sector/hosteleria');
-    assert.equal(tagHref('roi'), '/blog/tag/roi');
+    assert.equal(tagHref('inmobiliarias'), '/sector/inmobiliarias');
+    assert.equal(tagHref('peluqueria'), '/sector/peluquerias');
+    assert.equal(tagHref('hosteleria'), '/sector/hosteleria');
+    assert.equal(tagHref('restaurantes'), '/sector/hosteleria');
+    assert.equal(tagHref('roi'), '/tag/roi');
   });
 
   test('el sitemap lista el índice y cada sector con contenido, y no una clínica vacía', () => {
-    const urls = sitemap().map((e) => new URL(e.url).pathname);
+    const urls = sitemap().map((e) => e.url.replace(siteConfig.url, '') || '/');
     assert.ok(urls.includes(RUTA_SECTORES));
     for (const sector of sectoresConContenido()) {
       assert.ok(urls.includes(rutaDeSector(sector)), rutaDeSector(sector));
     }
-    assert.equal(urls.includes('/blog/sector/clinicas'), false);
+    assert.equal(urls.includes('/sector/clinicas'), false);
   });
 
   test('las descripciones salen del texto ya publicado, sin cifras nuevas', () => {

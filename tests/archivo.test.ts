@@ -127,9 +127,9 @@ describe('las opciones que se ofrecen', () => {
 
 describe('una dirección por combinación', () => {
   test('siempre en el mismo orden y aterriza en la lista', () => {
-    assert.equal(hrefDeArchivo({}), '/blog#archivo');
-    assert.equal(hrefDeArchivo({ q: 'geo', tema: 'captacion', tipo: 'sistemas' }), '/blog?tipo=sistemas&tema=captacion&q=geo#archivo');
-    assert.equal(hrefDeArchivo({ q: 'a b&c' }), '/blog?q=a+b%26c#archivo');
+    assert.equal(hrefDeArchivo({}), '/lecturas#archivo');
+    assert.equal(hrefDeArchivo({ q: 'geo', tema: 'captacion', tipo: 'sistemas' }), '/lecturas?tipo=sistemas&tema=captacion&q=geo#archivo');
+    assert.equal(hrefDeArchivo({ q: 'a b&c' }), '/lecturas?q=a+b%26c#archivo');
   });
 
   test('lo que escribe una dirección es lo que lee', () => {
@@ -141,7 +141,7 @@ describe('una dirección por combinación', () => {
 });
 
 describe('la página, con lo publicado', () => {
-  const pagina = readFileSync(join(root, 'src/app/blog/page.tsx'), 'utf8');
+  const pagina = readFileSync(join(root, 'src/app/lecturas/page.tsx'), 'utf8');
 
   test('todo lo escrito a mano cabe en algún tipo', () => {
     const archivo = getEditoriales();
@@ -151,15 +151,15 @@ describe('la página, con lo publicado', () => {
   });
 
   test('es una sola página para un buscador y los filtros son enlaces', () => {
-    assert.match(pagina, /canonical: "\/blog"/);
+    assert.match(pagina, /canonical: "\/lecturas"/);
     assert.match(pagina, /href=\{hrefDeArchivo\(\{ \.\.\.filtro, tipo: tipo\.activa \? undefined : tipo\.clave \}\)\}/);
     assert.match(pagina, /href=\{hrefDeArchivo\(\{ \.\.\.filtro, tema: tema\.activa \? undefined : tema\.clave \}\)\}/);
     assert.match(pagina, /<FlujoRow key=\{post\.slug\} post=\{post\} \/>/);
     assert.doesNotMatch(pagina, /"use client"/);
   });
 
-  test('las noticias siguen fuera: se enlazan, no se listan', () => {
+  test('las noticias siguen fuera: ni se listan ni se enlazan (Kata, 26-nov-2026)', () => {
     assert.match(pagina, /getEditoriales\(\)/);
-    assert.match(pagina, /href="\/noticias"/);
+    assert.doesNotMatch(pagina, /href="\/noticias"/);
   });
 });

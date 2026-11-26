@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { YouTubeFacade } from "@/components/video/youtube-facade";
+import { conBase } from "@/config/base-path";
 
 /**
  * Privacy-enhanced embed (youtube-nocookie.com) for a post's companion episode,
@@ -36,7 +37,7 @@ export function YouTubeEmbed({
         ) : (
           <>
             Vídeo del episodio — el código está más abajo, en{" "}
-            <a href="/herramientas" className="text-accent-ink hover:underline">
+            <a href={conBase("/herramientas")} className="text-accent-ink hover:underline">
               /herramientas
             </a>
             .

@@ -7,7 +7,7 @@
  * tags — the vocabulary already in the posts — rather than a new frontmatter
  * field that would have to be backfilled.
  *
- * `/blog/tag/<tag>` stays `noindex` (free-text long-tail). A sector page is
+ * `/tag/<tag>` stays `noindex` (free-text long-tail). A sector page is
  * the indexable grouping, and `tagHref` sends those tags here.
  *
  * Clínicas is not listed yet: there is no published editorial post tagged
@@ -58,7 +58,7 @@ export function sectorDeEtiqueta(tag: string): Sector | undefined {
 }
 
 export function rutaDeSector(sector: Sector): string {
-  return `/blog/sector/${sector}`;
+  return `/sector/${sector}`;
 }
 
-export const RUTA_SECTORES = "/blog/sectores";
+export const RUTA_SECTORES = "/sectores";

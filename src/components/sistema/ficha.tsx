@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/imagen";
 import { Dato } from "@/components/ui/dato";
 import { Estado } from "@/components/sistema/estado";
 import { cn } from "@/lib/utils";

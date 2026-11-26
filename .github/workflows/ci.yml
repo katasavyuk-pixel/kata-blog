@@ -71,5 +71,5 @@ jobs:
         shell: bash
         run: |
           npx next start -p 3001 &
-          for i in $(seq 1 30); do curl -sf http://localhost:3001/ -o /dev/null && break; sleep 1; done
-          node scripts/seo/check.mjs --local http://localhost:3001 --site https://kata.ianexora.com
+          for i in $(seq 1 30); do curl -sf http://localhost:3001/blog -o /dev/null && break; sleep 1; done
+          node scripts/seo/check.mjs --local http://localhost:3001/blog --site https://ianexora.com/blog

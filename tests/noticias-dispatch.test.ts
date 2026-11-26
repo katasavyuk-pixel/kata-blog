@@ -164,7 +164,7 @@ describe('vercel.json', () => {
     assert.ok(crons.length > 0);
     for (const { path } of crons) {
       assert.ok(
-        existsSync(join(root, 'src/app', path, 'route.ts')),
+        existsSync(join(root, 'src/app', path.replace(/^\/blog(?=\/)/, ''), 'route.ts')),
         `${path} no tiene ruta: el cron daría 404 cada día sin que nadie lo viera.`,
       );
     }

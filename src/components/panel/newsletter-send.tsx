@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { conBase } from "@/config/base-path";
 
 type IssueOption = {
   issue: string;
@@ -54,7 +55,7 @@ export function NewsletterSendPanel({ issues }: { issues: IssueOption[] }) {
     setResult(null);
 
     try {
-      const response = await fetch("/panel/newsletter", {
+      const response = await fetch(conBase("/panel/newsletter"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

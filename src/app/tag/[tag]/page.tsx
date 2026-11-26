@@ -20,7 +20,7 @@ export async function generateMetadata({
   return {
     title: `#${decoded}`,
     description: `Artículos etiquetados como ${decoded}.`,
-    alternates: { ...feedAlternates, canonical: `/blog/tag/${tag}` },
+    alternates: { ...feedAlternates, canonical: `/tag/${tag}` },
     // Tags are free-text long-tail keywords, mostly listings of one or two
     // posts. Crawlers may follow them to the articles; the listing itself
     // stays out of the index and out of the sitemap.

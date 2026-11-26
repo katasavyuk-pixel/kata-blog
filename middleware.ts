@@ -1,13 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
-import { canonicalBlogUrl } from "@/lib/host-redirect";
 
 export async function middleware(request: NextRequest) {
-  const redirected = canonicalBlogUrl(request.url, request.headers.get("host"));
-  if (redirected) {
-    return NextResponse.redirect(redirected, 301);
-  }
-
+  // The old hosts (kata.ianexora.com, blog.ianexora.com) are redirected in
+  // next.config.ts (src/config/migracion.ts), before this runs.
   // Before the Supabase project exists (Fase 0), env vars are unset — skip the
   // session refresh so the app runs locally without a live connection.
   if (

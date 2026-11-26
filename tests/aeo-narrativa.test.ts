@@ -23,11 +23,11 @@ describe('etiquetas', () => {
     assert.equal(tagHref('radar'), '/noticias');
   });
   test('el resto sigue en /blog/tag/<tag>, con la etiqueta codificada', () => {
-    assert.equal(tagHref('automatización'), '/blog/tag/automatizaci%C3%B3n');
-    assert.equal(tagHref('roi'), '/blog/tag/roi');
+    assert.equal(tagHref('automatización'), '/tag/automatizaci%C3%B3n');
+    assert.equal(tagHref('roi'), '/tag/roi');
   });
   test('las dos superficies que pintan chips usan el helper', () => {
-    for (const f of ['src/components/blog/tag-list.tsx', 'src/app/blog/[slug]/page.tsx']) {
+    for (const f of ['src/components/blog/tag-list.tsx', 'src/app/[slug]/page.tsx']) {
       assert.match(source(f), /tagHref\(/, `${f} vuelve a construir /blog/tag/ a mano.`);
       assert.doesNotMatch(source(f), /`\/blog\/tag\/\$\{encodeURIComponent/, `${f} vuelve a construir /blog/tag/ a mano.`);
     }
@@ -36,12 +36,12 @@ describe('etiquetas', () => {
 
 describe('og:url de los listados', () => {
   test('withOpenGraph pone la ruta de la página, no la raíz', () => {
-    const m = withOpenGraph('/blog', { title: 'Archivo', description: 'x' });
-    assert.equal((m.openGraph as { url: string }).url, '/blog');
+    const m = withOpenGraph('/lecturas', { title: 'Archivo', description: 'x' });
+    assert.equal((m.openGraph as { url: string }).url, '/lecturas');
     assert.match(String((m.openGraph as { title: string }).title), /^Archivo · /);
   });
   test('cada listado con canónica propia declara su openGraph con esa misma ruta', () => {
-    for (const ruta of ['blog', 'noticias', 'sistemas', 'marketplace', 'guias', 'reflexiones', 'herramientas', 'sobre-mi', 'trabaja-con-nbi', 'empieza-aqui', 'newsletter', 'glosario']) {
+    for (const ruta of ['lecturas', 'noticias', 'sistemas', 'marketplace', 'guias', 'reflexiones', 'herramientas', 'trabaja-con-nbi', 'empieza-aqui', 'newsletter', 'glosario']) {
       const f = `src/app/${ruta}/page.tsx`;
       assert.match(source(f), new RegExp(`withOpenGraph\\("/${ruta}"`), `${f} hereda el og:url de la raíz.`);
     }

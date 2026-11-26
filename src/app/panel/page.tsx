@@ -12,6 +12,7 @@ import {
   isPanelConfigured,
   verifySession,
 } from "@/lib/panel-auth";
+import { conBase } from "@/config/base-path";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -80,7 +81,7 @@ function Login({ error }: { error: boolean }) {
   return (
     <Container className="py-24">
       <form
-        action="/api/panel/login"
+        action={conBase("/api/panel/login")}
         method="POST"
         className="mx-auto max-w-sm"
       >

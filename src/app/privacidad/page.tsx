@@ -8,11 +8,12 @@ import { feedAlternates, siteConfig, withOpenGraph } from "@/config/site";
 export const metadata: Metadata = withOpenGraph("/privacidad", {
   title: "Política de privacidad",
   description:
-    "Cómo trata kata.ianexora.com tus datos: quién es el responsable, qué datos guarda y para qué, qué proveedores intervienen, cuánto tiempo y tus derechos.",
+    "Cómo trata el Blog de Nexora Business Intelligence (ianexora.com/blog) tus datos: quién es el responsable, qué datos guarda y para qué, qué proveedores intervienen, cuánto tiempo y tus derechos.",
   alternates: { ...feedAlternates, canonical: "/privacidad" },
 });
 
-// TODO(katamv): revisar con tu asesor el responsable y la dirección.
+// 26-nov-2026: the controller is the one of ianexora.com (NBI), as Kata asked.
+// The full identification lives in NBI's legal notice; no street address here.
 const CONTACT_EMAIL = siteConfig.contactEmail;
 
 export default function PrivacyPage() {
@@ -26,8 +27,11 @@ export default function PrivacyPage() {
         <Prose className="mt-6">
           <h2>Responsable del tratamiento</h2>
           <p>
-            {siteConfig.author.name} ({siteConfig.domain}). Para cualquier asunto
-            relacionado con tus datos, escribe a{" "}
+            Katalin Savyuk, persona física que ejerce por cuenta propia bajo la marca
+            comercial NBI · Nexora Business Intelligence, responsable también de
+            ianexora.com. Los datos identificativos completos están en el{" "}
+            <a href="https://ianexora.com/aviso-legal">aviso legal de ianexora.com</a>.
+            Para cualquier asunto relacionado con tus datos, escribe a{" "}
             <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
           </p>
 

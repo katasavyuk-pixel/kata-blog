@@ -13,6 +13,7 @@ import {
   semanasDelMes,
   tituloDeMes,
 } from "@/lib/mensual";
+import { htmlConBase } from "@/config/base-path";
 
 export function generateStaticParams() {
   return mesesPublicados().map((mes) => ({ mes }));
@@ -86,7 +87,7 @@ export default async function NoticiasDelMesPage({
             <Prose className="mt-4">
               {/* Same trust level as the edition's own page: versioned content
                   from this repo, as it was mailed. */}
-              <div dangerouslySetInnerHTML={{ __html: semana.noticiasHtml }} />
+              <div dangerouslySetInnerHTML={{ __html: htmlConBase(semana.noticiasHtml) }} />
             </Prose>
             <p className="mt-4 font-sans text-[0.9375rem]">
               <Link href={semana.permalink} className={linkClass}>

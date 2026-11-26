@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Instalar } from "@/components/marketplace/instalar";
 import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { CATALOGO_REPO_URL } from "@/config/catalogo";
+import { conBase } from "@/config/base-path";
 
 const enlace =
   "font-semibold text-accent-ink underline decoration-accent-ink/45 underline-offset-[0.18em] hover:decoration-current";
@@ -19,7 +20,7 @@ export function InstalarTrasAlta() {
 
   useEffect(() => {
     let cancelado = false;
-    fetch("/api/alta", { cache: "no-store" })
+    fetch(conBase("/api/alta"), { cache: "no-store" })
       .then((res) => (res.ok ? res.json() : { confirmada: false }))
       .then((data: { confirmada?: boolean }) => {
         if (!cancelado) setEstado(data.confirmada ? "alta" : "pendiente");

@@ -5,6 +5,7 @@ import { BitacoraLista } from "@/components/bitacora/lista";
 import { Container } from "@/components/ui/container";
 import { feeds, withOpenGraph } from "@/config/site";
 import { entradasBitacora } from "@/lib/bitacora";
+import { conBase } from "@/config/base-path";
 
 export const metadata: Metadata = withOpenGraph("/bitacora", {
   title: "Bitácora",
@@ -51,7 +52,7 @@ export default function BitacoraPage() {
             puede comprobar.
           </p>
           <p className="mt-4 font-sans text-[0.9375rem]">
-            <a href={feeds.bitacora.href} className="font-semibold text-accent-ink underline underline-offset-[0.18em] hover:decoration-2">
+            <a href={conBase(feeds.bitacora.href)} className="font-semibold text-accent-ink underline underline-offset-[0.18em] hover:decoration-2">
               Síguela por RSS
             </a>
           </p>

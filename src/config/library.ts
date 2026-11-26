@@ -267,7 +267,7 @@ const SKILLS: LibraryItem[] = [
     publicado: "2026-11-25",
     ruta: "lead-magnets/te-recomienda-la-ia/zip/te-recomienda-la-ia",
     evidenciaRuta: "lead-magnets/te-recomienda-la-ia/tests/test_puntuar.py",
-    descarga: { slug: "te-recomienda-la-ia", articulo: "/blog/te-recomienda-la-ia" },
+    descarga: { slug: "te-recomienda-la-ia", articulo: "/te-recomienda-la-ia" },
     costeMotivo: "el script corre en tu ordenador y no consulta APIs de pago",
   }),
   skill({
@@ -365,7 +365,7 @@ export const LIBRARY_ITEMS: LibraryItem[] = [
     listedOn: "recursos",
     evidencia: {
       tipo: "en-produccion",
-      url: "/blog/cuanto-cuesta-la-ia",
+      url: "/cuanto-cuesta-la-ia",
       desde: "junio de 2026",
     },
     queHace:
@@ -423,7 +423,7 @@ export const LIBRARY_ITEMS: LibraryItem[] = [
     listedOn: "sistemas",
     evidencia: {
       tipo: "en-produccion",
-      url: "/blog/maitreai-geo",
+      url: "/maitreai-geo",
       desde: "agosto de 2026",
     },
     // content/posts/maitreai-geo.mdx; the deployment is in ESTADO.md (2026-08-21).
@@ -448,7 +448,7 @@ export const LIBRARY_ITEMS: LibraryItem[] = [
     listedOn: "sistemas",
     evidencia: {
       tipo: "en-produccion",
-      url: "/blog/antes-del-tms-tu-inbox",
+      url: "/antes-del-tms-tu-inbox",
       desde: "agosto de 2026",
     },
     // content/posts/antes-del-tms-tu-inbox.mdx, «La forma que tiene el arreglo».

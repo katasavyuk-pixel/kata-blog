@@ -118,7 +118,7 @@ describe('lo publicado', () => {
 
 describe('la página pinta lo que el grafo dice', () => {
   test('los tres bloques salen de relacionesDe y no pintan nada sin relaciones', () => {
-    const pagina = readFileSync(join(root, 'src/app/blog/[slug]/page.tsx'), 'utf8');
+    const pagina = readFileSync(join(root, 'src/app/[slug]/page.tsx'), 'utf8');
     assert.match(pagina, /const relaciones = relacionesDe\(post\);/);
     assert.match(pagina, /<ARaizDe posts=\{relaciones\.aRaizDe\} \/>/);
     assert.match(pagina, /<SeResuelveCon items=\{relaciones\.seResuelveCon\} \/>/);

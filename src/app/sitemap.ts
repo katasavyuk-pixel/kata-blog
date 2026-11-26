@@ -61,11 +61,11 @@ const fechasDe = (posts: Post[]) => posts.map(fechaDe);
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url;
   const entry = (ruta: string, lastModified: string | undefined): MetadataRoute.Sitemap[number] =>
-    lastModified ? { url: `${base}${ruta}`, lastModified } : { url: `${base}${ruta}` };
+    lastModified ? { url: ruta === "/" ? base : `${base}${ruta}`, lastModified } : { url: ruta === "/" ? base : `${base}${ruta}` };
 
-  // The home shows the newest pieces of every kind, news included: when a
-  // daily edition lands on it, its visible content did change.
-  const allNewest = newestOf(fechasDe(allPosts));
+  // The home shows the newest articles, no news (26-nov-2026): a daily
+  // edition does not change it.
+  const allNewest = newestOf(fechasDe(getEditoriales()));
   const curso = COURSE_SLUGS.map((slug) => getPost(slug)).filter((p): p is Post => Boolean(p));
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -73,7 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/marketplace", newestOf(ACTIVOS.map((item) => item.activo.publicado))),
     entry("/sistemas", newestOf(fechasDe(getPostsByEstante("sistemas")))),
     // The archive carries no news any more, so a daily edition must not mark /blog as changed.
-    entry("/blog", newestOf(fechasDe(getEditoriales()))),
+    entry("/lecturas", newestOf(fechasDe(getEditoriales()))),
     entry("/noticias", newestOf(fechasDe(getNoticias()))),
     entry("/empieza-aqui", newestOf(fechasDe(curso))),
     entry("/newsletter", newestOf(sentIssues.map((issue) => issue.date))),
@@ -81,7 +81,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/herramientas", REVISADO["/herramientas"]),
     entry("/videos", REVISADO["/videos"]),
     entry("/bitacora", newestOf(entradasBitacora.map((e) => e.fecha))),
-    entry("/sobre-mi", REVISADO["/sobre-mi"]),
     entry("/trabaja-con-nbi", REVISADO["/trabaja-con-nbi"]),
     entry("/herramientas/no-me-da-la-vida", REVISADO["/herramientas/no-me-da-la-vida"]),
     entry(REGALO.ficha.href, REVISADO["/herramientas/ficha-para-tu-ia"]),

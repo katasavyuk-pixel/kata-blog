@@ -78,7 +78,7 @@ export function rssResponse({
     id: `${base}${sitePath}`,
     link: `${base}${sitePath}`,
     language: siteConfig.locale,
-    copyright: `© ${new Date().getFullYear()} ${siteConfig.author.name}`,
+    copyright: `© ${new Date().getFullYear()} NBI · Nexora Business Intelligence`,
     // `feed` writes `<atom:link rel="self">` from this option only, not from feedLinks.
     feed: `${base}${feedPath}`,
     feedLinks: { rss2: `${base}${feedPath}` },

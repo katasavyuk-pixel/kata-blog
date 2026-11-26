@@ -58,7 +58,7 @@ describe('seoTitle', () => {
   test('sin seoTitle, el <title> es el H1 y el layout le añade el nombre del sitio', () => {
     const meta = metadataDePost({ ...post, seoTitle: undefined });
     assert.equal(meta.title, post.title);
-    assert.equal(tituloEfectivo({ title: 'Qué es RAG', seoTitle: undefined }), `Qué es RAG · ${siteConfig.name}`);
+    assert.equal(tituloEfectivo({ title: 'Qué es RAG', seoTitle: undefined }), `Qué es RAG · ${siteConfig.shortName}`);
   });
 
   test('con seoTitle, sustituye al <title> entero y deja el H1 y og:title como están', () => {

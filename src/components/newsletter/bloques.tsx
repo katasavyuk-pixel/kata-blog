@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/imagen";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Prose } from "@/components/ui/prose";
@@ -12,6 +12,7 @@ import {
   skillDeEdicion,
   type Edicion,
 } from "@/lib/edicion";
+import { htmlConBase } from "@/config/base-path";
 
 /**
  * A newsletter edition on its archive page, block by block in the same order
@@ -50,7 +51,7 @@ function Cuerpo({ html, className }: { html: string; className?: string }) {
   return (
     <Prose className={className}>
       {/* The edition as subscribers read it: versioned markdown, same trust as a post. */}
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <div dangerouslySetInnerHTML={{ __html: htmlConBase(html) }} />
     </Prose>
   );
 }

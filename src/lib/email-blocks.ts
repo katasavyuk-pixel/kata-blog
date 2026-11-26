@@ -9,7 +9,7 @@
  * Table-based and inline-styled because that is what mail clients support.
  */
 
-import { emailColors as c } from "@/lib/email-colors";
+import { emailColors as c, emailFonts as f } from "@/lib/email-colors";
 import { escapeHtml } from "@/lib/email-template";
 import { readCostPayload } from "@/lib/lead-magnets";
 import { COST_MAGNET_SLUG } from "@/lib/cost-model";
@@ -17,14 +17,16 @@ import type { MagnetSubmission } from "@/lib/lead-magnets";
 import { bloquePieza } from "@/lib/piezas/email";
 import { REGALO } from "@/config/regalo";
 
-const P = `margin:0 0 16px;line-height:1.6;color:${c.textMain};font-size:15px`;
+const P = `margin:0 0 16px;font-family:${f.sans};line-height:1.6;color:${c.textMain};font-size:15px`;
 const CELL = `padding:10px 12px;border-bottom:1px solid ${c.border};font-size:14px`;
 
 export function button(href: string, label: string): string {
   return (
     `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 20px"><tr><td` +
-    ` style="background-color:${c.buttonBg}">` +
-    `<a href="${escapeHtml(href)}" style="display:inline-block;padding:12px 22px;color:${c.onAccent};` +
+    ` style="background-color:${c.buttonBg};border-radius:999px">` +
+    // NBI's navy pill; the class turns it cyan in dark mode (src/lib/email-colors.ts).
+    `<a href="${escapeHtml(href)}" class="nbi-boton" style="display:inline-block;padding:13px 24px;color:${c.onAccent};` +
+    `background-color:${c.buttonBg};border-radius:999px;font-family:${f.sans};` +
     `font-weight:600;text-decoration:none;font-size:15px">${escapeHtml(label)}</a>` +
     `</td></tr></table>`
   );
@@ -119,7 +121,7 @@ export function openingBlock(
 export function regaloBlock(url: string | null, siteUrl: string): string {
   if (!url) return "";
   return (
-    `<h2 style="margin:28px 0 10px;font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:400;line-height:1.25;color:${c.textMain}">Tu regalo: ${escapeHtml(REGALO.titulo)}</h2>` +
+    `<h2 style="margin:28px 0 10px;font-family:${f.display};font-size:21px;font-weight:600;line-height:1.3;color:${c.textMain}">Tu regalo: ${escapeHtml(REGALO.titulo)}</h2>` +
     `<p style="${P}">Dos piezas, veinte minutos. <strong>${escapeHtml(REGALO.hoja.titulo)}</strong>: apuntas tus tareas repetitivas, del trabajo o de casa, y te dice cuántas horas al año te come cada una y cuáles le puedes pasar ya a la IA. Y <strong>${escapeHtml(REGALO.ficha.titulo)}</strong>: la rellenas una vez y desde ahí te responde sabiendo quién eres y cómo trabajas.</p>` +
     button(url, "Descargar la hoja de tu semana") +
     `<p style="${P}"><a href="${escapeHtml(`${siteUrl}${REGALO.ficha.href}`)}" style="color:${c.accent};text-decoration:underline">Abrir tu ficha para la IA</a></p>`

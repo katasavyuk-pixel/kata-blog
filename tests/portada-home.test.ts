@@ -305,10 +305,12 @@ describe('la home es la portada', () => {
     assert.ok(real.triadas[0]?.activo, 'la primera tríada tiene que ser una completa.');
   });
 
-  test('la página es el hero y la portada, con su canónica y sus datos de autor', () => {
-    assert.match(pagina, /const portada = leerPortada\(\);[\s\S]*<Portada portada=\{portada\} cabecera=\{<Hero portada=\{portada\} \/>\} \/>/);
+  test('la página es la home del blog de NBI, con su canónica y sus datos de autor', () => {
+    // 26-nov-2026: la home ya no es la portada de revista (se conserva en la
+    // etiqueta design/blog-personal-v1); los componentes siguen y se prueban.
+    assert.match(pagina, /<SubscribeForm source="home"/);
     assert.match(pagina, /<JsonLd data=\{\[websiteJsonLd\(\), personJsonLd\(\), organizationJsonLd\(\)\]\} \/>/);
-    assert.match(pagina, /canonical: "\/"/);
+    assert.match(pagina, /canonical: siteConfig\.url/);
     assert.doesNotMatch(componente, /<Hero\b|<h1\b/, 'la promesa la pone el hero, una vez.');
     assert.match(componente, /source="home-regalo"/);
     assert.match(componente, /datosRegaloDeLaSemana\(\)/);
@@ -343,11 +345,11 @@ describe('la home es la portada', () => {
     assert.ok(!hasOwnSignupForm('/portada') && !hasOwnSignupForm('/portada/b'));
   });
 
-  test('la navegación empieza por las noticias y no lleva a un estante vacío', () => {
-    assert.equal(navLinks[0].href, '/noticias');
+  test('la navegación empieza por los artículos y no lleva a un estante vacío', () => {
+    assert.equal(navLinks[0].href, '/lecturas');
     const hrefs: string[] = navLinks.map((link) => link.href);
     for (const [estante, ruta] of Object.entries(RUTA_POR_ESTANTE) as [Estante, string][]) {
-      if (ruta !== '/blog' && hrefs.includes(ruta)) {
+      if (ruta !== '/lecturas' && hrefs.includes(ruta)) {
         assert.ok(tienePaginaViva(estante), `la navegación enlaza ${ruta}, que hoy responde 404.`);
       }
     }

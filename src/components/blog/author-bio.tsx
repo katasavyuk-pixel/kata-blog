@@ -16,16 +16,15 @@ export function AuthorBio() {
   return (
     <aside className="not-prose mt-14 border-t border-border pt-6 font-sans">
       <p className="font-sans text-[0.8125rem] text-muted">Quién escribe esto</p>
-      <p className="mt-2 text-base font-semibold text-fg">{siteConfig.author.name}</p>
-      <p className="mt-2 max-w-[60ch] text-[0.9375rem] leading-relaxed text-muted">
-        {siteConfig.author.bio}
-      </p>
-      <Link
-        href="/sobre-mi"
+      {/* 26-nov-2026: one byline for the NBI blog, linking to the author page
+          on ianexora.com (the same entity as the `Person` node). */}
+      <p className="mt-2 text-base font-semibold text-fg">{siteConfig.author.firma}</p>
+      <a
+        href={siteConfig.author.profileUrl}
         className="mt-3 inline-block text-[0.9375rem] text-accent-ink underline decoration-accent-ink/45 underline-offset-[0.18em] hover:decoration-current"
       >
-        Más sobre mí
-      </Link>
+        Más sobre Katalin Savyuk
+      </a>
     </aside>
   );
 }

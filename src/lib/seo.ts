@@ -21,12 +21,12 @@ export const DESCRIPCION_MAX = 155;
  * without it the layout's template appends the site name to the H1.
  */
 export function tituloEfectivo(post: Pick<Post, "title" | "seoTitle">): string {
-  return post.seoTitle ?? `${post.title} · ${siteConfig.name}`;
+  return post.seoTitle ?? `${post.title} · ${siteConfig.shortName}`;
 }
 
 export function metadataDePost(post: Post): Metadata {
   return {
-    // `absolute` ignores the layout's `%s · Kata Savyuk` template, so a
+    // `absolute` ignores the layout's `%s · Blog de NBI` template, so a
     // seoTitle has the full width. The H1 and og:title keep `title`: the first
     // is for the reader, the second for whoever sees the link shared.
     title: post.seoTitle ? { absolute: post.seoTitle } : post.title,

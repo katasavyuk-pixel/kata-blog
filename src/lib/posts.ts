@@ -105,7 +105,7 @@ export function zonasConContenido(): Estante[] {
 
 /** Whether a shelf's own page can be linked: it has one, and it is not a 404. */
 export function tienePaginaViva(estante: Estante): boolean {
-  if (RUTA_POR_ESTANTE[estante] === "/blog") return false;
+  if (RUTA_POR_ESTANTE[estante] === "/lecturas") return false;
   return !ZONAS_CONDICIONALES.includes(estante) || getPostsByEstante(estante).length > 0;
 }
 

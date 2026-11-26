@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { conBase } from "@/config/base-path";
 
 type Edicion = { issue: string; title: string; date: string; estado: string };
 
@@ -29,7 +30,7 @@ export function NewsletterPrueba({ ediciones }: { ediciones: Edicion[] }) {
     setEnviando(true);
     setRespuesta(null);
     try {
-      const res = await fetch("/panel/newsletter/prueba", {
+      const res = await fetch(conBase("/panel/newsletter/prueba"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ issue }),

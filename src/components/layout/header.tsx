@@ -1,37 +1,45 @@
 import Link from "next/link";
-import { Container } from "@/components/ui/container";
-import { Nav } from "./nav";
+import Image from "@/components/ui/imagen";
+import { Nav, SubNav } from "./nav";
 import { SuscribeteLink } from "@/components/newsletter/suscribete-link";
 import { siteConfig } from "@/config/site";
+import { NBI_LOGO } from "@/config/nbi-chrome";
 
 /**
- * One quiet row: the name, the links, the way to the form. The interface
- * face throughout — the header is interface, not reading. The internal panel
- * keeps the same bar, sticky.
+ * The header of ianexora.com (26-nov-2026): the NBI logo, NBI's menu with
+ * «Blog» active and the one call to action, as on the rest of the site. Under
+ * it, a quiet second row with the blog's name and sections, so the reader
+ * knows they are in the blog without a second logo competing with NBI's.
+ * Styles: src/components/layout/nbi-chrome.css.
  */
 export function Header({ variant = "public" }: { variant?: "public" | "internal" }) {
-  const frame =
-    variant === "public"
-      ? "relative z-50 border-b border-border bg-bg font-sans"
-      : "sticky top-0 z-50 border-b border-border bg-bg/90 font-sans backdrop-blur-md";
-
   return (
-    <header data-site-header={variant} className={frame}>
-      <Container size="wide" className="flex h-16 items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="text-[0.9375rem] font-semibold tracking-tight text-fg hover:text-accent-ink"
-          aria-label={`${siteConfig.name}, inicio`}
-        >
-          {siteConfig.name}
-        </Link>
-        <div className="flex items-center gap-2 sm:gap-4">
-          <Nav variant={variant} />
-          <SuscribeteLink className="hidden text-sm text-accent-ink underline decoration-accent-ink/45 underline-offset-[0.18em] hover:decoration-current sm:inline">
-            Suscríbete
-          </SuscribeteLink>
+    <header data-site-header={variant} className="nbi-cabecera">
+      <div className="nbi-wrap nbi-cabecera__fila">
+        <a href="https://ianexora.com/" className="flex-none" aria-label="NBI — ir al inicio de ianexora.com">
+          <Image
+            src={NBI_LOGO.src}
+            alt={NBI_LOGO.alt}
+            width={NBI_LOGO.width}
+            height={NBI_LOGO.height}
+            sizes="150px"
+            priority
+            className="nbi-cabecera__logo"
+          />
+        </a>
+        <div className="flex items-center gap-3 lg:gap-8">
+          <Nav />
         </div>
-      </Container>
+      </div>
+      <div className="nbi-subnav">
+        <div className="nbi-wrap nbi-subnav__fila">
+          <Link href="/" className="nbi-subnav__nombre" aria-label={`${siteConfig.name}, inicio`}>
+            {siteConfig.shortName}
+          </Link>
+          <SubNav />
+          <SuscribeteLink className="nbi-subnav__suscribete hidden sm:inline">Suscríbete</SuscribeteLink>
+        </div>
+      </div>
     </header>
   );
 }

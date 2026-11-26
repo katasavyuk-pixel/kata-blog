@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/admin";
 import { verifyDownloadSignature } from "@/lib/signed-links";
+import { urlPublica } from "@/lib/url-publica";
 
 export const runtime = "nodejs";
 
@@ -52,7 +53,7 @@ export async function GET(request: NextRequest) {
     }
     if (!confirmed) {
       return NextResponse.redirect(
-        new URL(`/herramientas?need_email=${encodeURIComponent(slug)}`, request.url),
+        urlPublica(`/herramientas?need_email=${encodeURIComponent(slug)}`),
       );
     }
   }
@@ -75,7 +76,7 @@ export async function GET(request: NextRequest) {
       signError,
     );
     return NextResponse.redirect(
-      new URL(`/herramientas?error=descarga&slug=${encodeURIComponent(slug)}`, request.url),
+      urlPublica(`/herramientas?error=descarga&slug=${encodeURIComponent(slug)}`),
     );
   }
 

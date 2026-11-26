@@ -1,14 +1,29 @@
 import Link from "next/link";
-import { Container } from "@/components/ui/container";
+import Image from "@/components/ui/imagen";
 import { SubscribeForm } from "@/components/newsletter/subscribe-form";
-import { feeds, footerLinks, legalLinks, navLinks, siteConfig } from "@/config/site";
+import { conBase } from "@/config/base-path";
+import { feeds, footerLinks, navLinks, siteConfig } from "@/config/site";
+import { NBI_BLURB, NBI_COLUMNAS, NBI_COPYRIGHT, NBI_LOGO, type EnlaceNbi } from "@/config/nbi-chrome";
 import { fechaDeVersion } from "@/lib/version";
 
-const linkClass = "text-sm text-muted transition-colors hover:text-fg";
+function Enlace({ link }: { link: EnlaceNbi }) {
+  if (link.href.startsWith("/")) return <Link href={link.href}>{link.label}</Link>;
+  return (
+    <a
+      href={link.href}
+      target={link.external ? "_blank" : undefined}
+      rel={link.external ? "noopener noreferrer" : undefined}
+    >
+      {link.label}
+    </a>
+  );
+}
 
 /**
- * Byline and the form where the page has none, then the three lists: where
- * to go next, the feeds, the profiles that leave the site.
+ * Two parts (26-nov-2026). First the blog's own close: the newsletter form
+ * where the page has none, its sections and its feeds, on the light page.
+ * Then the footer of ianexora.com, navy, the same on every page of NBI's
+ * site (src/config/nbi-chrome.ts). Styles: nbi-chrome.css.
  *
  * `signup` is false on the routes that already render their own form
  * (`hasOwnSignupForm` in config/site): one signup form per page.
@@ -23,101 +38,88 @@ export function Footer({
   const version = fechaDeVersion();
 
   return (
-    <footer data-site-footer={variant} className="border-t border-border font-sans text-muted">
-      <Container
-        size="wide"
-        className="grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]"
-      >
-        <div className="max-w-sm">
-          <Link href="/" className="text-[0.9375rem] font-semibold tracking-tight text-fg hover:text-accent-ink" aria-label={`${siteConfig.name}, inicio`}>
-            {siteConfig.name}
-          </Link>
-          <p className="mt-3 text-sm leading-relaxed">{siteConfig.home.titular}</p>
-          {/* Who makes it, said once and quietly: the person is in «Sobre mí»,
-              not in front of what the reader came to do (2026-10-14). */}
-          <p className="mt-2 text-sm leading-relaxed">
-            Escribe y mantiene este sitio {siteConfig.author.name}.{" "}
-            <Link href="/sobre-mi" className="text-fg underline underline-offset-[0.18em] hover:text-accent-ink">
-              Sobre mí
-            </Link>
-          </p>
-          {signup ? (
-            <div className="mt-5">
-              <SubscribeForm source="footer" />
+    <footer data-site-footer={variant} className="font-sans">
+      <div className="nbi-cierre">
+        <div className="nbi-wrap nbi-cierre__rejilla">
+          <div className="max-w-md">
+            <p className="nbi-cierre__nombre">{siteConfig.name}</p>
+            <p className="nbi-cierre__texto">{siteConfig.home.titular}</p>
+            <p className="nbi-cierre__texto">
+              {siteConfig.author.byline}{" "}
+              <a href={siteConfig.author.profileUrl} className="nbi-cierre__enlace">
+                {siteConfig.author.profileLabel}
+              </a>
+            </p>
+            {signup ? (
+              <div className="mt-6">
+                <SubscribeForm source="footer" />
+              </div>
+            ) : null}
+          </div>
+
+          <nav aria-label="Secciones del blog" className="nbi-cierre__lista">
+            <p className="nbi-cierre__titulo">El blog</p>
+            {navLinks.map((link) => (
+              <Enlace key={link.href} link={link} />
+            ))}
+          </nav>
+
+          <div className="nbi-cierre__lista">
+            <p className="nbi-cierre__titulo">Más</p>
+            {footerLinks.map((link) => (
+              <Enlace key={link.href} link={link} />
+            ))}
+          </div>
+
+          {/* The news feed is not offered here (26-nov-2026, Kata): the daily
+              news move to his personal blog; /noticias/feed.xml stays live. */}
+          <div className="nbi-cierre__lista">
+            <p className="nbi-cierre__titulo">Seguir</p>
+            <a href={conBase(feeds.editorial.href)}>RSS · artículos</a>
+            <a href={conBase(feeds.bitacora.href)}>RSS · bitácora</a>
+            {siteConfig.social.map((item) => (
+              <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer">
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="nbi-pie">
+        <div className="nbi-wrap nbi-pie__dentro">
+          <div className="nbi-pie__rejilla">
+            <div>
+              <Image
+                src={NBI_LOGO.src}
+                alt={NBI_LOGO.alt}
+                width={NBI_LOGO.width}
+                height={NBI_LOGO.height}
+                sizes="150px"
+                className="nbi-pie__logo"
+              />
+              <p className="nbi-pie__texto">{NBI_BLURB}</p>
             </div>
-          ) : null}
+            {NBI_COLUMNAS.map((col, i) => (
+              <div key={col.title}>
+                <p id={`pie-columna-${i}`} className="nbi-pie__titulo">
+                  {col.title}
+                </p>
+                <ul className="nbi-pie__lista" aria-labelledby={`pie-columna-${i}`}>
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <Enlace link={link} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="nbi-pie__base">
+            <span>{NBI_COPYRIGHT}</span>
+            <span>Versión del blog: {version.dia}</span>
+          </div>
         </div>
-
-        <nav aria-label="Navegación" className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-fg">Navegación</span>
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={linkClass}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-fg">Más</span>
-          {footerLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={linkClass}>
-              {link.label}
-            </Link>
-          ))}
-          {legalLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={linkClass}>
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Two feeds, two names: subscribing to what I write is not the same
-            as receiving an automated edition every day. */}
-        <div className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-fg">Seguir</span>
-          <a href={feeds.editorial.href} className={linkClass}>
-            RSS · artículos
-          </a>
-          <a href={feeds.noticias.href} className={linkClass}>
-            RSS · noticias
-          </a>
-          <a href={feeds.bitacora.href} className={linkClass}>
-            RSS · bitácora
-          </a>
-          {siteConfig.social.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={linkClass}
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-      </Container>
-
-      <div className="border-t border-border">
-        <Container
-          size="wide"
-          className="flex flex-col gap-2 py-6 text-[0.8125rem] leading-relaxed text-faint sm:flex-row sm:items-baseline sm:justify-between"
-        >
-          <p>
-            © {version.anio} {siteConfig.name}. {siteConfig.author.byline}{" "}
-            <a
-              href={siteConfig.author.profileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-[0.18em] transition-colors hover:text-fg"
-            >
-              {siteConfig.author.profileLabel}
-            </a>
-          </p>
-          <p className="shrink-0">
-            Construido en público. Versión del {version.dia}
-          </p>
-        </Container>
       </div>
     </footer>
   );

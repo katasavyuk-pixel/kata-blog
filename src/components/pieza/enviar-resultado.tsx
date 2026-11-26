@@ -10,6 +10,7 @@ import {
   type EntradaProcesos,
 } from "@/lib/piezas/registry";
 import { usePieza } from "./pieza";
+import { conBase } from "@/config/base-path";
 
 /**
  * The email offered after a piece, through the one capture path the site has
@@ -68,7 +69,7 @@ function EnviarProcesos({ magnet }: { magnet: "prioridad-procesos" }) {
           consentLabel={
             <>
               Acepto recibir el orden, la hoja y la newsletter, y la{" "}
-              <a href="/privacidad" className="text-accent-ink underline">
+              <a href={conBase("/privacidad")} className="text-accent-ink underline">
                 política de privacidad
               </a>
               . Es una sola lista: te mando esto y te quedas suscrito. Te llega un email para

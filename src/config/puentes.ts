@@ -33,13 +33,11 @@ export type GuiaNbi = keyof typeof GUIAS_NBI;
 /** Which guide continues each article. A post not listed here gets none. */
 export const PUENTE_POR_POST: Record<string, GuiaNbi> = {
   "como-instalar-skills-en-claude": "agente",
-  "por-que-hago-esto": "mapa",
   "cuanto-cuesta-un-agente-de-ia": "medir",
   "cuando-la-ia-se-abarata-el-coste-cambia-de-sitio": "medir",
   "que-proceso-automatizar-primero": "mapa",
   "no-me-da-la-vida": "mapa",
   "astra-y-el-modelo-que-se-escapo": "agente",
-  "lo-que-me-cuesta-avanzar": "mapa",
   "cloudflare-agent-readiness": "agente",
   "medir-un-sistema": "medir",
   "que-es-un-agente": "rpa",
@@ -49,7 +47,6 @@ export const PUENTE_POR_POST: Record<string, GuiaNbi> = {
   "vida-de-un-prompt": "agente",
   "que-es-un-token": "rpa",
   "temperatura-y-aleatoriedad": "rpa",
-  bienvenida: "mapa",
   "cuanto-cuesta-la-ia": "medir",
   "que-es-el-pre-dua": "mapa",
   "cuando-la-ia-alucina": "rpa",

@@ -184,12 +184,12 @@ export default async function ResourcesPage({
                   </p>
                 ) : null}
                 {resource.slug === "maitreai-geo" ? (
-                  <Link href="/blog/maitreai-geo" className={`mt-3 inline-block text-[0.9375rem] ${linkClass}`}>
+                  <Link href="/maitreai-geo" className={`mt-3 inline-block text-[0.9375rem] ${linkClass}`}>
                     Ver el artículo y el vídeo del episodio
                   </Link>
                 ) : null}
                 {resource.slug === "25-datos-emails-logisticos" ? (
-                  <Link href="/blog/antes-del-tms-tu-inbox" className={`mt-3 inline-block text-[0.9375rem] ${linkClass}`}>
+                  <Link href="/antes-del-tms-tu-inbox" className={`mt-3 inline-block text-[0.9375rem] ${linkClass}`}>
                     Leer el artículo sobre coste y ROI
                   </Link>
                 ) : null}

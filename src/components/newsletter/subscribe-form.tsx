@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { TurnstileWidget } from "./turnstile-widget";
+import { conBase } from "@/config/base-path";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
@@ -94,7 +95,7 @@ export function SubscribeForm({
 
     try {
       const utm = new URLSearchParams(window.location.search).get("utm_source");
-      const res = await fetch("/api/subscribe", {
+      const res = await fetch(conBase("/api/subscribe"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -193,7 +194,7 @@ export function SubscribeForm({
               // "suscríbete" boxes and reasonably assumed they were separate.
               <>
                 Acepto recibir la newsletter y la{" "}
-                <a href="/privacidad" className={t.link}>
+                <a href={conBase("/privacidad")} className={t.link}>
                   política de privacidad
                 </a>
                 . Es una sola lista: te mando el recurso y te quedas suscrito. Te
@@ -203,7 +204,7 @@ export function SubscribeForm({
             ) : (
               <>
                 Acepto recibir la newsletter y la{" "}
-                <a href="/privacidad" className={t.link}>
+                <a href={conBase("/privacidad")} className={t.link}>
                   política de privacidad
                 </a>
                 . Te mando un email para confirmar tu suscripción (doble opt-in).

@@ -96,7 +96,7 @@ export default function NoMeDaLaVidaPage() {
 
       <p className="mt-12 max-w-[66ch] border-t border-border pt-6 font-sans text-[0.9375rem] leading-relaxed text-muted">
         Esta herramienta acompaña al artículo{" "}
-        <Link href="/blog/no-me-da-la-vida" className={linkClass}>
+        <Link href="/no-me-da-la-vida" className={linkClass}>
           No me da la vida: hacer menos también es un sistema
         </Link>
         . Si quieres recibir los sistemas nuevos antes que nadie,{" "}

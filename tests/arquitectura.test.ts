@@ -4,6 +4,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, relative } from 'node:path';
 import { footerLinks, hasOwnSignupForm, navLinks } from '@/config/site';
+import { NBI_CTA } from '@/config/nbi-chrome';
 import { COURSE_SLUGS } from '@/config/course';
 import { allPosts, getEditoriales, getNoticias, getPostsByEstante } from '@/lib/posts';
 
@@ -48,23 +49,24 @@ describe('estantes', () => {
     assert.deepEqual(enEstante, [...COURSE_SLUGS].sort());
   });
 
-  test('la navegación son las cuatro puertas de la home y no vende NBI', () => {
-    // 2026-10-14: la home es el mapa de lo que el lector puede hacer, y la
-    // cabecera repite sus cuatro puertas en su orden. 2026-10-15: «Sobre mí»
-    // vuelve a la cabecera, la última, después de lo que el lector viene a hacer,
-    // y la Bitácora (lo que construyo, fecha a fecha) entra justo antes.
-    assert.deepEqual(navLinks.map((link) => link.label), ['Noticias', 'Marketplace', 'Herramientas', 'Lecturas', 'Bitácora', 'Sobre mí']);
+  test('la navegación del blog son sus secciones, sin el menú de revista', () => {
+    // 26-nov-2026 (Kata, §10): el menú de NBI va arriba; debajo, las secciones
+    // del blog. Fuera Noticias, Bitácora y Sobre mí.
+    assert.deepEqual(navLinks.map((link) => link.label), ['Artículos', 'Marketplace', 'Herramientas', 'Newsletter']);
     const hrefs: string[] = navLinks.map((link) => link.href);
     assert.ok(!hrefs.includes('/trabaja-con-nbi'));
   });
 
-  test('la home no vende NBI: su camino es el pie y /trabaja-con-nbi', () => {
-    // En la home se ve y se aprende; en NBI se contrata (frontera
-    // Kata / NBI). El 11-oct-2026 un bloque «Conocer NBI» volvió al cuerpo de
-    // la home dentro de otro cambio. Los comentarios citan la regla: no cuentan.
-    // La home y todo lo que pinta: la página, la portada y sus piezas.
+  test('la home pide la llamada con el destino de ianexora.com, sin inventar otro', () => {
+    // 26-nov-2026 (Kata, §10): la home del blog de NBI lleva «Pedir la
+    // llamada», el mismo destino que el `nav.cta` de ianexora.com fuera de su
+    // home. /trabaja-con-nbi sigue fuera del cuerpo de la home.
+    assert.equal(NBI_CTA.href, 'https://ianexora.com/contacto');
+    assert.equal(NBI_CTA.label, 'Pedir la llamada');
+    const pagina = readFileSync(join(root, 'src/app/page.tsx'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    assert.match(pagina, /href=\{NBI_CTA\.href\}/);
+    assert.doesNotMatch(pagina, /\/trabaja-con-nbi/);
     for (const fichero of [
-      'src/app/page.tsx',
       'src/components/portada/portada.tsx',
       'src/components/home/hero.tsx',
     ]) {
@@ -82,7 +84,7 @@ describe('un formulario de alta por página', () => {
   // cabecera de la home (promesa + formulario en una sección, fase 3).
   const CON_FORMULARIO = /<(SubscribeForm|Hero|ArticleClosing|InstalarTrasAlta)\b/;
 
-  /** src/app/blog/[slug]/page.tsx → /blog/x */
+  /** src/app/[slug]/page.tsx → /blog/x */
   function rutaDe(file: string): string {
     const ruta = relative(join(root, 'src/app'), file)
       .replace(/(^|\/)page\.tsx$/, '')

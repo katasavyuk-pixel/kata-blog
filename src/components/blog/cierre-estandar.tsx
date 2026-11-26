@@ -25,7 +25,7 @@ export function CierreEstandar({
               titulo: "Más lecturas",
               descripcion:
                 "Guías, reflexiones y casos, con sus números y con lo que falló.",
-              href: "/blog",
+              href: "/lecturas",
               accion: "Ver todas las lecturas",
             }
           : salida,

@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
+import { BASE_PATH } from "./src/config/base-path";
+import { POSTS_RETIRADOS, redireccionesDeHostsAntiguos } from "./src/config/migracion";
 
 const nextConfig: NextConfig = {
+  // 26-nov-2026: the blog is a zone of ianexora.com, under /blog. NBI-WEB
+  // rewrites ianexora.com/blog/* to this project; see src/config/base-path.ts
+  // and docs/migracion-ianexora-blog.md.
+  basePath: BASE_PATH,
   // The deploy's date, fixed when the build starts and the same in the server and
   // client bundles: the footer's «Versión del …» (src/lib/version.ts).
   env: { FECHA_DE_VERSION: new Date().toISOString() },
@@ -14,6 +20,24 @@ const nextConfig: NextConfig = {
   // experimental.viewTransition no longer exists.
   async redirects() {
     return [
+      // The old hosts (kata.ianexora.com, blog.ianexora.com): one 301 to the
+      // same content on ianexora.com/blog, path and query kept. They run
+      // outside the base path (`basePath: false`). src/config/migracion.ts.
+      ...redireccionesDeHostsAntiguos(),
+      // The old permalinks, reached through this zone: /blog/blog/<slug> was
+      // never public, but a link written for the old site ("/blog/<slug>")
+      // and passed through <Link> lands there. Same for the old archive.
+      // The three personal posts that left on 26-nov-2026 (src/config/migracion.ts).
+      ...POSTS_RETIRADOS.map((r) => ({ ...r, statusCode: 301 as const })),
+      ...POSTS_RETIRADOS.map((r) => ({ ...r, source: `/blog${r.source}`, statusCode: 301 as const })),
+      { source: "/blog", destination: "/lecturas", statusCode: 301 },
+      { source: "/blog/:path+", destination: "/:path+", statusCode: 301 },
+      // The author page is ianexora.com's, the one entity for both sites.
+      {
+        source: "/sobre-mi",
+        destination: "https://ianexora.com/sobre-katalin-savyuk",
+        statusCode: 301,
+      },
       // Keep the singular bio URL working alongside the canonical page.
       {
         source: "/enlace",
@@ -36,7 +60,7 @@ const nextConfig: NextConfig = {
       // automatic. Editions keep their /blog/<slug> permalinks, so nothing
       // indexed moves.
       {
-        source: "/blog/tag/radar",
+        source: "/tag/radar",
         destination: "/noticias",
         permanent: true,
       },
@@ -53,7 +77,7 @@ const nextConfig: NextConfig = {
       // /noticias. `?seccion=ideas|practica` are not redirected: /blog renders
       // the full archive for them.
       {
-        source: "/blog",
+        source: "/lecturas",
         has: [{ type: "query", key: "seccion", value: "radar" }],
         destination: "/noticias",
         permanent: true,

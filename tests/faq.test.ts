@@ -19,7 +19,7 @@ const source = (file: string) => readFileSync(join(root, file), 'utf8');
 
 describe('preguntas frecuentes', () => {
   test('el bloque visible y los datos estructurados salen del mismo array', () => {
-    const pagina = source('src/app/blog/[slug]/page.tsx');
+    const pagina = source('src/app/[slug]/page.tsx');
     assert.match(pagina, /<Faq items=\{post\.faq\} \/>/, 'la página ya no pinta el bloque de preguntas');
     assert.match(
       pagina,

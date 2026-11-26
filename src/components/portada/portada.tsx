@@ -24,7 +24,7 @@ import { datosRegaloDeLaSemana } from "@/lib/regalo-semana";
 import { esNuevo, tituloEnFrase } from "@/lib/portada-texto";
 import { getYouTubeVideos } from "@/lib/youtube";
 import { ultimaEntrada } from "@/lib/bitacora";
-import Image from "next/image";
+import Image from "@/components/ui/imagen";
 import "@/components/portada/portada.css";
 
 /**
@@ -112,13 +112,13 @@ export async function Portada({ portada, cabecera }: { portada: PortadaLeida; ca
             </div>
             <ul className="mt-4 font-sans text-[0.9375rem]">
               <li className="border-b border-border py-2.5">
-                <Link href="/blog/cuanto-cuesta-la-ia" className="font-semibold text-fg hover:text-accent-ink">
+                <Link href="/cuanto-cuesta-la-ia" className="font-semibold text-fg hover:text-accent-ink">
                   Calculadora de costes de IA
                 </Link>{" "}
                 <span className="text-muted">La factura al mes, con el precio de cada modelo y su fecha.</span>
               </li>
               <li className="border-b border-border py-2.5">
-                <Link href="/blog/que-proceso-automatizar-primero" className="font-semibold text-fg hover:text-accent-ink">
+                <Link href="/que-proceso-automatizar-primero" className="font-semibold text-fg hover:text-accent-ink">
                   Puntúa tus procesos
                 </Link>{" "}
                 <span className="text-muted">Cinco notas del 1 al 5 y sale el orden en que automatizar.</span>
@@ -445,7 +445,7 @@ function PuertaLecturas({ firmadas }: { firmadas: Post[] }) {
         ))}
       </ul>
       <p className="mt-3 font-sans text-[0.9375rem]">
-        <Link href="/blog" className={enlace}>
+        <Link href="/lecturas" className={enlace}>
           Todas las lecturas
         </Link>
       </p>

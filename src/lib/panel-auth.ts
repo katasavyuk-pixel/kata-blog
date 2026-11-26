@@ -18,6 +18,7 @@
 
 import { createHmac } from "node:crypto";
 import { hashToken, safeEqualHex } from "@/lib/tokens";
+import { BASE_PATH } from "@/config/base-path";
 
 export const PANEL_COOKIE = "nbi_panel";
 const TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -74,6 +75,7 @@ export const PANEL_COOKIE_OPTIONS = {
   httpOnly: true,
   secure: true,
   sameSite: "strict" as const,
-  path: "/panel",
+  // Under the /blog base path the panel is /blog/panel (26-nov-2026).
+  path: `${BASE_PATH}/panel`,
   maxAge: TTL_MS / 1000,
 };

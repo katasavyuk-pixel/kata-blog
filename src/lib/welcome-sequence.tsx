@@ -49,7 +49,7 @@ export function renderStep(step: SequenceStep, ctx: RenderContext): string | nul
   try {
     return renderTemplate(step.html, {
       url_sitio: ctx.siteUrl,
-      nombre_sitio: siteConfig.name,
+      nombre_sitio: siteConfig.newsletter.nombre,
       apertura_personalizada: openingBlock(ctx.siteUrl, ctx.submission),
       ...bloquesDeDescarga(ctx),
     });
@@ -123,7 +123,7 @@ function messageFor(
     replyTo: REPLY_TO,
     subject: step.subject,
     react: NewsletterEmail({
-      brand: siteConfig.name,
+      brand: siteConfig.newsletter.nombre,
       preview: step.preheader,
       title: step.title,
       unsubscribeUrl,
@@ -214,7 +214,7 @@ export async function sendResourceDelivery(
       replyTo: REPLY_TO,
       subject: regaloUrl ? ASUNTOS.regalo : ASUNTOS.recurso,
       react: NewsletterEmail({
-        brand: siteConfig.name,
+        brand: siteConfig.newsletter.nombre,
         preview: "Lo que pediste, sin volver a darte de alta.",
         title,
         unsubscribeUrl,
