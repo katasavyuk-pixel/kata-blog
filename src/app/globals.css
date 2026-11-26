@@ -2,7 +2,12 @@
 @plugin "@tailwindcss/typography";
 
 /*
-  Kata Savyuk — design system (redesign for reading, 2026-10-14).
+  Blog de Nexora Business Intelligence — since 26-nov-2026 it wears the
+  palette and type of ianexora.com (tokens below, values from NBI-WEB
+  app/globals.css). The previous warm/red system is kept in the
+  design/blog-personal-v1 tag for the personal blog.
+
+  Original note (redesign for reading, 2026-10-14):
 
   Kata chose it on the Claude Design canvas: «V1 · Conclusión primero», light.
   Reading on a light page is what this site is for; the warm black stays the
@@ -24,47 +29,47 @@
 
 @theme {
   /* Surfaces (warm paper) */
-  --color-bg: #fbf9f8; /* page background */
-  --color-surface: #f2edeb; /* panel / callout surface */
-  --color-surface-2: #eee7e4; /* deeper band */
+  --color-bg: #ffffff; /* page background (NBI-WEB --color-bg) */
+  --color-surface: #f4f8fb; /* panel / callout surface (NBI ice) */
+  --color-surface-2: #eaf2f8; /* deeper band (NBI ice-2) */
   --color-panel: #ffffff; /* a door or card standing on the paper (the home's four doors) */
 
   /* Text */
-  --color-fg: #140a0d; /* warm black ink (18.54:1; 16.76:1 on surface) */
-  --color-muted: #5e4b50; /* secondary text (7.70:1; 6.96:1) */
-  --color-faint: #76636a; /* tertiary (5.32:1; 4.81:1) */
-  --color-chrome: #3f3236; /* labels / metadata (11.63:1; 10.51:1) */
+  --color-fg: #071e38; /* NBI ink: 16.8:1 on white, 15.7:1 on ice */
+  --color-muted: #3d4a5c; /* NBI ink-2: 9.0:1 */
+  --color-faint: #5d6979; /* NBI ink-mute: 5.6:1 white, 5.2:1 ice */
+  --color-chrome: #3d4a5c; /* labels / metadata (NBI ink-2) */
 
   /* The one colour: red */
-  --color-accent: #e11423; /* SURFACE: buttons, rules. 4.63:1 → never small text */
-  --color-accent-ink: #c40f1f; /* TEXT red on paper (5.82:1; 5.27:1) */
-  --color-accent-strong: #7a0c18; /* hover on a red surface; decorative */
-  --color-on-accent: #ffffff; /* pure white on red: 4.85:1 */
+  --color-accent: #0c3558; /* SURFACE: buttons, rules (NBI navy button). White on it: 12:1 */
+  --color-accent-ink: #07738d; /* TEXT accent on paper: NBI cyan-text (5.46:1 white; 5.11:1 ice) */
+  --color-accent-strong: #03203d; /* hover on an accent surface (NBI navy-900) */
+  --color-on-accent: #ffffff;
 
   /* "Piloto / atención" state and the AI notice (brand amber, darkened
      so it can be text on paper: 5.63:1; 5.09:1). */
-  --color-amber: #8a5a12;
+  --color-amber: #a35c05; /* NBI amber-text */
 
   /* Lines & focus */
-  --color-border: #e3d9d6; /* hairlines (1.32:1 vs bg) */
-  --color-ring: #e11423;
+  --color-border: #dbe3ec; /* hairlines (≈ NBI line-2 on white) */
+  --color-ring: #0d94b5; /* NBI cyan-deep: borders and focus */
 
   /* Status */
-  --color-danger: #b3261e; /* 6.23:1 */
+  --color-danger: #b91c1c; /* NBI red-text */
 
   /* Elevation (ink shadows on paper) — menus and floating panels only */
-  --shadow-card: 0 1px 2px rgba(20, 10, 13, 0.08);
-  --shadow-card-hover: 0 16px 40px rgba(20, 10, 13, 0.12);
+  --shadow-card: 0 1px 2px rgba(9, 40, 75, 0.05), 0 6px 16px -6px rgba(9, 40, 75, 0.08);
+  --shadow-card-hover: 0 1px 2px rgba(9, 40, 75, 0.05), 0 18px 40px -16px rgba(9, 40, 75, 0.16);
 
   /* Motion easings */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Type scale (DESIGN.md). Utilities: text-h1-home, text-h1, text-h2, text-h3,
      text-numeral, text-label, and text-lede for the short answer under an h1. */
-  --text-h1-home: clamp(2.375rem, 1.375rem + 3.3vw, 4rem);
-  --text-h1-home--line-height: 1.04;
-  --text-h1: clamp(2.375rem, 1.375rem + 3.4vw, 4.125rem);
-  --text-h1--line-height: 1.03;
+  --text-h1-home: clamp(2.125rem, 1.4rem + 2.4vw, 3.25rem);
+  --text-h1-home--line-height: 1.08;
+  --text-h1: clamp(2.125rem, 1.4rem + 2.4vw, 3.25rem);
+  --text-h1--line-height: 1.08;
   --text-h2: clamp(1.5625rem, 1.0625rem + 1.1vw, 2rem);
   --text-h2--line-height: 1.15;
   --text-lede: clamp(1.3125rem, 0.9375rem + 0.75vw, 1.5625rem);
@@ -75,9 +80,9 @@
   --text-numeral--line-height: 1;
   /* Skin A+B (2026-10-07): section headings that outweigh the cards under
      them, and the one big result number of a piece. */
-  --text-h2-section: clamp(1.875rem, 1.35rem + 1.9vw, 2.75rem);
+  --text-h2-section: clamp(1.75rem, 1.35rem + 1.4vw, 2.375rem);
   --text-h2-section--line-height: 1.08;
-  --text-numeral-xl: clamp(2.75rem, 1.9rem + 3.4vw, 4.75rem);
+  --text-numeral-xl: clamp(2.5rem, 1.9rem + 2.4vw, 3.75rem);
   --text-numeral-xl--line-height: 0.95;
   --text-label: 0.75rem;
   --text-label--line-height: 1.4;
@@ -86,9 +91,10 @@
 @theme inline {
   /* next/font variables from src/app/layout.tsx. Newsreader reads and
      headlines, Schibsted Grotesk runs the interface, JetBrains Mono is code. */
-  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
-  --font-body: var(--font-newsreader), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-instrument-sans), "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-instrument-sans), "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument-sans), "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas,
     "Liberation Mono", monospace;
 }
@@ -110,8 +116,9 @@
     background-color: var(--color-bg);
     color: var(--color-fg);
     font-family: var(--font-body);
-    /* 18px on a phone, 20.5px on a laptop: the size the canvas was read at. */
-    font-size: clamp(1.125rem, 0.97rem + 0.4vw, 1.28125rem);
+    /* 17px on a phone, 18.5px on a laptop: Instrument Sans reads larger than
+       the old serif at the same size (26-nov-2026, NBI identity). */
+    font-size: clamp(1.0625rem, 0.98rem + 0.25vw, 1.15625rem);
     line-height: 1.64;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;

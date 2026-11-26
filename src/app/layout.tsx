@@ -1,31 +1,29 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Newsreader, Schibsted_Grotesk } from "next/font/google";
+import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import "@/components/layout/nbi-chrome.css";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { SiteChrome } from "@/components/layout/site-chrome";
 import { ROBOTS_GOOGLE, TITULO_HOME, feedAlternates, siteConfig } from "@/config/site";
 import { SCRIPT_LENTE } from "@/lib/impacto";
 
-// Three faces, three jobs (DESIGN.md). All variable fonts, self-hosted by
-// next/font; the CSS maps them in globals.css (`@theme inline`).
-//
-// Newsreader: reading text and headlines, drawn for long reading on screen.
-// The optical-size axis is what makes the same family work at 19px body and
-// a 66px headline (2026-10-14 redesign, chosen by Kata on the canvas).
-const newsreader = Newsreader({
+// The type of ianexora.com (26-nov-2026: the blog takes NBI's identity).
+// Instrument Sans for everything (headlines, text, interface) and Instrument
+// Serif italic for the occasional accent word, as NBI-WEB app/layout.tsx.
+// Both self-hosted by next/font. The previous faces (Newsreader, Schibsted
+// Grotesk) are kept in the design/blog-personal-v1 tag for the personal blog.
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
-  variable: "--font-newsreader",
-  style: ["normal", "italic"],
-  axes: ["opsz"],
+  variable: "--font-instrument-sans",
   display: "swap",
 });
 
-// Schibsted Grotesk: the interface — nav, buttons, forms, labels, card meta.
-// A newsroom face, so the interface and the news read as one site.
-const schibsted = Schibsted_Grotesk({
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
-  variable: "--font-schibsted",
+  weight: "400",
+  style: "italic",
+  variable: "--font-instrument-serif",
   display: "swap",
 });
 
@@ -71,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang={siteConfig.locale}
-      className={`${newsreader.variable} ${schibsted.variable} ${jetbrains.variable} h-full`}
+      className={`${instrumentSans.variable} ${instrumentSerif.variable} ${jetbrains.variable} h-full`}
       // The lens script below adds `data-lente` to this element before React
       // hydrates. Without this React reports the extra attribute on every page
       // load. It covers this element's own attributes and nothing under it.
