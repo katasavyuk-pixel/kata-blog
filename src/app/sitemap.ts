@@ -73,7 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/marketplace", newestOf(ACTIVOS.map((item) => item.activo.publicado))),
     entry("/sistemas", newestOf(fechasDe(getPostsByEstante("sistemas")))),
     // The archive carries no news any more, so a daily edition must not mark /blog as changed.
-    entry("/blog", newestOf(fechasDe(getEditoriales()))),
+    entry("/lecturas", newestOf(fechasDe(getEditoriales()))),
     entry("/noticias", newestOf(fechasDe(getNoticias()))),
     entry("/empieza-aqui", newestOf(fechasDe(curso))),
     entry("/newsletter", newestOf(sentIssues.map((issue) => issue.date))),

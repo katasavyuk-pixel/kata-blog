@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
+import { urlPublica } from "@/lib/url-publica";
 import {
   PANEL_COOKIE,
   PANEL_COOKIE_OPTIONS,
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
   const password = form?.get("password");
 
   if (typeof password !== "string" || !verifyPassword(password)) {
-    return NextResponse.redirect(new URL("/panel?error=1", request.url));
+    return NextResponse.redirect(urlPublica("/panel?error=1"));
   }
 
   const session = issueSession();
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "no configurado" }, { status: 503 });
   }
 
-  const res = NextResponse.redirect(new URL("/panel", request.url));
+  const res = NextResponse.redirect(urlPublica("/panel"));
   res.cookies.set(PANEL_COOKIE, session, PANEL_COOKIE_OPTIONS);
   return res;
 }

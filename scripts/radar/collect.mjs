@@ -110,7 +110,7 @@ function extractItems(doc) {
 async function fetchSource(source, { windowDays, maxItemsPerSource }) {
   const res = await fetch(source.url, {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    headers: { "user-agent": "noticias-collector/1.0 (+https://kata.ianexora.com)" },
+    headers: { "user-agent": "noticias-collector/1.0 (+https://ianexora.com/blog)" },
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const doc = parser.parse(await res.text());
@@ -178,7 +178,7 @@ async function attachFullText(item) {
     try {
       const res = await fetch(item.url, {
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-        headers: { "user-agent": "noticias-collector/1.0 (+https://kata.ianexora.com)" },
+        headers: { "user-agent": "noticias-collector/1.0 (+https://ianexora.com/blog)" },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       extracted = extractArticleText(await res.text());

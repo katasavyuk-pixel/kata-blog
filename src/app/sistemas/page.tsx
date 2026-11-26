@@ -117,7 +117,7 @@ export default function SistemasPage() {
           Herramientas
         </Link>
         . Lo demás que escribo, en{" "}
-        <Link href="/blog" className={linkClass}>
+        <Link href="/lecturas" className={linkClass}>
           el archivo
         </Link>
         .

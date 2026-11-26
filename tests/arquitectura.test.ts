@@ -53,7 +53,7 @@ describe('estantes', () => {
     // cabecera repite sus cuatro puertas en su orden. 2026-10-15: «Sobre mí»
     // vuelve a la cabecera, la última, después de lo que el lector viene a hacer,
     // y la Bitácora (lo que construyo, fecha a fecha) entra justo antes.
-    assert.deepEqual(navLinks.map((link) => link.label), ['Noticias', 'Marketplace', 'Herramientas', 'Lecturas', 'Bitácora', 'Sobre mí']);
+    assert.deepEqual(navLinks.map((link) => link.label), ['Noticias', 'Marketplace', 'Herramientas', 'Lecturas', 'Bitácora', 'Sobre Katalin']);
     const hrefs: string[] = navLinks.map((link) => link.href);
     assert.ok(!hrefs.includes('/trabaja-con-nbi'));
   });
@@ -82,7 +82,7 @@ describe('un formulario de alta por página', () => {
   // cabecera de la home (promesa + formulario en una sección, fase 3).
   const CON_FORMULARIO = /<(SubscribeForm|Hero|ArticleClosing|InstalarTrasAlta)\b/;
 
-  /** src/app/blog/[slug]/page.tsx → /blog/x */
+  /** src/app/[slug]/page.tsx → /blog/x */
   function rutaDe(file: string): string {
     const ruta = relative(join(root, 'src/app'), file)
       .replace(/(^|\/)page\.tsx$/, '')

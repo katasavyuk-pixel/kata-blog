@@ -144,7 +144,7 @@ const posts = defineCollection({
       return {
         ...data,
         slug,
-        permalink: `/blog/${slug}`,
+        permalink: `/${slug}`,
         // What a news piece carries in its body rather than in its frontmatter,
         // read here so a page never has to open the file: the home revalidates
         // at runtime, where content/posts is not guaranteed to exist. Same

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { PANEL_COOKIE, isPanelConfigured, verifySession } from "@/lib/panel-auth";
 import { NewsletterError } from "@/lib/newsletter-error";
+import { siteConfig } from "@/config/site";
 
 const BodySchema = z.object({
   issue: z.string().min(1).max(60),
@@ -35,7 +36,10 @@ function rechazoDelPanel(request: Request): Response | null {
     return Response.json({ ok: false, error: "no_autorizado" }, { status: 401 });
   }
 
-  if (request.headers.get("origin") !== new URL(request.url).origin) {
+  // Behind NBI-WEB's rewrite the request reaches this project on its own host,
+  // while the browser's Origin is the public one (ianexora.com): both count.
+  const origin = request.headers.get("origin");
+  if (origin !== new URL(request.url).origin && origin !== new URL(siteConfig.url).origin) {
     return Response.json({ ok: false, error: "origen_no_autorizado" }, { status: 403 });
   }
   return null;

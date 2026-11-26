@@ -16,6 +16,7 @@ import { etiquetaDeEje } from "@/config/taxonomy";
 import { Icon } from "@/components/ui/icon";
 import { LenteSelector } from "@/components/portada/lente-selector";
 import { DESDE_LENTE, LENTES } from "@/lib/impacto";
+import { conBase } from "@/config/base-path";
 
 export const metadata: Metadata = withOpenGraph("/noticias", {
   title: "Noticias",
@@ -196,7 +197,7 @@ export default function NoticiasPage() {
               Ver la edición completa
             </Link>
             <span aria-hidden className="mx-2 text-faint">·</span>
-            <a href={feeds.noticias.href} className={linkClass}>
+            <a href={conBase(feeds.noticias.href)} className={linkClass}>
               Seguir las noticias por RSS
             </a>
           </p>
@@ -264,7 +265,7 @@ export default function NoticiasPage() {
           Por eso llevan la etiqueta «{ETIQUETA_IA}» y no llevan mi firma: no los
           he escrito yo. Cuando leo uno y lo doy por bueno, lo marco como revisado
           y la etiqueta desaparece. Lo que firmo está en{" "}
-          <Link href="/blog" className={linkClass}>
+          <Link href="/lecturas" className={linkClass}>
             el archivo
           </Link>
           . Si ves un dato mal, escríbeme a{" "}

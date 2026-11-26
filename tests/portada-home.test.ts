@@ -347,7 +347,7 @@ describe('la home es la portada', () => {
     assert.equal(navLinks[0].href, '/noticias');
     const hrefs: string[] = navLinks.map((link) => link.href);
     for (const [estante, ruta] of Object.entries(RUTA_POR_ESTANTE) as [Estante, string][]) {
-      if (ruta !== '/blog' && hrefs.includes(ruta)) {
+      if (ruta !== '/lecturas' && hrefs.includes(ruta)) {
         assert.ok(tienePaginaViva(estante), `la navegación enlaza ${ruta}, que hoy responde 404.`);
       }
     }

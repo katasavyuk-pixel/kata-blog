@@ -9,13 +9,14 @@ import { feedAlternates, siteConfig, withOpenGraph } from "@/config/site";
 import { facetas, filtrar, hrefDeArchivo, leerFiltro } from "@/lib/archivo";
 import { estanteDe, getEditoriales, tienePaginaViva, sectoresConContenido } from "@/lib/posts";
 import { RUTA_SECTORES, SECTORES, rutaDeSector } from "@/config/sectores";
+import { conBase } from "@/config/base-path";
 
-export const metadata: Metadata = withOpenGraph("/blog", {
+export const metadata: Metadata = withOpenGraph("/lecturas", {
   // The search title (brief of 17-oct-2026); the H1 and the Blog node keep «Lecturas».
   title: { absolute: `Blog de IA aplicada a negocio · ${siteConfig.name}` },
   description:
     "Lo que escribo: sistemas, guías, reflexiones, notas y las lecciones del curso sobre IA aplicada a un negocio. Filtra por tipo o por tema, o busca. Las noticias van aparte.",
-  alternates: { ...feedAlternates, canonical: "/blog" },
+  alternates: { ...feedAlternates, canonical: "/lecturas" },
 });
 
 /**
@@ -56,7 +57,7 @@ export default async function BlogIndexPage({
     <>
       <JsonLd
         data={coleccionJsonLd({
-          path: "/blog",
+          path: "/lecturas",
           tipo: "Blog",
           ...datosDe(metadata),
           name: TITULO_BLOG,
@@ -100,7 +101,7 @@ export default async function BlogIndexPage({
       </header>
 
       <Container size="wide" className="py-8 font-sans sm:py-10">
-        <form action="/blog" method="get" role="search" aria-label="Buscar en el archivo" className="grid gap-3 border-b border-border pb-6 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end">
+        <form action={conBase("/lecturas")} method="get" role="search" aria-label="Buscar en el archivo" className="grid gap-3 border-b border-border pb-6 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end">
           {filtro.tipo ? <input type="hidden" name="tipo" value={filtro.tipo} /> : null}
           {filtro.tema ? <input type="hidden" name="tema" value={filtro.tema} /> : null}
           <div>

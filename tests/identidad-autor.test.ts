@@ -46,7 +46,7 @@ describe('identidad del autor', () => {
     assert.equal(articulo.author['@id'], person['@id']);
     assert.equal(articulo.author.name, PERSONA.name);
     assert.equal(articulo.publisher['@id'], 'https://ianexora.com/#organization');
-    assert.match(source('src/app/blog/[slug]/page.tsx'), /articleJsonLd\(post\),\s*personJsonLd\(\),/);
+    assert.match(source('src/app/[slug]/page.tsx'), /articleJsonLd\(post\),\s*personJsonLd\(\),/);
   });
 
   test('lo que declara el schema se ve: el pie y «El viaje» pintan la misma línea y el mismo enlace', () => {

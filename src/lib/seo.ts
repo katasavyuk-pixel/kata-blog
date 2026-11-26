@@ -21,7 +21,7 @@ export const DESCRIPCION_MAX = 155;
  * without it the layout's template appends the site name to the H1.
  */
 export function tituloEfectivo(post: Pick<Post, "title" | "seoTitle">): string {
-  return post.seoTitle ?? `${post.title} · ${siteConfig.name}`;
+  return post.seoTitle ?? `${post.title} · ${siteConfig.shortName}`;
 }
 
 export function metadataDePost(post: Post): Metadata {

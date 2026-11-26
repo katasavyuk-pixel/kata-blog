@@ -35,7 +35,7 @@ describe('el alta confirmada, para el marketplace', () => {
     assert.equal(hasOwnSignupForm('/marketplace'), true);
     assert.equal(hasOwnSignupForm('/marketplace/empezar'), true);
     assert.equal(hasOwnSignupForm('/empieza-aqui'), true);
-    assert.equal(hasOwnSignupForm('/blog'), false);
+    assert.equal(hasOwnSignupForm('/lecturas'), false);
   });
   test('la política de cookies nombra la cookie de confirmación, y dice que no mide', () => {
     const fuente = leer('src/app/cookies/page.tsx');

@@ -27,7 +27,7 @@ describe('el mural de la portada', () => {
     const articulos = columnas.find((c) => c.id === 'articulos');
     const firmadas = leerPortada().firmadas.filter((post) => post.formato !== 'radar' && post.formato !== 'leccion');
     const esperadas = [...firmadas].sort((a, b) => Date.parse(b.date) - Date.parse(a.date)).slice(0, 9);
-    assert.equal(articulos?.href, '/blog');
+    assert.equal(articulos?.href, '/lecturas');
     assert.equal(articulos?.total, esperadas.length);
     assert.deepEqual(articulos?.piezas.map((pieza) => pieza.id), esperadas.map((post) => post.slug));
     assert.equal(articulos?.piezas[0].id, firmadas.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))[0].slug, 'el artículo más reciente encabeza la columna.');
@@ -38,8 +38,8 @@ describe('el mural de la portada', () => {
   test('marca Nuevo hasta siete días y aplica la frase al titular de la primera noticia', () => {
     const portada = leerPortada();
     const ahora = new Date('2026-10-30T12:00:00.000Z');
-    const nuevo = { ...portada.firmadas[0], slug: 'post-nuevo', permalink: '/blog/post-nuevo', date: '2026-10-24T12:00:00.000Z' };
-    const antiguo = { ...portada.firmadas[0], slug: 'post-antiguo', permalink: '/blog/post-antiguo', date: '2026-10-22T11:59:59.999Z' };
+    const nuevo = { ...portada.firmadas[0], slug: 'post-nuevo', permalink: '/post-nuevo', date: '2026-10-24T12:00:00.000Z' };
+    const antiguo = { ...portada.firmadas[0], slug: 'post-antiguo', permalink: '/post-antiguo', date: '2026-10-22T11:59:59.999Z' };
     const articulos = columnasDelMural({ ...portada, firmadas: [antiguo, nuevo] }, ahora).find((columna) => columna.id === 'articulos');
     assert.equal(articulos?.piezas.find((pieza) => pieza.id === 'post-nuevo')?.nuevo, true);
     assert.equal(articulos?.piezas.find((pieza) => pieza.id === 'post-antiguo')?.nuevo, false);

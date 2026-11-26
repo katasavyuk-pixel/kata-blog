@@ -62,7 +62,7 @@ export function EstantePagina({
 
       <p className="mt-14 max-w-[60ch] border-t border-border pt-6 font-sans text-[0.9375rem] leading-relaxed text-muted">
         Lo demás que escribo está en{" "}
-        <Link href="/blog" className={linkClass}>
+        <Link href="/lecturas" className={linkClass}>
           Lecturas
         </Link>
         , y lo que ya funciona en mi negocio, en{" "}

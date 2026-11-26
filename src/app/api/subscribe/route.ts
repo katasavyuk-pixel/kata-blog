@@ -20,7 +20,7 @@ const BodySchema = z.object({
   resource: z.string().max(80).optional(),
   utmSource: z.string().max(80).optional(),
   turnstileToken: z.string().optional(),
-  /** Literal route the signup happened on, e.g. "/blog/que-es-rag". */
+  /** Literal route the signup happened on, e.g. "/que-es-rag". */
   signupPath: z
     .string()
     .max(120)

@@ -284,7 +284,7 @@ describe('la skill que se descarga con el correo', () => {
     assert.equal(skill.href, '/marketplace/te-recomienda-la-ia');
     assert.ok(skill.descarga, 'le falta el campo descarga.');
     assert.equal(skill.descarga.slug, 'te-recomienda-la-ia');
-    assert.equal(skill.descarga.articulo, '/blog/te-recomienda-la-ia');
+    assert.equal(skill.descarga.articulo, '/te-recomienda-la-ia');
     assert.equal(skill.activo.version, '1.1.0');
     assert.equal(skill.activo.publicado, '2026-11-25');
     assert.ok(esSkillDelPaquete(getActivo('visibilidad-en-ia')!));

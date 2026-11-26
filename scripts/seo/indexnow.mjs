@@ -43,7 +43,9 @@ import { fileURLToPath } from "node:url";
 import { publicUrlFor } from "./indexnow-urls.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const DEFAULT_HOST = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kata.ianexora.com";
+// Since 26-nov-2026 the public base includes the /blog base path; the key file
+// lives at ianexora.com/blog/indexnow-<key>.txt, which scopes it to /blog URLs.
+const DEFAULT_HOST = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ianexora.com/blog";
 const API = "https://api.indexnow.org/indexnow";
 
 function findKey() {

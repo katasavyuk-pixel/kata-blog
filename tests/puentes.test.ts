@@ -34,7 +34,7 @@ describe('los puentes a ianexora.com', () => {
   });
 
   test('el artículo, el glosario y los recursos lo pintan', () => {
-    for (const f of ['src/app/blog/[slug]/page.tsx', 'src/app/glosario/page.tsx', 'src/app/glosario/[id]/page.tsx', 'src/app/herramientas/page.tsx']) {
+    for (const f of ['src/app/[slug]/page.tsx', 'src/app/glosario/page.tsx', 'src/app/glosario/[id]/page.tsx', 'src/app/herramientas/page.tsx']) {
       assert.match(source(f), /<PuenteNbi /, `${f} no pinta el puente.`);
     }
   });

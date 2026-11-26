@@ -15,7 +15,7 @@ import { articleJsonLd, coleccionJsonLd, fechaConZona, organizationJsonLd, perso
  */
 const root = fileURLToPath(new URL('..', import.meta.url));
 const source = (file: string) => readFileSync(join(root, file), 'utf8');
-const base = { title: 't', description: 'd', date: '2026-06-25T00:00:00.000Z', tags: [], permalink: '/blog/x', metadata: {} };
+const base = { title: 't', description: 'd', date: '2026-06-25T00:00:00.000Z', tags: [], permalink: '/x', metadata: {} };
 
 describe('la persona', () => {
   const person = personJsonLd() as Record<string, unknown>;
@@ -100,7 +100,7 @@ describe('los listados y las páginas sueltas', () => {
 
   test('cada página indexable sin artículo emite sus datos estructurados', () => {
     const paginas = [
-      'src/app/sistemas/page.tsx', 'src/app/blog/page.tsx', 'src/app/noticias/page.tsx', 'src/app/empieza-aqui/page.tsx',
+      'src/app/sistemas/page.tsx', 'src/app/lecturas/page.tsx', 'src/app/noticias/page.tsx', 'src/app/empieza-aqui/page.tsx',
       'src/app/glosario/page.tsx', 'src/app/marketplace/page.tsx', 'src/app/bitacora/page.tsx', 'src/app/videos/page.tsx',
       'src/app/herramientas/page.tsx', 'src/app/trabaja-con-nbi/page.tsx', 'src/app/privacidad/page.tsx',
       'src/app/cookies/page.tsx', 'src/app/herramientas/no-me-da-la-vida/page.tsx',

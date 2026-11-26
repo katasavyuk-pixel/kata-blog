@@ -103,7 +103,7 @@ describe('integración de la medición mensual de recomendaciones en IA', () => 
     assert.equal(item.title, '¿Te recomienda la IA?');
     assert.equal(item.href, `/marketplace/${slug}`);
     assert.equal(item.descarga?.slug, resource);
-    assert.equal(item.descarga?.articulo, `/blog/${slug}`);
+    assert.equal(item.descarga?.articulo, `/${slug}`);
     assert.ok(LOGOS_DE_SKILL[slug], 'no tiene logo.');
     assert.equal(LOGOS_DE_SKILL[slug].foto, undefined);
     const ficha = read('src/app/marketplace/[id]/page.tsx');

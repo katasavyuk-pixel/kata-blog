@@ -57,7 +57,7 @@ describe('qué se indexa', () => {
   });
 
   test('la página del artículo emite exactamente esa metadata', () => {
-    assert.match(source('src/app/blog/[slug]/page.tsx'), /return post \? metadataDePost\(post\) : \{\};/);
+    assert.match(source('src/app/[slug]/page.tsx'), /return post \? metadataDePost\(post\) : \{\};/);
   });
 
   test('el sitemap lista lo indexable y nada más', () => {
@@ -87,9 +87,9 @@ describe('qué se indexa', () => {
   test('IndexNow lee el frontmatter de verdad', () => {
     const fm = (lines: string[]) => `---\n${lines.join('\n')}\n---\n\nTexto.\n`;
     assert.equal(publicUrlFor('content/posts/x.mdx', fm(['formato: nota', 'draft: true'])), null);
-    assert.equal(publicUrlFor('content/posts/x.mdx', fm(['formato: nota', 'draft: false'])), '/blog/x');
+    assert.equal(publicUrlFor('content/posts/x.mdx', fm(['formato: nota', 'draft: false'])), '/x');
     assert.equal(publicUrlFor('content/posts/noticias-2026-10-12.mdx', fm(['formato: radar'])), null);
-    assert.equal(publicUrlFor('content/posts/noticias-2026-10-12.mdx', fm(['formato: radar', 'revisado: true'])), '/blog/noticias-2026-10-12');
+    assert.equal(publicUrlFor('content/posts/noticias-2026-10-12.mdx', fm(['formato: radar', 'revisado: true'])), '/noticias-2026-10-12');
     assert.equal(publicUrlFor('content/newsletters/2026-10-a.md', fm(['sent: false'])), null);
     assert.equal(publicUrlFor('content/newsletters/2026-10-a.md', fm(['sent: true'])), '/newsletter/2026-10-a');
     assert.equal(publicUrlFor('src/app/page.tsx', 'export default 1'), null);
@@ -134,7 +134,7 @@ describe('qué dice de sí misma una pieza automática', () => {
 
   test('el mismo literal en los cinco sitios donde aparece una noticia', () => {
     const SUPERFICIES = [
-      'src/app/blog/[slug]/page.tsx', // firma del artículo
+      'src/app/[slug]/page.tsx', // firma del artículo
       'src/app/noticias/page.tsx', // portada de noticias
       'src/components/portada/portada.tsx', // la noticia del día y los breves de la home
       'src/components/blog/fuentes-noticia.tsx', // caja de fuente
@@ -146,7 +146,7 @@ describe('qué dice de sí misma una pieza automática', () => {
   });
 
   test('no la firma una persona: ni en la cabecera ni al pie', () => {
-    const pagina = source('src/app/blog/[slug]/page.tsx');
+    const pagina = source('src/app/[slug]/page.tsx');
     // El nombre y el retrato solo se pintan en la rama de lo escrito a mano.
     assert.match(pagina, /\{automatico \? \([\s\S]*?FIRMA_AUTOMATICA[\s\S]*?\) : \([\s\S]*?siteConfig\.author\.name[\s\S]*?\)\}/);
     assert.match(

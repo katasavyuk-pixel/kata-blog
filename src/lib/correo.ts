@@ -42,7 +42,7 @@ export function imagenDeCorreo(src: string, formato: FormatoDeCorreo): string {
 /** The sequence diagram of an edition, as a GIF (also made by `npm run correo`). */
 export const gifDeSecuencia = (issue: string): string => `/correo/${issue}/secuencia.gif`;
 
-/** A path of this site becomes a full URL: in an email, "/blog/x" goes nowhere. */
+/** A path of this site becomes a full URL: in an email, "/x" goes nowhere. */
 export const absoluta = (url: string, siteUrl: string): string => (url.startsWith("/") ? `${siteUrl}${url}` : url);
 
 export const conUtm = (url: string, campaña: string): string =>

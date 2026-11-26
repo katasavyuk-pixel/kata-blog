@@ -135,8 +135,8 @@ export const RUTA_POR_ESTANTE: Record<Estante, string> = {
   sistemas: "/sistemas",
   guias: "/guias",
   reflexiones: "/reflexiones",
-  pruebas: "/blog",
-  notas: "/blog",
+  pruebas: "/lecturas",
+  notas: "/lecturas",
   curso: "/empieza-aqui",
   noticias: "/noticias",
 };
@@ -194,5 +194,5 @@ export function tagHref(tag: string): string {
   if (tag === "radar") return "/noticias";
   const sector = sectorDeEtiqueta(tag);
   if (sector) return rutaDeSector(sector);
-  return `/blog/tag/${encodeURIComponent(tag)}`;
+  return `/tag/${encodeURIComponent(tag)}`;
 }

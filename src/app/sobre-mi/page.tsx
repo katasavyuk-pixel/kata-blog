@@ -6,7 +6,7 @@ import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { feedAlternates, siteConfig, withOpenGraph } from "@/config/site";
 import { getEditoriales } from "@/lib/posts";
 import { formatDate, weekNumberSince } from "@/lib/format";
-import Image from "next/image";
+import Image from "@/components/ui/imagen";
 import { RETRATO } from "@/components/ui/retrato";
 import { JsonLd } from "@/components/ui/json-ld";
 import { datosDe, perfilJsonLd } from "@/lib/jsonld";
@@ -85,7 +85,7 @@ export default function AboutPage() {
             se rompe: cada sistema de la biblioteca sale de algo que implementé
             de verdad, en NBI o en este mismo blog. Y contarlo me obliga a
             hacerlo bien. Lo cuento entero en{" "}
-            <Link href="/blog/por-que-hago-esto">Por qué hago esto</Link>.
+            <Link href="/por-que-hago-esto">Por qué hago esto</Link>.
           </p>
           <p>
             Esto es para ti si diriges un negocio y quieres aplicar

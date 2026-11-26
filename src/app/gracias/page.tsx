@@ -76,7 +76,7 @@ export default async function GraciasPage({
               href={`/api/download?slug=${encodeURIComponent(sp.descarga)}`}
             />
           ) : null}
-          <Button href="/blog" variant={sp.descarga ? "secondary" : "primary"}>
+          <Button href="/lecturas" variant={sp.descarga ? "secondary" : "primary"}>
             Leer el blog
           </Button>
         </div>

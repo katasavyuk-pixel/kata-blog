@@ -127,6 +127,6 @@ export function columnasDelMural(
   return [
     columna("noticias", "Noticias de hoy", "/noticias", "sube", noticias),
     columna("skills", "Skills", "/marketplace", "baja", skills),
-    columna("articulos", "Artículos", "/blog", "sube", articulos),
+    columna("articulos", "Artículos", "/lecturas", "sube", articulos),
   ].filter((c) => c.piezas.length > 0);
 }

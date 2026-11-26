@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/imagen";
 import type { Post } from "@/lib/posts";
 import { cn } from "@/lib/utils";
 

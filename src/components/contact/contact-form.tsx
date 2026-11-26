@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TurnstileWidget } from "@/components/newsletter/turnstile-widget";
+import { conBase } from "@/config/base-path";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
@@ -37,7 +38,7 @@ export function ContactForm({
       (form.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement | null)
         ?.value || undefined;
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(conBase("/api/contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message, turnstileToken, intent }),

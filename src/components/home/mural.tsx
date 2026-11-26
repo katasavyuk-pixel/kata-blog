@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import Image from "next/image";
+import Image from "@/components/ui/imagen";
 import Link from "next/link";
 import { MuralMovimiento } from "@/components/home/mural-movimiento";
 import { NuevoBadge } from "@/components/home/nuevo-badge";

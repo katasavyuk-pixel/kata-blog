@@ -17,6 +17,7 @@ import {
   computeCost,
   formatCost,
 } from "@/lib/cost-model";
+import { conBase } from "@/config/base-path";
 
 function Stat({
   label,
@@ -170,7 +171,7 @@ export function CostCalculator({
               consentLabel={
                 <>
                   Acepto recibir el desglose y la newsletter, y la{" "}
-                  <a href="/privacidad" className="text-accent-ink underline">
+                  <a href={conBase("/privacidad")} className="text-accent-ink underline">
                     política de privacidad
                   </a>
                   . Es una sola lista: te mando el desglose y te quedas suscrito.

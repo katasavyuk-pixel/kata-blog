@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/admin";
 import { cancelWelcomeSequence } from "@/lib/welcome-sequence";
 import { deleteSubmissions } from "@/lib/lead-magnets";
+import { urlPublica } from "@/lib/url-publica";
 
 export const runtime = "nodejs";
 
@@ -32,5 +33,5 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   await doUnsubscribe(request.nextUrl.searchParams.get("token"));
-  return NextResponse.redirect(new URL("/baja", request.url));
+  return NextResponse.redirect(urlPublica("/baja"));
 }

@@ -77,7 +77,7 @@ export default async function PostPage({
   const estante = estanteDe(post);
   const parent = tienePaginaViva(estante)
     ? { name: ESTANTES[estante], path: RUTA_POR_ESTANTE[estante] }
-    : { name: "Archivo", path: "/blog" };
+    : { name: "Archivo", path: "/lecturas" };
   const relaciones = relacionesDe(post);
   // The system behind the article, when config/library declares one for this
   // slug. After the body now: the short answer carries the conclusion, the

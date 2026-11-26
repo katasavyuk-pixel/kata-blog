@@ -115,5 +115,5 @@ export function hrefDeArchivo(filtro: Partial<FiltroDeArchivo>): string {
   if (filtro.tema) consulta.set("tema", filtro.tema);
   if (filtro.q) consulta.set("q", filtro.q);
   const cadena = consulta.toString();
-  return `/blog${cadena ? `?${cadena}` : ""}#archivo`;
+  return `/lecturas${cadena ? `?${cadena}` : ""}#archivo`;
 }

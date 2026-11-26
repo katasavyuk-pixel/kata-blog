@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { esRutaDeArticulo } from "@/config/rutas";
 /**
  * Single source of truth for the site's textual identity (brief §1).
  *
@@ -23,12 +24,23 @@ import type { Metadata } from "next";
 export type SocialLink = { label: string; href: string };
 
 export const siteConfig = {
-  /** §1 NOMBRE_MARCA — marca personal = tu nombre. */
-  name: "Kata Savyuk",
-  /** §1 DOMINIO (without protocol) — subdominio del dominio NBI ianexora.com. */
-  domain: "kata.ianexora.com",
-  /** Absolute base URL — used for metadataBase / canonical / OG. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://kata.ianexora.com",
+  /**
+   * The blog is NBI's since 26-nov-2026 (Kata: «Blog de Nexora Business
+   * Intelligence en ianexora.com/blog»). Never «Nexora» alone. The author is
+   * still Katalin Savyuk (`author` below).
+   */
+  name: "Blog de Nexora Business Intelligence",
+  /** Short form for tight UI. */
+  shortName: "Blog de NBI",
+  /** Host + base path, without protocol. */
+  domain: "ianexora.com/blog",
+  /**
+   * Absolute base URL INCLUDING the base path (/blog): canonical, OG, emails,
+   * signed download links. Paths are appended to it (`${url}/marketplace`).
+   * NEXT_PUBLIC_SITE_URL overrides it and must be https://ianexora.com/blog in
+   * production at the cutover.
+   */
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://ianexora.com/blog",
   /** §1 TAGLINE — one line: what you promise and to whom. */
   // Singular on purpose ("un negocio real"): production today is my own
   // business plus one pilot. "Pequeño" went on 2026-10-15 at Kata's request:
@@ -38,7 +50,7 @@ export const siteConfig = {
   tagline:
     "Sistemas de IA que ya funcionan en un negocio real. Con sus números y con lo que se rompió.",
   /** Mono label above the home headline. Email 2 already calls the blog this. */
-  kicker: "El cuaderno de obra de Kata Savyuk",
+  kicker: "Blog de Nexora Business Intelligence",
   /**
    * The home's own words (2026-10-14). Kata found a home that opened with his
    * face and his promise too much about him: the home is now the map of what
@@ -166,9 +178,11 @@ export const navLinks = [
   { label: "Noticias", href: "/noticias" },
   { label: "Marketplace", href: "/marketplace" },
   { label: "Herramientas", href: "/herramientas" },
-  { label: "Lecturas", href: "/blog" },
+  { label: "Lecturas", href: "/lecturas" },
   { label: "Bitácora", href: "/bitacora" },
-  { label: "Sobre mí", href: "/sobre-mi" },
+  // The author page is ianexora.com's since the move (26-nov-2026); /sobre-mi
+  // redirects there (next.config.ts).
+  { label: "Sobre Katalin", href: "https://ianexora.com/sobre-katalin-savyuk" },
 ] as const;
 
 /** Secondary destinations, in footer order. Also read by /llms.txt. */
@@ -250,8 +264,10 @@ export function hasOwnSignupForm(pathname: string): boolean {
   if (pathname.startsWith("/marketplace/")) return true;
   // Articles close with the form. The archive (/blog), tag listings
   // (/blog/tag/<tag>) and sector listings do not: they keep the footer form.
-  if (pathname === "/blog/sectores" || pathname.startsWith("/blog/sector/")) return false;
-  return /^\/blog\/[^/]+$/.test(pathname);
+  if (pathname === "/sectores" || pathname.startsWith("/sector/")) return false;
+  // Since the move under ianexora.com/blog an article is /<slug> (basePath
+  // /blog): a single segment that is not one of the site's own sections.
+  return esRutaDeArticulo(pathname);
 }
 
 /**

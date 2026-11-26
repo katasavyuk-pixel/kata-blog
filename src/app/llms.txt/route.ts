@@ -35,7 +35,7 @@ const DESCRIPTIONS: Record<string, string> = {
     "seis skills en español para el trabajo de oficina de un negocio, para Claude, Codex y cualquier agente compatible con Agent Skills, cada una con su ficha: qué lee, qué escribe, cómo se ha probado y cómo se instala en cada agente.",
   "/sistemas":
     "los sistemas de IA que ya funcionan en mi negocio: qué hace cada uno, sus números y lo que se rompió.",
-  "/blog":
+  "/lecturas":
     "el archivo de lo escrito a mano — sistemas, casos reales, notas y lecciones. No incluye las noticias automáticas.",
   "/noticias":
     "lo importante del día en IA, tecnología y negocio, filtrado y verificado contra su fuente por un pipeline en automático. Son resúmenes hechos con IA que el autor no revisa antes de publicarse, y no llevan su firma.",
@@ -70,7 +70,7 @@ const CONTENT_ORDER = [
   "/noticias",
   "/marketplace",
   "/herramientas",
-  "/blog",
+  "/lecturas",
   "/sistemas",
   "/videos",
   "/bitacora",

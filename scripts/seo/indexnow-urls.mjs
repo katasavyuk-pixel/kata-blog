@@ -31,7 +31,7 @@ export function publicUrlFor(file, text) {
     if (is(front, "draft", "true") || is(front, "premium", "true")) return null;
     // An automated news piece is `noindex, follow` until a person reviews it.
     if (is(front, "formato", "radar") && !is(front, "revisado", "true")) return null;
-    return `/blog/${file.slice("content/posts/".length).replace(/\.mdx$/, "")}`;
+    return `/${file.slice("content/posts/".length).replace(/\.mdx$/, "")}`;
   }
 
   if (file.startsWith("content/newsletters/") && file.endsWith(".md")) {

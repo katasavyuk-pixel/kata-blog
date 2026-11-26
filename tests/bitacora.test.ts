@@ -6,6 +6,7 @@ import { ENLACE_BITACORA, PROYECTOS, PROYECTO_KEYS, TIPOS_ENTRADA, TIPO_ENTRADA_
 import { navLinks, siteConfig } from '@/config/site';
 import { entradasBitacora, entradasEntre, porMes, ultimaEntrada } from '@/lib/bitacora';
 import { allPosts } from '@/lib/posts';
+import { rutaInterna } from '@/config/base-path';
 
 /**
  * La bitácora (2026-10-15): lo que Kata construye, fecha a fecha. Cada entrada
@@ -19,8 +20,9 @@ describe('la bitácora', () => {
     for (const entrada of bitacora) {
       assert.match(entrada.enlace, ENLACE_BITACORA, entrada.slug);
       assert.doesNotMatch(entrada.enlace, /github\.com\/katasavyuk-pixel\/blog-newsletter/, `${entrada.slug}: ese repositorio es privado.`);
-      if (entrada.draft || entrada.enlace.startsWith('http')) continue;
-      const ruta = entrada.enlace.split('#')[0] || '/';
+      const enlace = rutaInterna(entrada.enlace);
+      if (entrada.draft || enlace.startsWith('http')) continue;
+      const ruta = enlace.split('#')[0] || '/';
       assert.ok(paginas.has(ruta), `${entrada.slug} enlaza ${ruta}, que no está publicada.`);
     }
   });
@@ -47,8 +49,8 @@ describe('la bitácora', () => {
     assert.ok(entradasEntre('2000-01-01', dia).some((e) => e.slug === entradasBitacora[0].slug));
   });
 
-  test('está en la cabecera, antes de «Sobre mí»', () => {
+  test('está en la cabecera, antes de «Sobre Katalin»', () => {
     const labels: string[] = navLinks.map((l) => l.label);
-    assert.equal(labels.indexOf('Bitácora') + 1, labels.indexOf('Sobre mí'));
+    assert.equal(labels.indexOf('Bitácora') + 1, labels.indexOf('Sobre Katalin'));
   });
 });

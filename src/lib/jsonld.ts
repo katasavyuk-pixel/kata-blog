@@ -22,6 +22,7 @@
 
 import { IMAGEN_OG_POR_DEFECTO, ORGANIZACION, PERSONA, siteConfig } from "@/config/site";
 import { FORMATO_AUTOMATICO } from "@/config/taxonomy";
+import { esRutaDeArticulo } from "@/config/rutas";
 
 type Json = Record<string, unknown>;
 
@@ -32,7 +33,7 @@ type Json = Record<string, unknown>;
 const PERSON_ID = PERSONA.id;
 const ORG_ID = ORGANIZACION.id;
 const WEBSITE_ID = `${siteConfig.url}/#website`;
-const BLOG_ID = `${siteConfig.url}/blog#blog`;
+const BLOG_ID = `${siteConfig.url}/lecturas#blog`;
 
 /**
  * A reference to the Person node that still reads on its own: `@id` resolves it
@@ -156,8 +157,8 @@ export function articleJsonLd(post: {
     datePublished: fechaConZona(post.date),
     dateModified: fechaConZona(post.updated ?? post.date),
     inLanguage: "es-ES",
-    ...(post.permalink.startsWith("/blog/")
-      ? { isPartOf: { "@type": "Blog", "@id": BLOG_ID, name: TITULO_BLOG, url: `${siteConfig.url}/blog` } }
+    ...(esRutaDeArticulo(post.permalink)
+      ? { isPartOf: { "@type": "Blog", "@id": BLOG_ID, name: TITULO_BLOG, url: `${siteConfig.url}/lecturas` } }
       : {}),
     ...(post.metadata.wordCount
       ? { wordCount: post.metadata.wordCount }

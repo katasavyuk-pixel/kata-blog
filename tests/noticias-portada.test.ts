@@ -115,18 +115,18 @@ describe('archivo plegado', () => {
 });
 
 describe('permalinks y RSS conservados', () => {
-  test('los ficheros de ediciones históricas siguen donde estaban (su ruta es /blog/<slug>)', () => {
+  test('los ficheros de ediciones históricas siguen donde estaban (su ruta pública es ianexora.com/blog/<slug>)', () => {
     for (const slug of ['radar-2026-07-21', 'noticias-2026-08-23', 'noticias-2026-10-08']) {
       assert.ok(existsSync(join(ROOT, 'content', 'posts', `${slug}.mdx`)), `falta ${slug}`);
     }
     const velite = readFileSync(join(ROOT, 'velite.config.ts'), 'utf8');
-    assert.match(velite, /permalink: `\/blog\/\$\{slug\}`/);
+    assert.match(velite, /permalink: `\/\$\{slug\}`/);
   });
 
   test('las redirecciones de /radar siguen en next.config', () => {
     const config = readFileSync(join(ROOT, 'next.config.ts'), 'utf8');
     assert.match(config, /source: "\/radar"/);
-    assert.match(config, /source: "\/blog\/tag\/radar"/);
+    assert.match(config, /source: "\/tag\/radar"/);
   });
 
   test('el RSS lleva ediciones y artículos con su permalink y la misma forma de item', async () => {
@@ -148,7 +148,7 @@ describe('permalinks y RSS conservados', () => {
     assert.equal((xml.match(/<item>/g) ?? []).length, 3);
     // RSS 2.0 publishes the channel's page link; the feed URL is declared in
     // the route's metadata and `feedLinks` is not serialized by this library.
-    assert.ok(xml.includes('<link>https://kata.ianexora.com/noticias</link>'));
+    assert.ok(xml.includes('<link>https://ianexora.com/blog/noticias</link>'));
   });
 
   test('la ruta del feed sigue sirviendo getNoticias (ediciones y artículos)', () => {

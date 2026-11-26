@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image from "@/components/ui/imagen";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { siteConfig } from "@/config/site";

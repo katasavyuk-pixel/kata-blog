@@ -40,7 +40,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: TITULO_HOME,
-    template: `%s · ${siteConfig.name}`,
+    // The short name keeps titles under 60 characters (tests/seo-snippets).
+    template: `%s · ${siteConfig.shortName}`,
   },
   description: siteConfig.description,
   // No title, description or url here: a page that declares no `openGraph`

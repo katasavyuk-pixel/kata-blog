@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/admin";
 import { hashToken, generateToken } from "@/lib/tokens";
 import { scheduleWelcomeSequence } from "@/lib/welcome-sequence";
+import { urlPublica } from "@/lib/url-publica";
+import { BASE_PATH } from "@/config/base-path";
 
 export const runtime = "nodejs";
 
@@ -11,10 +13,10 @@ export async function GET(request: NextRequest) {
   const resource = request.nextUrl.searchParams.get("resource") ?? undefined;
 
   if (!token) {
-    return NextResponse.redirect(new URL("/gracias?error=token", request.url));
+    return NextResponse.redirect(urlPublica("/gracias?error=token"));
   }
   if (!isSupabaseConfigured()) {
-    return NextResponse.redirect(new URL("/gracias?preview=1", request.url));
+    return NextResponse.redirect(urlPublica("/gracias?preview=1"));
   }
 
   const supabase = createAdminClient();
@@ -30,7 +32,7 @@ export async function GET(request: NextRequest) {
     !sub.confirm_expires_at ||
     new Date(sub.confirm_expires_at).getTime() <= Date.now()
   ) {
-    return NextResponse.redirect(new URL("/gracias?error=expired", request.url));
+    return NextResponse.redirect(urlPublica("/gracias?error=expired"));
   }
 
   const unsubscribeToken = generateToken();
@@ -56,7 +58,7 @@ export async function GET(request: NextRequest) {
   // nobody read.
   if (confirmError) {
     console.error("[confirm] update failed:", confirmError);
-    return NextResponse.redirect(new URL("/gracias?error=guardado", request.url));
+    return NextResponse.redirect(urlPublica("/gracias?error=guardado"));
   }
 
   // Soft, session-less marker so a just-confirmed visitor can download lead magnets
@@ -66,7 +68,9 @@ export async function GET(request: NextRequest) {
     secure: true,
     sameSite: "lax",
     maxAge: 60 * 60 * 24 * 30,
-    path: "/",
+    // Only the blog's paths: ianexora.com outside /blog is NBI-WEB, which
+    // promises no cookies at all (26-nov-2026 migration).
+    path: BASE_PATH,
   });
 
   // Onboarding sequence (now / +48h / +96h) via Resend scheduledAt.
@@ -88,5 +92,5 @@ export async function GET(request: NextRequest) {
   const dest = resource
     ? `/gracias?descarga=${encodeURIComponent(resource)}`
     : "/gracias?confirmed=1";
-  return NextResponse.redirect(new URL(dest, request.url));
+  return NextResponse.redirect(urlPublica(dest));
 }
