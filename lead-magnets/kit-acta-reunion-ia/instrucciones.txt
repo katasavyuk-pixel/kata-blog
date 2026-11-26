@@ -1,0 +1,61 @@
+INSTRUCCIONES PARA EL ACTA DE REUNIÓN CON IA
+Kit «Acta de reunión con IA» v1.0 (noviembre de 2026) · Kata Savyuk · NBI (Nexora Business Intelligence) · kata.ianexora.com
+
+Cómo se usa: copia el bloque 1 en tu asistente de IA (ChatGPT, Gemini, Claude, Copilot...), con la cuenta de empresa. Rellena lo que va entre corchetes y pega al final la transcripción o tus notas. Cuando el acta esté revisada, usa el bloque 2 para el correo.
+
+=====================================================================
+BLOQUE 1 · EL ACTA
+=====================================================================
+
+Eres quien redacta el acta de una reunión de trabajo. Te paso la transcripción (o mis notas) al final.
+
+Datos de la reunión
+- Reunión: [NOMBRE O MOTIVO]
+- Fecha y lugar: [FECHA], [SALA / TEAMS / MEET / TELÉFONO]
+- Asistentes, bien escritos: [NOMBRES Y CARGOS]
+- Orden del día: [PUNTOS NUMERADOS, si lo había]
+- Redacta: [TU NOMBRE]
+
+Redacta el acta con esta estructura, en español de España:
+1. Datos: reunión, fecha, lugar, asistentes y quién redacta.
+2. Puntos tratados: para cada uno, dos o tres líneas de resumen. Sin citas literales y sin «X dijo».
+3. Acuerdos: solo lo que se decidió. Lo que quedó en propuesta, duda o «lo miramos» va en el apartado 5.
+4. Tareas, en una tabla con tres columnas: qué | quién | para cuándo. Una tarea solo entra si alguien la aceptó.
+5. Pendiente de decidir, y temas para la próxima reunión.
+6. Para revisar: la lista de todo lo que has marcado, en el orden en que aparece.
+
+Reglas:
+- No inventes nada: ni nombres, ni fechas, ni cifras, ni responsables.
+- Si una tarea no tiene quién o cuándo, escribe [SIN RESPONSABLE] o [SIN FECHA].
+- Si una palabra, un nombre o un número no se entiende, escribe [REVISAR: lo que dudas].
+- Si no está claro si algo se aprobó, ponlo en «Pendiente de decidir» con [REVISAR: ¿se aprobó?].
+- Si hay una ronda de cierre al final de la transcripción, manda lo que se dijo en ella; si choca con algo anterior, márcalo con [REVISAR].
+- Copia las cifras y las fechas tal como aparecen. No las redondees ni las calcules.
+- Deja fuera bromas, conversaciones paralelas y lo que alguien pidió que no constara.
+- No añadas conclusiones, recomendaciones ni opiniones tuyas.
+
+Transcripción o notas:
+[PEGA AQUÍ]
+
+=====================================================================
+BLOQUE 2 · EL CORREO DE SEGUIMIENTO (con el acta ya revisada)
+=====================================================================
+
+Con el acta revisada que te pego abajo, escribe el correo para los asistentes:
+- Asunto: «Acta y tareas · [REUNIÓN] · [FECHA]».
+- Tres líneas de resumen.
+- La tabla de tareas: qué, quién y para cuándo.
+- La fecha de la próxima reunión, solo si está en el acta.
+Máximo 150 palabras. No añadas nada que no esté en el acta. Tono: [CERCANO / FORMAL].
+
+Acta:
+[PEGA EL ACTA REVISADA]
+
+=====================================================================
+BLOQUE 3 · SI LA TRANSCRIPCIÓN ES MUY LARGA (más de una hora)
+=====================================================================
+
+Antes del acta, solo esto: haz la lista de los acuerdos y de las tareas que aparecen en la transcripción, cada uno con el minuto o la frase donde se dice. Si algo es dudoso, márcalo con [REVISAR]. No redactes el acta todavía.
+[PEGA AQUÍ]
+
+(Después, pega esa lista junto con el bloque 1.)
