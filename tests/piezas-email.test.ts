@@ -90,7 +90,7 @@ describe('despacho por slug en email-blocks', () => {
       payload: { inputs: { modelId: 'gpt-4o-mini', inTok: 800, outTok: 400, reqs: 1000 } },
     } as never;
     const html = openingBlock('https://kata.ianexora.com', coste);
-    assert.ok(html.startsWith('<p style="margin:0 0 16px;line-height:1.6;color:#140a0d;font-size:15px">Esto es lo que calculaste'));
+    assert.match(html, /^<p style="margin:0 0 16px;font-family:[^;]+;line-height:1\.6;color:#071e38;font-size:15px">Esto es lo que calculaste/);
     assert.ok(html.includes('$0.00036'));
     assert.ok(html.includes('$11'));
   });

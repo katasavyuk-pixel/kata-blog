@@ -2,6 +2,7 @@ import { Button, Column, Img, Link, Row, Section, Text } from "@react-email/comp
 import type { ReactNode } from "react";
 import { emailColors as c, emailFonts as f } from "@/lib/email-colors";
 import { FORMATOS_DE_CORREO, SECUENCIA_EN_CORREO, estilarHtml } from "@/lib/correo";
+import { estiloBoton } from "@/emails/marco";
 
 /**
  * The blocks of the visual edition, for email: tables and inline styles, the
@@ -44,11 +45,11 @@ export function Cuerpo({ html, alto = 22 }: { html: string; alto?: number }) {
   );
 }
 
-/** A section under a red rule, labelled in small capitals. */
+/** A section under NBI's cyan rule, labelled in small capitals. */
 export function Bloque({ titulo, children }: { titulo: ReactNode; children: ReactNode }) {
   return (
     <Hueco alto={30}>
-      <Section style={{ borderTop: `3px solid ${c.rule}` }}>
+      <Section className="nbi-linea" style={{ borderTop: `2px solid ${c.rule}` }}>
         <Row>
           <Column style={{ paddingTop: "12px" }}>
             <Text style={etiqueta}>{titulo}</Text>
@@ -63,7 +64,7 @@ export function Bloque({ titulo, children }: { titulo: ReactNode; children: Reac
 export function EnUnMinuto({ puntos }: { puntos: readonly string[] }) {
   return (
     <Hueco alto={20}>
-      <Section style={{ backgroundColor: c.surface }}>
+      <Section className="nbi-caja" style={{ backgroundColor: c.surface, borderRadius: "12px" }}>
         <Row>
           <Column style={{ padding: "18px 20px" }}>
             <Text style={{ ...etiqueta, color: c.textMain }}>En un minuto</Text>
@@ -98,15 +99,11 @@ export function Boton({ href, children, claro = false }: { href: string; childre
   return (
     <Button
       href={href}
+      className="nbi-boton"
       style={{
-        display: "inline-block",
+        ...estiloBoton,
         backgroundColor: claro ? c.card : c.buttonBg,
         color: claro ? c.textMain : c.onAccent,
-        fontFamily: f.sans,
-        fontSize: "15px",
-        fontWeight: 700,
-        textDecoration: "none",
-        padding: "13px 20px",
       }}
     >
       {children}
@@ -144,10 +141,10 @@ export function Construido({ items }: { items: readonly ConstruidoEnCorreo[] }) 
                 <Img src={item.imagen} alt="" width={String(ancho)} height={String(alto)} style={{ display: "block", border: 0 }} />
               </Link>
             ) : (
-              <Section style={{ backgroundColor: c.textMain, width: `${ancho}px` }}>
+              <Section className="nbi-caja" style={{ backgroundColor: c.buttonBg, width: `${ancho}px`, borderRadius: "8px" }}>
                 <Row>
                   <Column style={{ height: `${alto}px`, padding: "10px 12px", verticalAlign: "bottom" }}>
-                    <Text style={{ margin: 0, fontFamily: f.serif, fontSize: "15px", lineHeight: "1.2", color: c.card }}>
+                    <Text style={{ margin: 0, fontFamily: f.display, fontSize: "15px", lineHeight: "1.2", fontWeight: 600, color: c.card }}>
                       {item.proyecto}
                     </Text>
                   </Column>
@@ -157,7 +154,7 @@ export function Construido({ items }: { items: readonly ConstruidoEnCorreo[] }) 
           </Column>
           <Column style={{ verticalAlign: "top", padding: "14px 0 0 16px" }}>
             <Text style={pie}>{item.etiqueta}</Text>
-            <Link href={item.href} style={{ display: "block", marginTop: "4px", fontFamily: f.serif, fontSize: "19px", lineHeight: "1.25", color: c.textMain, textDecoration: "none" }}>
+            <Link href={item.href} style={{ display: "block", marginTop: "4px", fontFamily: f.display, fontSize: "18px", lineHeight: "1.3", fontWeight: 600, color: c.textMain, textDecoration: "none" }}>
               {item.titulo}
             </Link>
             <Text style={{ ...texto, marginTop: "6px", fontSize: "14px", lineHeight: "1.5" }}>{item.frase}</Text>
@@ -194,7 +191,7 @@ export function LoImportante({
         <Img src={imagen.src} alt={imagen.alt} width={String(ancho)} height={String(alto)} style={{ display: "block", marginTop: "14px", border: 0 }} />
       ) : null}
       {titulo ? (
-        <Text style={{ margin: "14px 0 0", fontFamily: f.serif, fontSize: "21px", lineHeight: "1.25", color: c.textMain }}>{titulo}</Text>
+        <Text style={{ margin: "14px 0 0", fontFamily: f.display, fontSize: "20px", lineHeight: "1.3", fontWeight: 600, color: c.textMain }}>{titulo}</Text>
       ) : null}
       {html ? <div style={{ marginTop: "12px" }} dangerouslySetInnerHTML={{ __html: estilarHtml(html) }} /> : null}
       {href ? (
@@ -235,7 +232,7 @@ export function SkillParaUsar({
             ) : null}
             <Column style={{ padding: "20px 22px", verticalAlign: "top" }}>
               <Text style={{ ...etiqueta, color: c.onAccent }}>Skill</Text>
-              <Text style={{ margin: "8px 0 0", fontFamily: f.serif, fontSize: "24px", lineHeight: "1.15", color: c.onAccent }}>{titulo}</Text>
+              <Text style={{ margin: "8px 0 0", fontFamily: f.display, fontSize: "22px", lineHeight: "1.2", fontWeight: 600, color: c.onAccent }}>{titulo}</Text>
               <Text style={{ ...texto, margin: "10px 0 18px", color: c.onAccent }}>{queHace}</Text>
               <Boton href={href} claro>
                 Instalarla en tu agente

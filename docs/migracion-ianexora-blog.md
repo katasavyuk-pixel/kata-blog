@@ -3,7 +3,7 @@
 Fecha: 26-nov-2026 (Europe/Madrid). Ejecutor: Nexo. Base: `migracion_blog_nbi.md` (Marketing), aprobada por Kata el 26/11 a las 08:19, y sus cambios de marca del §10, aprobados a las 08:37.
 **Fase actual: SOLO PREPARACIÓN.** No se ha tocado DNS, ni dominios de Vercel, ni variables de entorno de producción, ni secretos. No se ha fusionado nada y `DOWNLOAD_LINK_SECRET` no se rota.
 
-- Redirecciones: `migracion_blog_redirecciones.csv` (227 filas).
+- Redirecciones: `migracion_blog_redirecciones.csv` (223 filas; conflictos marcados como RESUELTO con la decisión de Kata del 26/11 a las 9:07).
 - PRs en borrador: kata-blog y NBI-WEB, rama `luna/2026-11-26-migracion-blog` en los dos repos (las URLs, al final).
 - Diseño personal conservado en la rama y etiqueta anotada `design/blog-personal-v1` del repo kata-blog, con `DESIGN-BLOG-PERSONAL.md`.
 
@@ -118,8 +118,8 @@ Fecha: 26-nov-2026 (Europe/Madrid). Ejecutor: Nexo. Base: `migracion_blog_nbi.md
    - Privacidad del blog: responsable «Katalin Savyuk, persona física que ejerce por cuenta propia bajo la marca comercial NBI · Nexora Business Intelligence», con enlace al aviso legal de ianexora.com para los datos completos. **Sin domicilio y sin NIF.**
    - Cookies a nombre del «Blog de Nexora Business Intelligence (ianexora.com/blog)».
    - © «NBI · Nexora Business Intelligence» en el pie y en los feeds.
-8. **Posts retirados.** `por-que-hago-esto` y `lo-que-me-cuesta-avanzar` → 301 a `/sobre-katalin-savyuk`. `bienvenida` → 301 a la home del blog.
-   - Se recomienda 301 y no 410 porque tienen enlaces y la intención de quien llega encaja con el destino.
+8. **Posts retirados.** `por-que-hago-esto`, `lo-que-me-cuesta-avanzar` y `bienvenida` → 301 a `/sobre-katalin-savyuk` (decisión de Kata, 26/11 9:07).
+   - 301 y no 410, porque tienen enlaces y la intención de quien llega encaja con el destino.
    - Se conservan en la etiqueta.
    - Las referencias internas se han reescrito: puentes, newsletters y bitácora.
 
@@ -127,6 +127,7 @@ Fecha: 26-nov-2026 (Europe/Madrid). Ejecutor: Nexo. Base: `migracion_blog_nbi.md
 - La Bitácora sale del menú (ya fuera en este PR; la página sigue viva).
 - Las noticias diarias quedan en segundo plano: siguen publicándose, sin sitio en el menú ni en la home.
 - Marketplace y Herramientas pasan a llamarse «Recursos de NBI».
+- «Lecturas» se renombra «Blog» (decisión de Kata, 26/11 9:07). La ruta /blog/lecturas puede quedarse, o pasar a /blog/articulos con 301; se decide al hacerlo.
 - `/trabaja-con-nbi` → 301 a `/contacto` o al diagnóstico (recomendación del §10).
 - Test de paridad de la cabecera y el pie entre los dos repos.
 
@@ -224,13 +225,79 @@ Fecha: 26-nov-2026 (Europe/Madrid). Ejecutor: Nexo. Base: `migracion_blog_nbi.md
 - Restaurar `NEXT_PUBLIC_SITE_URL` y la redirección de dominio de blog.ianexora.com si se cambiaron.
 - Los enlaces firmados siguen valiendo en las dos direcciones porque el secreto no cambia.
 
-## 9. Decisiones que necesita Kata
+## 9. Decisiones de Kata
 
-1. Mantener `/blog/privacidad` y `/blog/cookies` (recomendado), o fusionarlas en las de NBI con texto suyo. Las de NBI dicen «sin cookies» para ianexora.com. Conviene una línea suya que remita al blog, que usa la cookie `nbi_subscriber` limitada a /blog y Turnstile. Los textos legales de NBI-WEB no se tocan sin texto de Kata.
-2. La raíz `kata.ianexora.com/` va a la home del blog (recomendado), no a la de NBI.
-3. El archivo antiguo `/blog` pasa a `/blog/lecturas`. ¿Renombrar «Lecturas» como «Blog» después del corte?
-4. Los posts retirados: 301 (recomendado) o 410.
-5. El orden de fusión: NBI-WEB primero y kata-blog justo después (recomendado; se explica en §8).
-6. Añadir `ianexora.com/blog/**` a las redirect URLs de Supabase Auth (opcional).
-7. Confirmar si los commits del bot de noticias despliegan con la regla «solo commits de Kata».
-8. Aviso: la página de privacidad **de NBI-WEB** publica un domicilio en el campo «Domicilio». No se ha copiado al blog. Si la regla «no publicar mi dirección» aplica también a ianexora.com, decidir qué poner ahí. La LSSI pide datos de establecimiento.
+**Resueltas el 26/11 a las 9:07** (ya aplicadas en los PRs, el CSV y este plan):
+
+1. Se mantienen `/blog/privacidad` y `/blog/cookies`.
+2. La raíz `kata.ianexora.com/` va a la home del blog.
+3. Los tres posts retirados van con 301 a `/sobre-katalin-savyuk`.
+4. «Lecturas» se renombra «Blog» después del corte. Queda en el plan de después (§4), no se implementa ahora.
+5. El domicilio de la página de privacidad de ianexora.com se queda, porque lo exige la LSSI. **No se añade en ningún otro sitio**: ni en el blog, ni en los correos (tampoco en sus pies), ni en ningún pie de página. Lo comprueba un test de los correos (`estaEnElDisenoDeNbi`, en `tests/newsletter-edicion.test.ts`).
+
+**Siguen abiertas:**
+
+- Orden de fusión: NBI-WEB primero y kata-blog justo después (recomendado; se explica en §8).
+- Opcional: añadir `ianexora.com/blog/**` a las redirect URLs de Supabase Auth.
+- Confirmar si los commits del bot de noticias despliegan con la regla «solo commits de Kata».
+- Si la página de privacidad de NBI-WEB debe decir algo del blog. Necesita un texto de Kata.
+
+**El corte sigue SIN aprobar:** no se fusiona nada.
+
+## 10. Correos en el diseño de NBI (aprobado por Kata el 26/11 a las 9:03)
+
+Afecta a todos los correos automáticos: la confirmación (doble opt-in), la entrega de kits o descargas, la secuencia de bienvenida y la plantilla de la newsletter (ediciones visuales y antiguas).
+
+**Qué cambia (PR de kata-blog):**
+
+- **Marco común** en `src/emails/marco.tsx`:
+  - cabecera blanca con el logo de NBI, enlazado a ianexora.com;
+  - a la derecha, «Newsletter de NBI» y la fecha o la semana;
+  - la carta blanca con esquinas de 16 px sobre el azul pálido de NBI;
+  - el pie navy de ianexora.com (`#031a34`), con la baja o el motivo del correo y la línea «NBI · Nexora Business Intelligence · ianexora.com».
+  - **Sin domicilio.**
+- **Paleta** en `src/lib/email-colors.ts`, la de ianexora.com:
+  - tinta `#071e38`;
+  - enlaces cian `#07738d` (5,46:1 sobre blanco);
+  - reglas cian `#0d94b5`;
+  - botón en píldora navy `#0c3558`, como «Pedir la llamada»;
+  - cajas `#eaf2f8`.
+  - Desaparecen el rojo y la serif Georgia del blog personal.
+- **Tipografía:** `'Instrument Sans','Helvetica Neue',Helvetica,Arial,sans-serif`. Ningún cliente de correo carga fuentes web con garantía, así que se nombra primero y cae a las del sistema. Los títulos van en seminegrita, como los h1 y h2 de ianexora.com.
+- **Técnica segura para correo:**
+  - maquetación con tablas (Row/Column de React Email) y estilos en línea;
+  - el HTML de markdown se estiliza etiqueta por etiqueta (`estilarHtml`);
+  - los bloques prerenderizados (botón, regalo, desglose de costes) usan la misma paleta;
+  - Outlook clásico cuadra las esquinas y la píldora, sin romper nada.
+- **Logo:** `https://ianexora.com/blog/correo/nbi-logo-correo.png`, un PNG de 300×90 que se muestra a 150×45, con el fondo blanco incluido para que se lea en modo oscuro.
+  - Es una URL absoluta y fija, no `siteConfig.url`, porque los previews lo sobrescribirían con una URL protegida.
+  - **Existe a partir del corte.** Hasta entonces, un correo de prueba mandado desde un preview mostraría el texto alternativo «NBI · Nexora Business Intelligence», y el rótulo «Newsletter de NBI» va en texto.
+- **Modo oscuro:**
+  - `<meta name="color-scheme" content="light dark">` y una hoja `@media (prefers-color-scheme: dark)` para Apple Mail, iOS y Outlook para Mac, más las copias `[data-ogsc]` para Outlook.com;
+  - colores en oscuro: fondo navy, texto `#e6eef6`, enlaces `#5cc8e0` y botón cian con texto navy;
+  - Gmail ignora la media query e invierte por su cuenta: el texto oscuro sobre claro se invierte bien y el logo conserva su fondo blanco.
+
+**Comprobado sin enviar ningún correo:**
+
+- Cada plantilla se ha renderizado a HTML y a PNG en `/tmp/email-previews/`, en claro y en oscuro.
+- Tests nuevos en `tests/newsletter-edicion.test.ts`. Para la edición y la confirmación comprueban:
+  - el logo (PNG absoluto y su alt);
+  - la meta de esquema de color y la media query oscura;
+  - la pila tipográfica y el pie navy;
+  - que no quedan el rojo ni Georgia;
+  - que no hay domicilio, Irún, NIF ni «cuaderno de obra».
+  - En la confirmación, además, el botón en píldora navy.
+
+**Prueba de humo en el corte (la hace Kata, a su propia dirección):**
+
+1. Después del paso 4 de §8, con `NEXT_PUBLIC_SITE_URL` ya cambiada, Kata entra en `https://ianexora.com/blog/panel` y manda **una** prueba de la newsletter («Enviar prueba»): llega solo a la dirección de respuesta, con «[PRUEBA]» en el asunto.
+2. Kata se da de alta con una dirección suya, recibe la confirmación, la confirma y recibe la bienvenida y el regalo. Pide un kit y recibe la entrega.
+3. En cada correo revisa:
+   - el remitente «Katalin Savyuk (NBI)»;
+   - que el logo carga desde ianexora.com/blog;
+   - que los enlaces van a ianexora.com/blog y que la baja funciona;
+   - cómo se ve en Gmail web, en el móvil y en modo oscuro;
+   - que ningún pie lleva domicilio.
+4. Si el logo no carga, el texto alternativo mantiene el correo legible. Se revisa `public/correo/nbi-logo-correo.png` en el despliegue.
+
+No se manda ningún correo a la lista como prueba. Las ediciones antiguas conservan sus GIF e imágenes con el rojo anterior (contenido histórico); las nuevas ya salen con el marco de NBI.

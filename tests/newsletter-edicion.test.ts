@@ -41,6 +41,7 @@ const BAJA = `${SITIO}/api/unsubscribe?token=t`;
 
 type Plantilla = {
   EdicionEmail: (props: { edicion: Edicion; brand: string; preview: string; siteUrl: string; unsubscribeUrl: string }) => unknown;
+  ConfirmOptInEmail: (props: { confirmUrl: string; brand: string }) => unknown;
   render: (elemento: unknown) => Promise<string>;
 };
 
@@ -54,7 +55,8 @@ async function cargarPlantilla(): Promise<Plantilla> {
   mkdirSync(join(root, '.velite', 'pruebas'), { recursive: true });
   await build({
     stdin: {
-      contents: 'export { EdicionEmail } from "@/emails/edicion"; export { render } from "@react-email/components";',
+      contents:
+        'export { EdicionEmail } from "@/emails/edicion"; export { ConfirmOptInEmail } from "@/emails/confirm-opt-in"; export { render } from "@react-email/components";',
       resolveDir: root,
       loader: 'tsx',
     },
@@ -132,7 +134,7 @@ describe('las rutas y el HTML del correo', () => {
 
   test('cada etiqueta lleva su estilo, y la que ya tenía uno se queda como estaba', () => {
     const html = estilarHtml('<p>a <a href="/x/">b</a></p><p style="margin:0">c</p><pre>d</pre><abbr>e</abbr><img src="/i.jpg" />');
-    assert.match(html, /^<p style="margin:0 0 16px;[^"]*">a <a href="\/x\/" style="color:#c40f1f;[^"]*">b<\/a><\/p>/);
+    assert.match(html, /^<p style="margin:0 0 16px;[^"]*">a <a href="\/x\/" style="color:#07738d;[^"]*">b<\/a><\/p>/);
     assert.ok(html.includes('<p style="margin:0">c</p>'));
     assert.ok(html.includes('<pre>d</pre><abbr>e</abbr>'));
     assert.match(html, /<img src="\/i\.jpg" style="display:block;[^"]*" \/>$/);
@@ -187,6 +189,20 @@ describe('cada edición tiene lo que su correo necesita', () => {
   });
 });
 
+/** Lo que todo correo lleva desde el 26-nov-2026: el marco de ianexora.com, sin el rojo del blog personal ni datos de domicilio. */
+function estaEnElDisenoDeNbi(correo: string) {
+  assert.ok(correo.includes('src="https://ianexora.com/blog/correo/nbi-logo-correo.png"'), 'falta el logo de NBI (PNG absoluto).');
+  assert.ok(correo.includes('alt="NBI · Nexora Business Intelligence"'));
+  assert.ok(correo.includes('NBI · Nexora Business Intelligence'));
+  assert.match(correo, /<meta name="color-scheme" content="light dark"/);
+  assert.match(correo, /prefers-color-scheme: dark/);
+  // Las comillas del font-family salen escapadas en el atributo style.
+  assert.match(correo, /(&#x27;|')Instrument Sans(&#x27;|'),(&#x27;|')Helvetica Neue(&#x27;|'),Helvetica,Arial,sans-serif/);
+  assert.match(correo, /background-color:#031a34/, 'falta el pie navy de ianexora.com.');
+  assert.doesNotMatch(correo, /#e11423|#c40f1f|Georgia/i, 'queda el rojo o la serif del blog personal.');
+  assert.doesNotMatch(correo, /ir[uú]n|domicilio|calle|\bNIF\b|cuaderno de obra/i, 'un correo no lleva dirección ni la marca vieja.');
+}
+
 describe('la plantilla, en el HTML que sale', () => {
   let plantilla: Plantilla;
   const html = (edicion: Edicion) =>
@@ -200,7 +216,8 @@ describe('la plantilla, en el HTML que sale', () => {
   };
   const sinLoQueUnCorreoNoAguanta = (correo: string) => {
     assert.doesNotMatch(correo, /<svg|<script|\.webp/i);
-    assert.doesNotMatch(correo, /border-radius/, 'esquinas rectas, también en el correo.');
+    // 26-nov-2026: el diseño de ianexora.com (logo, paleta, píldora navy, pie navy).
+    estaEnElDisenoDeNbi(correo);
   };
 
   before(async () => {
@@ -265,6 +282,17 @@ describe('la plantilla, en el HTML que sale', () => {
     assert.ok(texto.indexOf('LO IMPORTANTE') < texto.indexOf('LO QUE HE CONSTRUIDO'), 'el texto plano sigue el orden del HTML.');
     assert.ok(texto.indexOf('PARA USAR ESTA SEMANA') < texto.indexOf('LO QUE HA PASADO'), 'el resto de la semana va al final, también en texto.');
     assert.ok(texto.includes(`${SITIO}/marketplace/prever-caja?utm_source=newsletter`));
+  });
+});
+
+describe('el correo de confirmación, en el diseño de NBI', () => {
+  test('logo, botón píldora navy, pie navy y el enlace en texto', async () => {
+    const plantilla = await cargarPlantilla();
+    const correo = await plantilla.render(plantilla.ConfirmOptInEmail({ confirmUrl: 'https://ianexora.com/blog/api/confirm?token=t', brand: 'Newsletter de NBI' }));
+    estaEnElDisenoDeNbi(correo);
+    assert.match(correo, /class="nbi-boton"[^>]*style="[^"]*background-color:#0c3558[^"]*border-radius:999px/);
+    assert.ok(correo.includes('https://ianexora.com/blog/api/confirm?token=t'));
+    assert.ok(correo.includes('Newsletter de NBI'));
   });
 });
 

@@ -31,11 +31,12 @@ type Regla = {
  * The three personal posts that leave the NBI blog (26-nov-2026, Kata's §10):
  * they live on in the design/blog-personal-v1 tag. A 301 to the closest page
  * rather than a 410: they have links and the reader still gets an answer.
+ * Kata (26-nov-2026, 9:07): all three go to NBI's author page.
  */
 export const POSTS_RETIRADOS: readonly Regla[] = [
   { source: "/por-que-hago-esto", destination: `${NBI_ORIGIN}/sobre-katalin-savyuk` },
   { source: "/lo-que-me-cuesta-avanzar", destination: `${NBI_ORIGIN}/sobre-katalin-savyuk` },
-  { source: "/bienvenida", destination: DESTINO },
+  { source: "/bienvenida", destination: `${NBI_ORIGIN}/sobre-katalin-savyuk` },
 ];
 
 /**

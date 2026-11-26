@@ -1,3 +1,4 @@
+import { emailColors as c, emailFonts } from "@/lib/email-colors";
 /**
  * What a newsletter edition needs to travel by email: its images in a format
  * and a crop every mail client shows, links that say they came from the email,
@@ -77,21 +78,21 @@ export function partirCuerpo(html: string): { entrada: string; secciones: Seccio
   return { entrada: entrada.trim(), secciones };
 }
 
-const SERIF = "Georgia,'Times New Roman',serif";
-const SANS = "Arial,Helvetica,sans-serif";
+const SANS = emailFonts.sans;
+const DISPLAY = emailFonts.display;
 
-/** Inline styles per tag, in the email's colours (src/lib/email-colors.ts). */
+/** Inline styles per tag, in the email's colours (src/lib/email-colors.ts, NBI's since 26-nov-2026). */
 const ESTILOS: Record<string, string> = {
-  p: `margin:0 0 16px;font-family:${SANS};font-size:16px;line-height:1.6;color:#140a0d`,
-  h2: `margin:28px 0 10px;font-family:${SERIF};font-size:22px;font-weight:400;line-height:1.25;color:#140a0d`,
-  h3: `margin:28px 0 10px;font-family:${SERIF};font-size:20px;font-weight:400;line-height:1.25;color:#140a0d`,
+  p: `margin:0 0 16px;font-family:${SANS};font-size:16px;line-height:1.6;color:${c.textMain}`,
+  h2: `margin:28px 0 10px;font-family:${DISPLAY};font-size:21px;font-weight:600;line-height:1.3;color:${c.textMain}`,
+  h3: `margin:24px 0 8px;font-family:${DISPLAY};font-size:18px;font-weight:600;line-height:1.3;color:${c.textMain}`,
   ul: "margin:0 0 16px;padding:0 0 0 20px",
   ol: "margin:0 0 16px;padding:0 0 0 20px",
-  li: `margin:0 0 6px;font-family:${SANS};font-size:16px;line-height:1.55;color:#140a0d`,
-  a: "color:#c40f1f;text-decoration:underline",
-  blockquote: "margin:0 0 16px;padding:0 0 0 16px;border-left:3px solid #e11423",
+  li: `margin:0 0 6px;font-family:${SANS};font-size:16px;line-height:1.55;color:${c.textMain}`,
+  a: `color:${c.accent};text-decoration:underline`,
+  blockquote: `margin:0 0 16px;padding:0 0 0 16px;border-left:3px solid ${c.rule}`,
   img: "display:block;max-width:100%;height:auto;border:0",
-  hr: "margin:24px 0;border:0;border-top:1px solid #e3d9d6",
+  hr: `margin:24px 0;border:0;border-top:1px solid ${c.border}`,
 };
 
 /**
