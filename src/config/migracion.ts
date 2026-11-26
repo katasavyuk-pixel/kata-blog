@@ -21,7 +21,11 @@ export const HOSTS_ANTIGUOS = ["kata.ianexora.com", "blog.ianexora.com", "www.bl
 
 export const DESTINO = `${NBI_ORIGIN}/blog`;
 
-type Regla = { source: string; destination: string };
+type Regla = {
+  source: string;
+  destination: string;
+  has?: { type: "query"; key: string; value?: string }[];
+};
 
 /**
  * The three personal posts that leave the NBI blog (26-nov-2026, Kata's §10):
@@ -42,6 +46,7 @@ export const POSTS_RETIRADOS: readonly Regla[] = [
 export const REGLAS_HOST_ANTIGUO: readonly Regla[] = [
   { source: "/", destination: DESTINO },
   // Old archive filter «Radar» and the old tag → the news.
+  { source: "/blog", has: [{ type: "query", key: "seccion", value: "radar" }], destination: `${DESTINO}/noticias` },
   { source: "/blog", destination: `${DESTINO}/lecturas` },
   { source: "/blog/tag/radar", destination: `${DESTINO}/noticias` },
   ...POSTS_RETIRADOS.map((r) => ({ source: `/blog${r.source}`, destination: r.destination })),
@@ -68,7 +73,7 @@ export function redireccionesDeHostsAntiguos() {
     REGLAS_HOST_ANTIGUO.map((regla) => ({
       ...regla,
       basePath: false as const,
-      has: [{ type: "host" as const, value: host }],
+      has: [{ type: "host" as const, value: host }, ...(regla.has ?? [])],
       statusCode: 301 as const,
     })),
   );
