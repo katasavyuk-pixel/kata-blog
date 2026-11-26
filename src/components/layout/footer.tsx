@@ -71,12 +71,11 @@ export function Footer({
             ))}
           </div>
 
-          {/* Two feeds, two names: subscribing to what I write is not the same
-              as receiving an automated edition every day. */}
+          {/* The news feed is not offered here (26-nov-2026, Kata): the daily
+              news move to his personal blog; /noticias/feed.xml stays live. */}
           <div className="nbi-cierre__lista">
             <p className="nbi-cierre__titulo">Seguir</p>
             <a href={conBase(feeds.editorial.href)}>RSS · artículos</a>
-            <a href={conBase(feeds.noticias.href)}>RSS · noticias</a>
             <a href={conBase(feeds.bitacora.href)}>RSS · bitácora</a>
             {siteConfig.social.map((item) => (
               <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer">

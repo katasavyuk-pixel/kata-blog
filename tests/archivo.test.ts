@@ -158,8 +158,8 @@ describe('la página, con lo publicado', () => {
     assert.doesNotMatch(pagina, /"use client"/);
   });
 
-  test('las noticias siguen fuera: se enlazan, no se listan', () => {
+  test('las noticias siguen fuera: ni se listan ni se enlazan (Kata, 26-nov-2026)', () => {
     assert.match(pagina, /getEditoriales\(\)/);
-    assert.match(pagina, /href="\/noticias"/);
+    assert.doesNotMatch(pagina, /href="\/noticias"/);
   });
 });

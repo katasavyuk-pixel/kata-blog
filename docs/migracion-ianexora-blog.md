@@ -125,7 +125,7 @@ Fecha: 26-nov-2026 (Europe/Madrid). Ejecutor: Nexo. Base: `migracion_blog_nbi.md
 
 **Después del corte, solo planificado:**
 - La Bitácora sale del menú (ya fuera en este PR; la página sigue viva).
-- Las noticias diarias quedan en segundo plano: siguen publicándose, sin sitio en el menú ni en la home.
+- Las noticias diarias se mudan al futuro blog personal (§11, decisión de Kata del 26/11 a las 9:17–9:19). Las ya publicadas siguen en /blog/noticias, fuera del menú y de la home.
 - Marketplace y Herramientas pasan a llamarse «Recursos de NBI».
 - «Lecturas» se renombra «Blog» (decisión de Kata, 26/11 9:07). La ruta /blog/lecturas puede quedarse, o pasar a /blog/articulos con 301; se decide al hacerlo.
 - `/trabaja-con-nbi` → 301 a `/contacto` o al diagnóstico (recomendación del §10).
@@ -161,7 +161,7 @@ Fecha: 26-nov-2026 (Europe/Madrid). Ejecutor: Nexo. Base: `migracion_blog_nbi.md
 - **Workflow `noticias-diarias`:**
   - Publica comiteando a main como `github-actions[bot]`, y Vercel despliega el proyecto del blog. No hay cambios de URL en el workflow.
   - El cron de Vercel ya apunta a `/blog/api/cron/noticias`.
-  - Observación previa a la migración: si Vercel solo despliega commits de Kata, esos commits del bot no desplegarían solos. No lo cambia esta migración, pero conviene confirmarlo.
+  - Si Vercel solo despliega commits de Kata, esos commits del bot no se despliegan solos. **Se resuelve cuando el generador se mude al blog personal (§11), no ahora** (decisión de Kata, 26/11 9:17–9:19). Esta migración no toca el workflow.
 - **Newsletter:**
   - `POST /api/newsletter/send` está protegido por secreto. Quien lo llame (panel o script) debe usar `https://ianexora.com/blog/api/newsletter/send`. El panel ya llama con `conBase`.
   - Los `curl` de los comentarios del código siguen citando kata.ianexora.com: son solo documentación y el 301 recoge un GET, pero **no un POST**.
@@ -235,11 +235,18 @@ Fecha: 26-nov-2026 (Europe/Madrid). Ejecutor: Nexo. Base: `migracion_blog_nbi.md
 4. «Lecturas» se renombra «Blog» después del corte. Queda en el plan de después (§4), no se implementa ahora.
 5. El domicilio de la página de privacidad de ianexora.com se queda, porque lo exige la LSSI. **No se añade en ningún otro sitio**: ni en el blog, ni en los correos (tampoco en sus pies), ni en ningún pie de página. Lo comprueba un test de los correos (`estaEnElDisenoDeNbi`, en `tests/newsletter-edicion.test.ts`).
 
+**Resueltas el 26/11 a las 9:17–9:19** (noticias; detalle en §11):
+
+6. Las noticias diarias son del futuro blog personal, no del blog de NBI.
+7. Las ya publicadas se quedan en /blog: 200, en el sitemap como hasta ahora, sin 410 y sin redirigirlas fuera de su propia URL.
+8. Fuera de la home, del menú y del pie del blog de NBI. Las páginas siguen vivas.
+9. La generación de noticias se muda al blog personal cuando se monte, y el despliegue de `github-actions[bot]` en Vercel se arregla entonces.
+
 **Siguen abiertas:**
 
 - Orden de fusión: NBI-WEB primero y kata-blog justo después (recomendado; se explica en §8).
 - Opcional: añadir `ianexora.com/blog/**` a las redirect URLs de Supabase Auth.
-- Confirmar si los commits del bot de noticias despliegan con la regla «solo commits de Kata».
+- (Aplazada al blog personal, §11) el despliegue de los commits de `github-actions[bot]` con la regla «solo commits de Kata».
 - Si la página de privacidad de NBI-WEB debe decir algo del blog. Necesita un texto de Kata.
 
 **El corte sigue SIN aprobar:** no se fusiona nada.
@@ -288,10 +295,10 @@ Afecta a todos los correos automáticos: la confirmación (doble opt-in), la ent
   - que no hay domicilio, Irún, NIF ni «cuaderno de obra».
   - En la confirmación, además, el botón en píldora navy.
 
-**Prueba de humo en el corte (la hace Kata, a su propia dirección):**
+**Prueba de humo en el corte (la hace Kata, con su propio correo):**
 
-1. Después del paso 4 de §8, con `NEXT_PUBLIC_SITE_URL` ya cambiada, Kata entra en `https://ianexora.com/blog/panel` y manda **una** prueba de la newsletter («Enviar prueba»): llega solo a la dirección de respuesta, con «[PRUEBA]» en el asunto.
-2. Kata se da de alta con una dirección suya, recibe la confirmación, la confirma y recibe la bienvenida y el regalo. Pide un kit y recibe la entrega.
+1. Después del paso 4 de §8, con `NEXT_PUBLIC_SITE_URL` ya cambiada, Kata entra en `https://ianexora.com/blog/panel` y manda **una** prueba de la newsletter («Enviar prueba»): le llega solo a su propio correo (la dirección de respuesta), con «[PRUEBA]» en el asunto.
+2. Kata se da de alta con su propio correo, recibe la confirmación, la confirma y recibe la bienvenida y el regalo. Pide un kit y recibe la entrega.
 3. En cada correo revisa:
    - el remitente «Katalin Savyuk (NBI)»;
    - que el logo carga desde ianexora.com/blog;
@@ -301,3 +308,37 @@ Afecta a todos los correos automáticos: la confirmación (doble opt-in), la ent
 4. Si el logo no carga, el texto alternativo mantiene el correo legible. Se revisa `public/correo/nbi-logo-correo.png` en el despliegue.
 
 No se manda ningún correo a la lista como prueba. Las ediciones antiguas conservan sus GIF e imágenes con el rojo anterior (contenido histórico); las nuevas ya salen con el marco de NBI.
+
+## 11. Noticias: fuera de las superficies de NBI y, más adelante, al blog personal (decisión de Kata, 26/11 9:17–9:19)
+
+**En esta migración (PR de kata-blog):**
+
+- **Menú:** el de NBI-WEB solo lleva «Blog», y la fila del blog (Artículos, Marketplace, Herramientas, Newsletter) no tiene Noticias. Sin cambios en NBI-WEB.
+- **Home del blog:** no tiene «Noticia del día», ni tira ni columna de noticias. Se cambia el lema de `siteConfig.home`, que el pie muestra en todas las páginas: de «Noticias, herramientas y skills de IA para tu negocio.» a «Guías, herramientas y skills de IA para tu negocio.». La fecha del sitemap para la home ya no se mueve con cada noticia.
+- **Pie:** se quita «RSS · noticias».
+- **Archivo «Lecturas»:** se quitan sus dos enlaces a /noticias, la frase de la entradilla y el botón junto a los filtros.
+- **Autodescubrimiento:** el feed de noticias ya no se anuncia en todas las páginas, solo en /noticias.
+- **Lo que se queda igual:**
+  - las 88 piezas publicadas responden 200 en `/blog/<slug>`;
+  - `/blog/noticias`, `/blog/noticias/2026-10` y `/blog/noticias/feed.xml` siguen vivas;
+  - desde los hosts viejos, cada noticia da 301 a su misma URL en ianexora.com/blog, nunca a otra página;
+  - ni 410 ni redirección fuera de la pieza.
+- **Sitemap e indexación, sin cambios respecto a kata.ianexora.com hoy:**
+  - siguen `/noticias` y `/noticias/2026-10` (indexables);
+  - las piezas sueltas llevan `noindex, follow` hasta que alguien las revisa (`esIndexable`), y por eso nunca han estado en el sitemap. Hoy ninguna de las 88 está revisada.
+  - Si Kata quiere que las piezas sueltas se indexen, es otra decisión: quitar el `noindex` y añadirlas al sitemap.
+- Lo comprueba `tests/noticias-fuera-de-superficies.test.ts`.
+- **El generador sigue como está:** el workflow `noticias-diarias` y el cron no se tocan en esta migración. Las nuevas piezas siguen saliendo en /blog/noticias, fuera de las superficies, hasta la mudanza.
+
+**Después, con el blog personal** (rama y etiqueta `design/blog-personal-v1`, dominio kataivanovych.com; no se monta ahora):
+
+- La generación de noticias se muda allí, y Kata las comenta y opina en ellas.
+- En ese momento se resuelve el despliegue en Vercel de los commits de `github-actions[bot]`.
+- Temas que quiere allí:
+  - IA;
+  - empresas;
+  - negocios;
+  - actualidad importante de España;
+  - economía y trading: macro, bancos centrales, datos que mueven el mercado, oro y Nasdaq.
+- Qué hacer con las noticias ya publicadas en ianexora.com/blog al mudarse (dejarlas, o 301 una a una a su copia en kataivanovych.com) se decide entonces. Hasta esa decisión, siguen en /blog con 200.
+

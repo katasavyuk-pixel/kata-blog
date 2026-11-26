@@ -63,9 +63,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entry = (ruta: string, lastModified: string | undefined): MetadataRoute.Sitemap[number] =>
     lastModified ? { url: ruta === "/" ? base : `${base}${ruta}`, lastModified } : { url: ruta === "/" ? base : `${base}${ruta}` };
 
-  // The home shows the newest pieces of every kind, news included: when a
-  // daily edition lands on it, its visible content did change.
-  const allNewest = newestOf(fechasDe(allPosts));
+  // The home shows the newest articles, no news (26-nov-2026): a daily
+  // edition does not change it.
+  const allNewest = newestOf(fechasDe(getEditoriales()));
   const curso = COURSE_SLUGS.map((slug) => getPost(slug)).filter((p): p is Post => Boolean(p));
 
   const staticRoutes: MetadataRoute.Sitemap = [

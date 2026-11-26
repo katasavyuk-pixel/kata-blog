@@ -15,15 +15,15 @@ export const metadata: Metadata = withOpenGraph("/lecturas", {
   // The search title (brief of 17-oct-2026); the H1 and the Blog node keep «Lecturas».
   title: { absolute: `Blog de IA aplicada a negocio · ${siteConfig.name}` },
   description:
-    "Lo que escribo: sistemas, guías, reflexiones, notas y las lecciones del curso sobre IA aplicada a un negocio. Filtra por tipo o por tema, o busca. Las noticias van aparte.",
+    "Lo que escribo: sistemas, guías, reflexiones, notas y las lecciones del curso sobre IA aplicada a un negocio. Filtra por tipo o por tema, o busca.",
   alternates: { ...feedAlternates, canonical: "/lecturas" },
 });
 
 /**
  * The archive is everything written by hand, as one stream: newest first, each
- * piece saying what it is. The automated news lives at /noticias and is linked
- * from here, never listed: a daily edition outnumbers and buries what is
- * published a few times a month.
+ * piece saying what it is. The automated news lives at /noticias, neither
+ * listed nor linked from here (26-nov-2026, Kata: the news move to his
+ * personal blog; the published ones stay live and in the sitemap).
  *
  * `?tipo=` and `?tema=` narrow the stream and `?q=` searches it; the rules are
  * in src/lib/archivo.ts. Every combination is the same page to a crawler (the
@@ -73,11 +73,7 @@ export default async function BlogIndexPage({
           </p>
           <h1 className="mt-3 max-w-[24ch] text-h1 font-medium">Lecturas</h1>
           <p className="mt-4 max-w-[52ch] text-muted sm:text-[1.1875rem]">
-            Guías, reflexiones, notas y casos, firmados: todo sale de lo que pongo en marcha en mi negocio. Las noticias las publica un sistema en automático y van aparte, en{" "}
-            <Link href="/noticias" className={linkClass}>
-              Noticias
-            </Link>
-            .
+            Guías, reflexiones, notas y casos, firmados: todo sale de lo que pongo en marcha en mi negocio.
             {sectoresConContenido().length > 0 ? (
               <>
                 {" "}
@@ -147,13 +143,8 @@ export default async function BlogIndexPage({
                 {ESTANTES[tipo.clave]}
               </Link>
             ))}
-            {/* Not a filter: the news left the archive, so this leaves the page. */}
-            <Link
-              href="/noticias"
-              className="inline-flex min-h-10 items-center px-3 font-sans text-[0.8125rem] font-semibold text-accent-ink underline underline-offset-[0.18em] hover:text-fg sm:ml-auto"
-            >
-              {ESTANTES.noticias}
-            </Link>
+            {/* No link to /noticias (26-nov-2026, Kata): the news stay live and
+                in the sitemap, but off the blog's menu and its archive. */}
           </nav>
           <nav aria-label="Filtrar por tema" className="mt-3 flex flex-wrap items-center gap-2">
             <span className="mr-1 w-12 font-sans text-[0.8125rem] font-semibold text-fg">Tema</span>

@@ -61,10 +61,14 @@ export const siteConfig = {
    * en un negocio pequeño.» On 2026-10-15 «para un negocio pequeño» became
    * «para tu negocio»: «pequeño» made the reader feel small.
    */
+  // 26-nov-2026 (Kata, 9:17): the daily news belong on his future personal
+  // blog, so the NBI blog no longer promises them. The published news stay
+  // live and indexed as they are at /noticias, just off the home, the menu
+  // and the footer.
   home: {
-    titular: "Noticias, herramientas y skills de IA para tu negocio.",
+    titular: "Guías, herramientas y skills de IA para tu negocio.",
     subtitulo:
-      "Las noticias del día sobre IA, negocio, tecnología y geopolítica. Herramientas que funcionan en el navegador, skills para Claude, Codex y otros agentes, y guías con sus números. Y un correo cuando hay algo que enseñar.",
+      "Guías con sus números, herramientas que funcionan en el navegador y skills para Claude, Codex y otros agentes. Y un correo cuando hay algo que enseñar.",
   },
   /** Default meta description (1–2 sentences). */
   // "mi negocio", never "una empresa": the voice is one person, first person
@@ -229,14 +233,15 @@ export const feeds = {
  * metadata shallowly per segment: a page that sets `alternates: { canonical }`
  * replaces the layout's whole `alternates`, feeds included. Every page that
  * declares its own `alternates` spreads this in (`/noticias` is the exception:
- * it advertises only its own feed).
+ * it advertises only its own feed, which is the only place it is offered).
  */
 export const feedAlternates = {
   types: {
     // Two feeds, two titles: a reader that autodiscovers them shows only this.
     "application/rss+xml": [
+      // The news feed is advertised only by /noticias itself (26-nov-2026,
+      // Kata: the news stay live but off the blog's surfaces).
       { url: feeds.editorial.href, title: feeds.editorial.title },
-      { url: feeds.noticias.href, title: feeds.noticias.title },
     ],
   },
 };
