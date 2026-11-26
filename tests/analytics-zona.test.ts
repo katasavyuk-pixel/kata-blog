@@ -26,9 +26,13 @@ describe('Vercel Analytics dentro de la zona /blog', () => {
     });
   });
 
-  test('el rewrite devuelve /blog/<hash>/… a la ruta raíz que sirve Vercel', () => {
+  test('el rewrite lleva /blog/<hash>/… a la ruta raíz del host de Vercel (URL absoluta: Next no admite otra fuera del base path)', () => {
     assert.deepEqual(rewritesAnalytics('/blog', '/74f3103ea9389461'), [
-      { source: '/blog/74f3103ea9389461/:path*', destination: '/74f3103ea9389461/:path*', basePath: false },
+      {
+        source: '/blog/74f3103ea9389461/:path*',
+        destination: 'https://kata-ivanovych-blog.vercel.app/74f3103ea9389461/:path*',
+        basePath: false,
+      },
     ]);
   });
 

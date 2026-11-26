@@ -10,13 +10,18 @@
  *
  * Fix: the <Analytics> component loads the script and sends the events under
  * the base path (`/blog/<hash>/…`), which NBI-WEB forwards here, and
- * next.config.ts rewrites that path to the root one this project's host
- * serves. `base` is the zone's base path (BASE_PATH, src/config/base-path.ts);
+ * next.config.ts rewrites that path to the root one on this project's own
+ * Vercel host (ORIGEN_VERCEL). It has to be an absolute URL: Next refuses a
+ * rewrite out of the base path to a relative destination, and the root
+ * `/<hash>` path is answered by Vercel's edge, not by this app. `base` is the zone's base path (BASE_PATH, src/config/base-path.ts);
  * it is passed in so next.config.ts can load this file without path aliases.
  * NBI-WEB itself has no Vercel Analytics and its pages never load
  * this script, so nothing is counted twice and ianexora.com's own pages stay
  * cookie-free and under their own CSP.
  */
+/** This project's production host on Vercel; it serves `/<hash>/…` itself. Same one NBI-WEB forwards /blog to. */
+export const ORIGEN_VERCEL = "https://kata-ivanovych-blog.vercel.app";
+
 export function raizAnalytics(env: Record<string, string | undefined> = process.env): string {
   const raiz = (env.NEXT_PUBLIC_VERCEL_OBSERVABILITY_BASEPATH ?? "").trim().replace(/\/+$/, "");
   if (!raiz) return "/_vercel/insights";
@@ -28,7 +33,7 @@ export function propsAnalytics(base: string, raiz: string = raizAnalytics()): { 
   return { scriptSrc: `${base}${raiz}/script.js`, endpoint: `${base}${raiz}` };
 }
 
-/** The rewrite that takes `/blog/<hash>/…` back to the root path the Vercel host serves. */
-export function rewritesAnalytics(base: string, raiz: string = raizAnalytics()) {
-  return [{ source: `${base}${raiz}/:path*`, destination: `${raiz}/:path*`, basePath: false as const }];
+/** The rewrite that takes `/blog/<hash>/…` to the root path on the Vercel host, which serves it. */
+export function rewritesAnalytics(base: string, raiz: string = raizAnalytics(), origen: string = ORIGEN_VERCEL) {
+  return [{ source: `${base}${raiz}/:path*`, destination: `${origen}${raiz}/:path*`, basePath: false as const }];
 }
