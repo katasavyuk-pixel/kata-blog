@@ -310,7 +310,7 @@ describe('la home es la portada', () => {
     // etiqueta design/blog-personal-v1); los componentes siguen y se prueban.
     assert.match(pagina, /<SubscribeForm source="home"/);
     assert.match(pagina, /<JsonLd data=\{\[websiteJsonLd\(\), personJsonLd\(\), organizationJsonLd\(\)\]\} \/>/);
-    assert.match(pagina, /canonical: "\/"/);
+    assert.match(pagina, /canonical: siteConfig\.url/);
     assert.doesNotMatch(componente, /<Hero\b|<h1\b/, 'la promesa la pone el hero, una vez.');
     assert.match(componente, /source="home-regalo"/);
     assert.match(componente, /datosRegaloDeLaSemana\(\)/);

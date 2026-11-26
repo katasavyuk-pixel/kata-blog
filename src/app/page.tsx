@@ -21,7 +21,8 @@ export const metadata: Metadata = withOpenGraph(
   {
     title: { absolute: TITULO_HOME },
     description: siteConfig.description,
-    alternates: { ...feedAlternates, canonical: "/" },
+    // "/" would resolve to …/blog/ (a 308 under the base path): the zone root itself.
+    alternates: { ...feedAlternates, canonical: siteConfig.url },
   },
   { title: TITULO_HOME_TARJETA },
 );

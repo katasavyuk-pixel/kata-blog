@@ -45,3 +45,16 @@ export function rutaInterna(href: string): string {
   }
   return href;
 }
+
+/**
+ * The same for HTML rendered from markdown (newsletter editions, the build
+ * log, the monthly news): root-relative `href`/`src` written for the old site
+ * get the base path, so they do not escape the zone into ianexora.com's own
+ * routes. Absolute URLs and anchors are left alone.
+ */
+export function htmlConBase(html: string): string {
+  return html.replace(/\b(href|src)="(\/(?!\/)[^"]*)"/g, (_, atributo: string, ruta: string) => {
+    const destino = atributo === "href" ? rutaInterna(ruta) : ruta;
+    return `${atributo}="${conBase(destino)}"`;
+  });
+}

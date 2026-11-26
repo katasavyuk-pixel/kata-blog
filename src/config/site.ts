@@ -385,7 +385,8 @@ export function withOpenGraph(
       ...social.ogExtra,
       title,
       description,
-      url: path,
+      // The home is the base path itself: "/" would resolve to …/blog/, a 308.
+      url: path === "/" ? siteConfig.url : path,
       images,
     } as OpenGraph,
     twitter: { card: "summary_large_image", title, description, images: urls },

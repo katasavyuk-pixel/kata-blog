@@ -128,10 +128,10 @@ export default async function PostPage({
                 {etiquetaIa(post) ? <span className="text-[0.8125rem]">{etiquetaIa(post)}</span> : null}
               </span>
             ) : (
-              <Link href="/sobre-mi" className="inline-flex items-center gap-2.5 font-semibold text-fg hover:text-accent-ink">
+              <a href={siteConfig.author.profileUrl} className="inline-flex items-center gap-2.5 font-semibold text-fg hover:text-accent-ink">
                 <RetratoMini size={32} decorative />
                 {siteConfig.author.name}
-              </Link>
+              </a>
             )}
             <Link href={parent.path} className="font-semibold text-accent-ink hover:underline">
               {FORMATOS[post.formato]}

@@ -119,7 +119,7 @@ describe('qué se indexa', () => {
   });
 
   test('la home declara su propia canónica', () => {
-    assert.match(source('src/app/page.tsx'), /alternates:\s*\{\s*\.\.\.feedAlternates,\s*canonical:\s*"\/"\s*\}/);
+    assert.match(source('src/app/page.tsx'), /alternates:\s*\{\s*\.\.\.feedAlternates,\s*canonical:\s*siteConfig\.url\s*\}/);
   });
 });
 

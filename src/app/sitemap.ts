@@ -61,7 +61,7 @@ const fechasDe = (posts: Post[]) => posts.map(fechaDe);
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url;
   const entry = (ruta: string, lastModified: string | undefined): MetadataRoute.Sitemap[number] =>
-    lastModified ? { url: `${base}${ruta}`, lastModified } : { url: `${base}${ruta}` };
+    lastModified ? { url: ruta === "/" ? base : `${base}${ruta}`, lastModified } : { url: ruta === "/" ? base : `${base}${ruta}` };
 
   // The home shows the newest pieces of every kind, news included: when a
   // daily edition lands on it, its visible content did change.

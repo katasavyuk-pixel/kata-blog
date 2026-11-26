@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { PROYECTOS, TIPOS_ENTRADA, type Proyecto, type TipoEntrada } from "@/config/bitacora";
 import { formatDate } from "@/lib/format";
+import { htmlConBase } from "@/config/base-path";
 
 export type EntradaVista = {
   slug: string;
@@ -78,7 +79,7 @@ export function BitacoraLista({ entradas }: { entradas: EntradaVista[] }) {
                     <h3 className="mt-1 font-display text-[1.375rem] font-medium leading-snug">{entrada.titulo}</h3>
                     <div
                       className="mt-2 max-w-[62ch] text-[1.0625rem] leading-relaxed text-muted [&_a]:text-accent-ink [&_a]:underline"
-                      dangerouslySetInnerHTML={{ __html: entrada.html }}
+                      dangerouslySetInnerHTML={{ __html: htmlConBase(entrada.html) }}
                     />
                     <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-sans text-[0.9375rem]">
                       {externo ? (

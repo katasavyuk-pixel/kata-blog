@@ -50,7 +50,6 @@ const DESCRIPTIONS: Record<string, string> = {
     "lo que construyo, fecha a fecha: lanzamientos, mejoras y arreglos del blog, las skills, las noticias, el canal y MaitreAI, cada uno con el enlace donde se comprueba.",
   "/videos":
     "los vídeos del canal de YouTube: episodios donde monto un sistema de IA de principio a fin, con su artículo cuando lo tiene.",
-  "/sobre-mi": "quién escribe, y por qué lo publica gratis.",
 };
 
 /**
@@ -112,7 +111,7 @@ export function GET() {
 
   const body = `# ${siteConfig.name}
 
-> ${siteConfig.tagline} — blog y newsletter en español sobre IA aplicada a un negocio: cada sistema documentado con sus números y con lo que se rompió, un curso interactivo de IA y las Noticias de IA cada día. Autor: ${siteConfig.author.alternateName}, fundador de NBI (Nexora Business Intelligence).
+> ${siteConfig.tagline} — el blog y la newsletter de NBI (Nexora Business Intelligence), en español, sobre IA aplicada a un negocio: cada sistema documentado con sus números y con lo que se rompió, un curso interactivo de IA y las Noticias de IA cada día. Autor: ${siteConfig.author.name}, fundador de NBI (Nexora Business Intelligence). Parte de ianexora.com (https://ianexora.com/llms.txt).
 
 Este sitio publica en español. Su audiencia es ${siteConfig.audience}: cada sistema documentado incluye qué hace, cómo está montado y qué se rompió. Las afirmaciones son verificables por diseño.
 
@@ -143,7 +142,6 @@ ${ACTIVOS.filter((item) => !esSkillDelPaquete(item)).map((item) => `- [${item.ti
 }## Identidad
 
 ${[
-  line("/sobre-mi"),
   `- Autor: ${siteConfig.author.name}, es decir, ${siteConfig.author.alternateName}, fundador de NBI (Nexora Business Intelligence). Su página en ianexora.com: ${siteConfig.author.profileUrl}`,
   `- Contacto: ${siteConfig.contactEmail}`,
   `- RSS: ${url}${feeds.editorial.href}`,
