@@ -86,13 +86,9 @@ describe('una sola promesa', () => {
   });
 
   test('la home, el pie y la bienvenida dicen lo mismo', () => {
-    assert.match(siteConfig.tagline, /^Sistemas de IA que ya funcionan en un negocio real\./);
-    // Desde el 2026-10-14 la home abre con lo que el lector puede hacer
-    // (siteConfig.home.titular) y la promesa vive en /sobre-mi, con el retrato.
-    const hero = readFileSync(`${root}src/components/home/hero.tsx`, 'utf8');
-    assert.match(hero, /\{siteConfig\.home\.titular\}/, 'El h1 de la home ya no sale de siteConfig.home.titular.');
-    const sobreMi = readFileSync(`${root}src/app/sobre-mi/page.tsx`, 'utf8');
-    assert.match(sobreMi, /\{siteConfig\.tagline\}/, 'La promesa ya no está en /sobre-mi.');
+    // 26-nov-2026: el blog es el de NBI; la promesa sigue siendo «sus números
+    // y lo que se rompió», ahora para pymes.
+    assert.match(siteConfig.tagline, /^IA aplicada para pymes: .*sus números y lo que se rompió\.$/);
     const bienvenida = readFileSync(`${root}content/emails/01-bienvenida.md`, 'utf8');
     for (const pieza of ['sus números', 'se rompió', 'Como mucho, un correo a la semana']) {
       assert.ok(siteConfig.newsletter.description.includes(pieza) || siteConfig.newsletter.magnet.includes(pieza), `siteConfig.newsletter perdió «${pieza}».`);

@@ -24,6 +24,17 @@ export const DESTINO = `${NBI_ORIGIN}/blog`;
 type Regla = { source: string; destination: string };
 
 /**
+ * The three personal posts that leave the NBI blog (26-nov-2026, Kata's §10):
+ * they live on in the design/blog-personal-v1 tag. A 301 to the closest page
+ * rather than a 410: they have links and the reader still gets an answer.
+ */
+export const POSTS_RETIRADOS: readonly Regla[] = [
+  { source: "/por-que-hago-esto", destination: `${NBI_ORIGIN}/sobre-katalin-savyuk` },
+  { source: "/lo-que-me-cuesta-avanzar", destination: `${NBI_ORIGIN}/sobre-katalin-savyuk` },
+  { source: "/bienvenida", destination: DESTINO },
+];
+
+/**
  * Old path → new absolute URL, most specific first (Next takes the first
  * match). The legacy redirects of next.config.ts are resolved to their final
  * destination here so an old short link is still one hop.
@@ -33,6 +44,7 @@ export const REGLAS_HOST_ANTIGUO: readonly Regla[] = [
   // Old archive filter «Radar» and the old tag → the news.
   { source: "/blog", destination: `${DESTINO}/lecturas` },
   { source: "/blog/tag/radar", destination: `${DESTINO}/noticias` },
+  ...POSTS_RETIRADOS.map((r) => ({ source: `/blog${r.source}`, destination: r.destination })),
   // The article permalink drops its /blog segment: /blog/<x> → /blog/<x>.
   { source: "/blog/:path+", destination: `${DESTINO}/:path+` },
   { source: "/sobre-mi", destination: `${NBI_ORIGIN}/sobre-katalin-savyuk` },

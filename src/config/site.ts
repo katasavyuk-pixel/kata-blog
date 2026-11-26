@@ -48,7 +48,7 @@ export const siteConfig = {
   // costs — counts and failure tallies are numbers too, and every one needs a
   // dated source.
   tagline:
-    "Sistemas de IA que ya funcionan en un negocio real. Con sus números y con lo que se rompió.",
+    "IA aplicada para pymes: guías, sistemas y recursos con sus números y lo que se rompió.",
   /** Mono label above the home headline. Email 2 already calls the blog this. */
   kicker: "Blog de Nexora Business Intelligence",
   /**
@@ -70,7 +70,7 @@ export const siteConfig = {
   // "mi negocio", never "una empresa": the voice is one person, first person
   // singular.
   description:
-    "Documento cada sistema de IA que pongo en marcha en mi negocio: qué hace, sus números y qué falló. Para quien dirige un negocio y quiere aplicar IA.",
+    "El blog de NBI (Nexora Business Intelligence): guías, sistemas y recursos de IA aplicada para pymes, con sus números y lo que falló. Escribe Katalin Savyuk, fundador de NBI.",
   /** Primary content language. */
   locale: "es",
   /**
@@ -95,7 +95,8 @@ export const siteConfig = {
   audience: "quien dirige un negocio y quiere aplicar IA sin fiarse de una demo",
   author: {
     /** §1 TU_NOMBRE */
-    name: "Kata Savyuk",
+    // 26-nov-2026: the NBI blog signs with the name ianexora.com uses.
+    name: "Katalin Savyuk",
     /** How the home introduces the author: "Soy Kata." */
     firstName: "Kata",
     /**
@@ -107,6 +108,8 @@ export const siteConfig = {
      * and page never disagree.
      */
     alternateName: "Katalin (Kata) Savyuk",
+    /** The author box of every article on the NBI blog (26-nov-2026, Kata). */
+    firma: "Katalin Savyuk, fundador de Nexora Business Intelligence (NBI)",
     /** Where that name has its own page: the reciprocal of ianexora.com's side. */
     profileUrl: "https://ianexora.com/sobre-katalin-savyuk",
     profileLabel: "Más en ianexora.com",
@@ -137,6 +140,8 @@ export const siteConfig = {
   ] as SocialLink[],
   /** Newsletter copy: the same promise as the tagline, as a delivery. */
   newsletter: {
+    /** The newsletter's name (26-nov-2026): what the emails call it. */
+    nombre: "Newsletter de NBI",
     title: "Lo importante de la semana, en tu correo",
     description:
       "Te escribo con lo importante de la semana: un sistema que he puesto en marcha, con sus números y lo que se rompió, o algo que ha pasado en la IA y qué te cambia.",
@@ -175,14 +180,14 @@ export type SiteConfig = typeof siteConfig;
  * glossary and NBI live in the footer; NBI is never in the header.
  */
 export const navLinks = [
-  { label: "Noticias", href: "/noticias" },
+  // 26-nov-2026 (Kata): the NBI blog drops the magazine menu (Noticias,
+  // Bitácora, Sobre mí). NBI's own menu is the header; this is the quiet row
+  // of the blog's sections under it. «Recursos de NBI» renaming of the
+  // marketplace and tools is the post-cutover phase.
+  { label: "Artículos", href: "/lecturas" },
   { label: "Marketplace", href: "/marketplace" },
   { label: "Herramientas", href: "/herramientas" },
-  { label: "Lecturas", href: "/lecturas" },
-  { label: "Bitácora", href: "/bitacora" },
-  // The author page is ianexora.com's since the move (26-nov-2026); /sobre-mi
-  // redirects there (next.config.ts).
-  { label: "Sobre Katalin", href: "https://ianexora.com/sobre-katalin-savyuk" },
+  { label: "Newsletter", href: "/newsletter" },
 ] as const;
 
 /** Secondary destinations, in footer order. Also read by /llms.txt. */
@@ -252,7 +257,6 @@ const OWN_SIGNUP_FORM_ROUTES: readonly string[] = [
   "/newsletter",
   "/herramientas",
   "/herramientas/ficha-para-tu-ia",
-  "/sobre-mi",
   "/empieza-aqui",
   "/marketplace",
 ];
@@ -278,7 +282,7 @@ export function hasOwnSignupForm(pathname: string): boolean {
  * at the other. Now both sites emit this same node: the @id ianexora.com already
  * published, the name its pages use, «Kata Savyuk» as `alternateName`, and one
  * `sameAs`. ianexora.com defines it (lib/seo/schema.ts there): change the two
- * together. The visible name here is «Kata Savyuk» (siteConfig.author).
+ * together. The visible name here is «Katalin Savyuk» (siteConfig.author, since 26-nov-2026).
  */
 export const PERSONA = {
   id: "https://ianexora.com/sobre-katalin-savyuk#person",
@@ -290,13 +294,13 @@ export const PERSONA = {
   image: "https://ianexora.com/images/katalin-donostia.jpg",
   jobTitle: "Fundador de NBI",
   description:
-    "Katalin (Kata) Savyuk es el fundador de NBI (Nexora Business Intelligence) y escribe el blog kata.ianexora.com.",
+    "Katalin (Kata) Savyuk es el fundador de NBI (Nexora Business Intelligence) y escribe el Blog de Nexora Business Intelligence (ianexora.com/blog).",
   worksFor: "https://ianexora.com/#organization",
   /**
    * The profiles the footer links, and this blog — written out, not
    * `siteConfig.url`, which a preview deploy overrides. The same list on ianexora.com.
    */
-  sameAs: [...siteConfig.social.map((link) => link.href), "https://kata.ianexora.com"],
+  sameAs: [...siteConfig.social.map((link) => link.href), "https://ianexora.com/blog"],
 } as const;
 
 /**
@@ -329,8 +333,8 @@ export const ROBOTS_GOOGLE = {
  * Kept within 60 characters: Kata chose the short versions on 17-oct, since
  * Google cut the brief's longer ones.
  */
-export const TITULO_HOME = `Sistemas de IA en un negocio real · ${siteConfig.name}`;
-export const TITULO_HOME_TARJETA = `Sistemas de IA en un negocio real — ${siteConfig.name}`;
+export const TITULO_HOME = `IA aplicada para pymes · ${siteConfig.name}`;
+export const TITULO_HOME_TARJETA = `IA aplicada para pymes — ${siteConfig.name}`;
 
 /**
  * The card a shared link shows when the page has no picture of its own:

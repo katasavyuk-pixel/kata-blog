@@ -41,7 +41,7 @@ describe('og:url de los listados', () => {
     assert.match(String((m.openGraph as { title: string }).title), /^Archivo · /);
   });
   test('cada listado con canónica propia declara su openGraph con esa misma ruta', () => {
-    for (const ruta of ['lecturas', 'noticias', 'sistemas', 'marketplace', 'guias', 'reflexiones', 'herramientas', 'sobre-mi', 'trabaja-con-nbi', 'empieza-aqui', 'newsletter', 'glosario']) {
+    for (const ruta of ['lecturas', 'noticias', 'sistemas', 'marketplace', 'guias', 'reflexiones', 'herramientas', 'trabaja-con-nbi', 'empieza-aqui', 'newsletter', 'glosario']) {
       const f = `src/app/${ruta}/page.tsx`;
       assert.match(source(f), new RegExp(`withOpenGraph\\("/${ruta}"`), `${f} hereda el og:url de la raíz.`);
     }

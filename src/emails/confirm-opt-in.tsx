@@ -48,7 +48,7 @@ export function ConfirmOptInEmail({
             Confirma tu suscripción
           </Heading>
           <Text style={{ lineHeight: "1.6", margin: "0 0 12px" }}>
-            Has solicitado suscribirte a la newsletter de <strong>{brand}</strong> desde{" "}
+            Has solicitado suscribirte a la <strong>{brand}</strong> desde{" "}
             {siteConfig.domain}. Antes de enviarte nada, necesito comprobar que esta
             dirección de correo es tuya.
           </Text>
@@ -107,9 +107,9 @@ export function ConfirmOptInEmail({
  */
 export function confirmOptInText(confirmUrl: string, brand: string): string {
   return [
-    `Confirma tu suscripción a ${brand}`,
+    `Confirma tu suscripción a la ${brand}`,
     "",
-    `Has solicitado suscribirte a la newsletter de ${brand} desde ${siteConfig.domain}.`,
+    `Has solicitado suscribirte a la ${brand} desde ${siteConfig.domain}.`,
     "Antes de enviarte nada, necesito comprobar que esta dirección de correo es tuya.",
     "",
     "Abre esta dirección para confirmar tu email y completar el alta:",

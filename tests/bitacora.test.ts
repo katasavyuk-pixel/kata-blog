@@ -49,8 +49,8 @@ describe('la bitácora', () => {
     assert.ok(entradasEntre('2000-01-01', dia).some((e) => e.slug === entradasBitacora[0].slug));
   });
 
-  test('está en la cabecera, antes de «Sobre Katalin»', () => {
+  test('sale del menú del blog de NBI (26-nov-2026), pero la página sigue', () => {
     const labels: string[] = navLinks.map((l) => l.label);
-    assert.equal(labels.indexOf('Bitácora') + 1, labels.indexOf('Sobre Katalin'));
+    assert.equal(labels.indexOf('Bitácora'), -1);
   });
 });

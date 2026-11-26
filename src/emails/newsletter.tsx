@@ -97,7 +97,7 @@ export function NewsletterEmail({
                 <Row>
                   <Column style={{ padding: "16px 32px 20px" }}>
                     <Text style={{ margin: 0, fontFamily: f.sans, fontSize: "12px", lineHeight: "1.6", color: c.textMuted }}>
-                      Recibes este correo porque te suscribiste a {brand}.{" "}
+                      Recibes este correo porque te suscribiste a la {brand}.{" "}
                       <Link href={unsubscribeUrl} style={{ color: c.accent, textDecoration: "underline" }}>
                         Cancelar suscripción
                       </Link>

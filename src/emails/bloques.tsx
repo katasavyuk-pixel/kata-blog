@@ -261,7 +261,7 @@ export function Pregunta({ texto: pregunta }: { texto: string }) {
             <Text style={{ margin: "14px 0 0", fontFamily: f.sans, fontSize: "16px", lineHeight: "1.6", color: c.textMain }}>
               Lo leo yo.
               <br />
-              Kata
+              Katalin Savyuk, fundador de NBI
             </Text>
           </Column>
         </Row>

@@ -49,13 +49,19 @@ describe('identidad del autor', () => {
     assert.match(source('src/app/[slug]/page.tsx'), /articleJsonLd\(post\),\s*personJsonLd\(\),/);
   });
 
-  test('lo que declara el schema se ve: el pie y «El viaje» pintan la misma línea y el mismo enlace', () => {
-    for (const file of ['src/components/layout/footer.tsx', 'src/app/sobre-mi/page.tsx']) {
+  test('lo que declara el schema se ve: el pie pinta la línea y el enlace, y la caja de autor la firma de NBI', () => {
+    // 26-nov-2026: /sobre-mi se va (301 a ianexora.com/sobre-katalin-savyuk).
+    for (const file of ['src/components/layout/footer.tsx']) {
       assert.match(source(file), /siteConfig\.author\.byline/, `${file} ya no pinta la línea de identidad.`);
       assert.match(source(file), /siteConfig\.author\.profileUrl/, `${file} ya no enlaza a la página de ianexora.com.`);
     }
     assert.ok(siteConfig.author.byline.includes(siteConfig.author.alternateName));
-    assert.equal(siteConfig.author.name, 'Kata Savyuk');
+    assert.equal(siteConfig.author.name, 'Katalin Savyuk');
+    const caja = source('src/components/blog/author-bio.tsx');
+    assert.match(caja, /siteConfig\.author\.firma/);
+    assert.match(caja, /siteConfig\.author\.profileUrl/);
+    assert.equal(siteConfig.author.firma, 'Katalin Savyuk, fundador de Nexora Business Intelligence (NBI)');
+    assert.equal(siteConfig.author.profileUrl, 'https://ianexora.com/sobre-katalin-savyuk');
   });
 
   test('la línea dice «fundador de NBI (Nexora Business Intelligence)», sin forma jurídica ni plural de empresa', () => {
@@ -87,7 +93,6 @@ describe('identidad del autor', () => {
       // 9-nov-2026: revisión del glosario / RAG (fila 7).
       ['content/posts/que-es-rag.mdx', '/guias/que-es-un-agente-de-ia', '2026-11-24'],
       ['content/posts/medir-un-sistema.mdx', '/guias/como-medir-si-una-automatizacion-funciona', '2026-10-11'],
-      ['content/posts/por-que-hago-esto.mdx', '/consultoria-ia-gipuzkoa', '2026-11-24'],
       ['content/posts/antes-del-tms-tu-inbox.mdx', '/consultoria-ia-gipuzkoa', '2026-11-24'],
       ['content/posts/que-hace-y-que-no-hace-un-asistente-de-whatsapp-en-una-inmobiliaria.mdx', '/inmobiliarias', '2026-11-13'],
     ];

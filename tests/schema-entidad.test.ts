@@ -30,7 +30,7 @@ describe('la persona', () => {
 
   test('sameAs: los perfiles del pie y el blog, cada uno con una sola forma', () => {
     const sameAs = person.sameAs as string[];
-    assert.deepEqual(sameAs, [...siteConfig.social.map((l) => l.href), 'https://kata.ianexora.com']);
+    assert.deepEqual(sameAs, [...siteConfig.social.map((l) => l.href), 'https://ianexora.com/blog']);
     for (const url of sameAs) assert.ok(!sameAs.includes(url.endsWith('/') ? url.slice(0, -1) : `${url}/`), `${url} sale con y sin barra.`);
     assert.ok(sameAs.includes('https://www.linkedin.com/in/katalin-savyuk-b024b7408'), 'El LinkedIn va sin barra final, como en ianexora.com.');
   });
@@ -104,7 +104,7 @@ describe('los listados y las páginas sueltas', () => {
       'src/app/glosario/page.tsx', 'src/app/marketplace/page.tsx', 'src/app/bitacora/page.tsx', 'src/app/videos/page.tsx',
       'src/app/herramientas/page.tsx', 'src/app/trabaja-con-nbi/page.tsx', 'src/app/privacidad/page.tsx',
       'src/app/cookies/page.tsx', 'src/app/herramientas/no-me-da-la-vida/page.tsx',
-      'src/app/herramientas/ficha-para-tu-ia/page.tsx', 'src/app/sobre-mi/page.tsx',
+      'src/app/herramientas/ficha-para-tu-ia/page.tsx',
       // /guias y /reflexiones, a través del componente que las pinta.
       'src/components/content/estante-pagina.tsx',
     ];

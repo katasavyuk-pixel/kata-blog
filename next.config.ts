@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import { BASE_PATH } from "./src/config/base-path";
-import { redireccionesDeHostsAntiguos } from "./src/config/migracion";
+import { POSTS_RETIRADOS, redireccionesDeHostsAntiguos } from "./src/config/migracion";
 
 const nextConfig: NextConfig = {
   // 26-nov-2026: the blog is a zone of ianexora.com, under /blog. NBI-WEB
@@ -27,6 +27,9 @@ const nextConfig: NextConfig = {
       // The old permalinks, reached through this zone: /blog/blog/<slug> was
       // never public, but a link written for the old site ("/blog/<slug>")
       // and passed through <Link> lands there. Same for the old archive.
+      // The three personal posts that left on 26-nov-2026 (src/config/migracion.ts).
+      ...POSTS_RETIRADOS.map((r) => ({ ...r, statusCode: 301 as const })),
+      ...POSTS_RETIRADOS.map((r) => ({ ...r, source: `/blog${r.source}`, statusCode: 301 as const })),
       { source: "/blog", destination: "/lecturas", statusCode: 301 },
       { source: "/blog/:path+", destination: "/:path+", statusCode: 301 },
       // The author page is ianexora.com's, the one entity for both sites.

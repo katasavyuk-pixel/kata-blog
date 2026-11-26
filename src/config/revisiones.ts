@@ -12,10 +12,9 @@
 export const REVISADO = {
   "/herramientas": "2026-10-16",
   "/videos": "2026-10-15",
-  "/sobre-mi": "2026-10-16",
   "/trabaja-con-nbi": "2026-10-11",
   "/herramientas/no-me-da-la-vida": "2026-10-14",
   "/herramientas/ficha-para-tu-ia": "2026-10-16",
-  "/privacidad": "2026-10-13",
-  "/cookies": "2026-10-15",
+  "/privacidad": "2026-11-26",
+  "/cookies": "2026-11-26",
 } as const satisfies Record<string, string>;

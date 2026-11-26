@@ -81,7 +81,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/herramientas", REVISADO["/herramientas"]),
     entry("/videos", REVISADO["/videos"]),
     entry("/bitacora", newestOf(entradasBitacora.map((e) => e.fecha))),
-    entry("/sobre-mi", REVISADO["/sobre-mi"]),
     entry("/trabaja-con-nbi", REVISADO["/trabaja-con-nbi"]),
     entry("/herramientas/no-me-da-la-vida", REVISADO["/herramientas/no-me-da-la-vida"]),
     entry(REGALO.ficha.href, REVISADO["/herramientas/ficha-para-tu-ia"]),

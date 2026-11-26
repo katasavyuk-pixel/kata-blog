@@ -20,7 +20,7 @@ export function GET() {
     id: `${base}/bitacora`,
     link: `${base}/bitacora`,
     language: siteConfig.locale,
-    copyright: `© ${new Date().getFullYear()} ${siteConfig.author.name}`,
+    copyright: `© ${new Date().getFullYear()} NBI · Nexora Business Intelligence`,
     feedLinks: { rss2: `${base}${feeds.bitacora.href}` },
     author: { name: siteConfig.author.name, link: base },
   });

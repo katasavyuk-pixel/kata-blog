@@ -65,7 +65,7 @@ function mensajeDeEdicion(issue: NewsletterIssue, to: string, unsubscribeUrl: st
     subject: asunto,
     react: EdicionEmail({
       edicion: issue,
-      brand: siteConfig.name,
+      brand: siteConfig.newsletter.nombre,
       preview: issue.preheader,
       siteUrl: siteConfig.url,
       unsubscribeUrl,

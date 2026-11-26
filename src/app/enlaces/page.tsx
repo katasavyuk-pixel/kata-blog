@@ -11,7 +11,7 @@ export const revalidate = 900;
 export const metadata: Metadata = {
   title: "Enlaces",
   description:
-    "Vídeos, sistemas de IA, recursos y formas de trabajar con Kata Savyuk y NBI.",
+    "Vídeos, sistemas de IA, recursos y formas de trabajar con NBI (Nexora Business Intelligence).",
   robots: { index: false, follow: false },
 };
 
@@ -211,7 +211,7 @@ export default async function EnlacesPage() {
             href="/"
             className="font-sans text-[0.8125rem] text-muted transition-colors hover:text-fg"
           >
-            kata.ianexora.com
+            ianexora.com/blog
           </Link>
         </footer>
       </div>

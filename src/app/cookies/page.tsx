@@ -8,7 +8,7 @@ import { feedAlternates, siteConfig, withOpenGraph } from "@/config/site";
 export const metadata: Metadata = withOpenGraph("/cookies", {
   title: "Política de cookies",
   description:
-    "kata.ianexora.com no usa cookies de medición ni de publicidad: qué guarda tu navegador, solo cuando lo pides, y qué pasa al reproducir un vídeo.",
+    "El Blog de Nexora Business Intelligence (ianexora.com/blog) no usa cookies de medición ni de publicidad: qué guarda tu navegador, solo cuando lo pides, y qué pasa al reproducir un vídeo.",
   alternates: { ...feedAlternates, canonical: "/cookies" },
 });
 

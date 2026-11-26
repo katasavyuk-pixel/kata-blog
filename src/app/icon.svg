@@ -1,17 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
-  <title id="title">Kata Savyuk</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <linearGradient id="edge" x1="8" y1="56" x2="56" y2="8" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#d7212a" />
-      <stop offset="1" stop-color="#f0a35b" />
-    </linearGradient>
-    <linearGradient id="letter" x1="18" y1="46" x2="46" y2="18" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#f4f0ea" />
-      <stop offset="1" stop-color="#c7ccd2" />
-    </linearGradient>
+    <radialGradient id="dotGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0%" stop-color="#67e8ff" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="fav-nm" maskUnits="userSpaceOnUse" x="-10" y="-25" width="80" height="115">
+      <rect x="0" y="0" width="12" height="64" rx="2" fill="white"/>
+      <polygon points="12,0 24,0 40,64 28,64" fill="white"/>
+      <rect x="40" y="0" width="12" height="64" rx="2" fill="white"/>
+      <line x1="6" y1="-20" x2="45" y2="84" stroke="black" stroke-width="8"/>
+      <line x1="19" y1="-20" x2="58" y2="84" stroke="black" stroke-width="8"/>
+    </mask>
+    <mask id="fav-bm" maskUnits="userSpaceOnUse" x="52" y="-25" width="90" height="115">
+      <path fill-rule="evenodd" fill="white" d="M62,0 H95 Q113,0 113,14 Q113,24 102,29 Q120,32 120,46 Q120,64 95,64 H62 Z M74,8 V24 H95 Q102,24 102,17 Q102,8 95,8 Z M74,34 V56 H95 Q107,56 107,45 Q107,34 95,34 Z"/>
+      <line x1="70" y1="-20" x2="109" y2="84" stroke="black" stroke-width="8"/>
+      <line x1="83" y1="-20" x2="122" y2="84" stroke="black" stroke-width="8"/>
+    </mask>
   </defs>
-  <rect width="64" height="64" rx="16" fill="#0a0b0d" />
-  <rect x="4" y="4" width="56" height="56" rx="14" fill="none" stroke="url(#edge)" stroke-width="2" />
-  <text x="32" y="42" fill="url(#letter)" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" letter-spacing="-2" text-anchor="middle">KI</text>
-  <circle cx="51" cy="13" r="3" fill="#d7212a" />
+
+  <rect width="64" height="64" rx="14" fill="#ffffff"/>
+  <rect x=".75" y=".75" width="62.5" height="62.5" rx="13.5" fill="none" stroke="rgba(26,36,64,.10)" stroke-width="1"/>
+
+  <g transform="translate(4, 18) scale(0.36)" fill="#1a2440">
+    <rect mask="url(#fav-nm)" x="0" y="0" width="52" height="64"/>
+    <rect mask="url(#fav-bm)" x="62" y="0" width="60" height="64"/>
+    <rect x="126" y="0" width="10" height="44" rx="3"/>
+  </g>
+
+  <circle cx="53" cy="50" r="6" fill="url(#dotGlow)" opacity=".7"/>
+  <circle cx="53" cy="50" r="3.6" fill="#00d4ff"/>
 </svg>
