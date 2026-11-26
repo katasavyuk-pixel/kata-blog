@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { BASE_PATH } from "@/config/base-path";
 import "./globals.css";
 import "@/components/layout/nbi-chrome.css";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { SiteChrome } from "@/components/layout/site-chrome";
 import { ROBOTS_GOOGLE, TITULO_HOME, feedAlternates, siteConfig } from "@/config/site";
 import { SCRIPT_LENTE } from "@/lib/impacto";
+import { propsAnalytics } from "@/config/analytics";
 
 // The type of ianexora.com (26-nov-2026: the blog takes NBI's identity).
 // Instrument Sans for everything (headlines, text, interface) and Instrument
@@ -84,8 +86,9 @@ export default function RootLayout({
         <MotionProvider>
           <SiteChrome>{children}</SiteChrome>
         </MotionProvider>
-        {/* Cookieless, no-PII page analytics. The Vercel host serves its own script. */}
-        {process.env.VERCEL === "1" ? <Analytics /> : null}
+        {/* Cookieless, no-PII page analytics. Script and events go through
+            /blog/<hash>/… so they also work on ianexora.com (src/config/analytics.ts). */}
+        {process.env.VERCEL === "1" ? <Analytics {...propsAnalytics(BASE_PATH)} /> : null}
       </body>
     </html>
   );
