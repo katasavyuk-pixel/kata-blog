@@ -7,9 +7,9 @@
  * It complements scripts/seo-check.ts (which reads the build and knows the page
  * registry) with what can only be seen over HTTP and across the two domains.
  *
- *   node scripts/seo/check.mjs --origin https://kata.ianexora.com
- *   node scripts/seo/check.mjs --local http://localhost:3000 --site https://kata.ianexora.com
- *   node scripts/seo/check.mjs --origin https://kata.ianexora.com --compare https://ianexora.com
+ *   node scripts/seo/check.mjs --origin https://ianexora.com/blog
+ *   node scripts/seo/check.mjs --local http://localhost:3000/blog --site https://ianexora.com/blog
+ *   node scripts/seo/check.mjs --origin https://ianexora.com/blog --compare https://ianexora.com
  *
  * Reads the sitemap, fetches every URL and checks what the brief of 17-oct-2026 asks for:
  *   - lastmod that is the build instant (same timestamp with time on several URLs, within 48 h)

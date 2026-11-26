@@ -12,7 +12,7 @@
  *
  * Usage:
  *   node scripts/geo/audit-ssr.mjs                      # against localhost:3100
- *   node scripts/geo/audit-ssr.mjs https://kata.ianexora.com
+ *   node scripts/geo/audit-ssr.mjs https://ianexora.com/blog
  */
 
 const base = (process.argv[2] ?? "http://localhost:3100").replace(/\/$/, "");
@@ -25,24 +25,26 @@ const base = (process.argv[2] ?? "http://localhost:3100").replace(/\/$/, "");
  * checking it proves nothing.
  */
 const PAGES = [
-  { label: "home", path: "/", needs: ["Sistemas de IA que ya funcionan en un negocio pequeño", "Empieza por «Clasificar solicitudes entrantes»: suma 19 de 25."], minWords: 250 },
-  { label: "artículo (lección)", path: "/blog/que-es-un-token", needs: ["no ve letras", "ventana de contexto"], minWords: 300 },
-  { label: "artículo (calculadora)", path: "/blog/cuanto-cuesta-la-ia", needs: ["El modelo manda", "La salida pesa"], minWords: 200 },
-  { label: "artículo (scrollytelling)", path: "/blog/vida-de-un-prompt", needs: ["No hay más misterio"], minWords: 120 },
+  // 26-nov-2026: the home of the NBI blog (ianexora.com/blog). Articles live at
+  // /<slug> inside the zone; the old /blog/<slug> form only redirects.
+  { label: "home", path: "/", needs: ["IA aplicada para pymes, con sus números.", "Artículos útiles"], minWords: 150 },
+  { label: "artículo (lección)", path: "/que-es-un-token", needs: ["no ve letras", "ventana de contexto"], minWords: 300 },
+  { label: "artículo (calculadora)", path: "/cuanto-cuesta-la-ia", needs: ["El modelo manda", "La salida pesa"], minWords: 200 },
+  { label: "artículo (scrollytelling)", path: "/vida-de-un-prompt", needs: ["No hay más misterio"], minWords: 120 },
   // Phase 4 pieces: each phrase comes from INSIDE the piece's default
   // server-rendered state (the «Ejemplo» result, the formula, the revealed
   // list), so a piece that only renders after hydration fails here.
-  { label: "pieza (puntuador)", path: "/blog/que-proceso-automatizar-primero", needs: ["Empieza por «Clasificar solicitudes entrantes»: suma 19 de 25.", "Orden del ejemplo", "Coste del error + Revisión"], minWords: 800 },
-  { label: "pieza (calculadora)", path: "/blog/antes-del-tms-tu-inbox", needs: ["660 × 8 ÷ 60 × 20 € = 1.760 €", "Referencia del cliente o número de pedido", "Origen del dato: quién lo dijo, en qué correo y cuándo", "Correo simulado", "Dato validado"], minWords: 1200 },
-  { label: "pieza (lista)", path: "/blog/maitreai-geo", needs: ["2 de 9", "Siguiente: la 1, «Cada URL pública responde 200 y no redirige»."], minWords: 600 },
-  { label: "edición del Radar", path: "/blog/radar-2026-08-04", needs: ["Nota editorial"], minWords: 400 },
-  { label: "archivo", path: "/blog", needs: [], minWords: 100 },
+  { label: "pieza (puntuador)", path: "/que-proceso-automatizar-primero", needs: ["Empieza por «Clasificar solicitudes entrantes»: suma 19 de 25.", "Orden del ejemplo", "Coste del error + Revisión"], minWords: 800 },
+  { label: "pieza (calculadora)", path: "/antes-del-tms-tu-inbox", needs: ["660 × 8 ÷ 60 × 20 € = 1.760 €", "Referencia del cliente o número de pedido", "Origen del dato: quién lo dijo, en qué correo y cuándo", "Correo simulado", "Dato validado"], minWords: 1200 },
+  { label: "pieza (lista)", path: "/maitreai-geo", needs: ["2 de 9", "Siguiente: la 1, «Cada URL pública responde 200 y no redirige»."], minWords: 600 },
+  // Automated news are `noindex, follow` until reviewed (esIndexable): expected.
+  { label: "edición del Radar", path: "/radar-2026-08-04", needs: ["Nota editorial"], minWords: 400, noindex: true },
+  { label: "archivo", path: "/lecturas", needs: [], minWords: 100 },
   { label: "noticias", path: "/noticias", needs: [], minWords: 150 },
   { label: "curso", path: "/empieza-aqui", needs: [], minWords: 150 },
   { label: "sistemas", path: "/sistemas", needs: [], minWords: 200 },
   { label: "herramientas", path: "/herramientas", needs: ["Herramientas que puedes usar hoy"], minWords: 150 },
   { label: "glosario (término)", path: "/glosario/token", needs: [], minWords: 40 },
-  { label: "sobre mí", path: "/sobre-mi", needs: [], minWords: 150 },
 ];
 
 /** Crawlers that must not be blocked. Reported, never changed by this script. */
@@ -131,7 +133,7 @@ for (const page of PAGES) {
   if (thin) flags.push(`solo ${words} palabras (< ${page.minWords})`);
   if (missing.length) flags.push(`falta en el HTML: ${missing.map((m) => `"${m}"`).join(", ")}`);
   if (invalid) flags.push(`${invalid} JSON-LD no parseable`);
-  if (noindex) flags.push("noindex");
+  if (noindex && !page.noindex) flags.push("noindex");
   if (flags.length) problems++;
 
   console.log(
