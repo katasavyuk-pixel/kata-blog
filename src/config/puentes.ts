@@ -62,6 +62,7 @@ export const PUENTE_POR_POST: Record<string, GuiaNbi> = {
   "responder-resenas-google-con-ia": "agente",
   "politica-de-uso-de-ia-en-la-empresa": "agente",
   "te-recomienda-la-ia": "medir",
+  "acta-de-reunion-con-ia": "mapa",
 };
 
 /** The guide's URL with the blog's UTM convention (`utm_medium=puente`). */

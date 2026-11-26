@@ -119,3 +119,24 @@ on conflict (slug) do update set
   file_path      = excluded.file_path,
   requires_email = excluded.requires_email,
   published      = excluded.published;
+
+-- ---------------------------------------------------------------------------
+-- Kit «Acta de reunión con IA»
+-- Source: lead-magnets/kit-acta-reunion-ia/
+-- Upload: kit-acta-reunion-ia.zip → lead-magnets/kit-acta-reunion-ia/
+-- ---------------------------------------------------------------------------
+insert into public.resources (slug, title, description, file_path, requires_email, published)
+values (
+  'kit-acta-reunion-ia',
+  'Kit «Acta de reunión con IA»',
+  'El sistema en cuatro pasos para que el acta salga el mismo día sin acuerdos inventados: guía PDF con los guiones de aviso y ronda de cierre, instrucciones para la IA, plantilla del acta en Word, registro de acuerdos en Excel y skill para Claude.',
+  'kit-acta-reunion-ia/kit-acta-reunion-ia.zip',
+  true,
+  true
+)
+on conflict (slug) do update set
+  title          = excluded.title,
+  description    = excluded.description,
+  file_path      = excluded.file_path,
+  requires_email = excluded.requires_email,
+  published      = excluded.published;
