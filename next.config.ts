@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import { BASE_PATH } from "./src/config/base-path";
 import { POSTS_RETIRADOS, redireccionesDeHostsAntiguos } from "./src/config/migracion";
+import { rewritesAnalytics } from "./src/config/analytics";
 
 const nextConfig: NextConfig = {
   // 26-nov-2026: the blog is a zone of ianexora.com, under /blog. NBI-WEB
@@ -18,6 +19,12 @@ const nextConfig: NextConfig = {
   },
   // <ViewTransition> works in the App Router with no configuration since Next 16.3;
   // experimental.viewTransition no longer exists.
+  // Vercel Web Analytics under the base path: ianexora.com only forwards
+  // /blog/* here, so the script and its events go through /blog/<hash>/… and
+  // are taken back to the root path the Vercel host serves (src/config/analytics.ts).
+  async rewrites() {
+    return { beforeFiles: rewritesAnalytics(BASE_PATH), afterFiles: [], fallback: [] };
+  },
   async redirects() {
     return [
       // The old hosts (kata.ianexora.com, blog.ianexora.com): one 301 to the
