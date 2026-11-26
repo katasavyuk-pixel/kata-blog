@@ -18,7 +18,9 @@
 
 set -uo pipefail
 
-BASE="https://kata.ianexora.com"
+# Desde el 26-nov-2026 el blog vive en ianexora.com/blog. Un POST al host viejo
+# recibe un 301 y curl no lo repite como POST, así que la base es la nueva.
+BASE="${VERIFICAR_EMBUDO_BASE:-https://ianexora.com/blog}"
 CORREO="${1:-${VERIFICAR_EMBUDO_CORREO:?Pasa el correo de prueba como argumento o en VERIFICAR_EMBUDO_CORREO}}"
 RECURSO="25-datos-emails-logisticos"
 
@@ -139,7 +141,7 @@ Si el aviso amarillo de arriba ha salido, es exactamente eso.
 
 Para probar la descarga de verdad hace falta un alta real:
 
-  curl -X POST https://kata.ianexora.com/api/subscribe \
+  curl -X POST https://ianexora.com/blog/api/subscribe \
     -H 'Content-Type: application/json' \
     -d '{"email":"TU+e2e@gmail.com","resource":"25-datos-emails-logisticos",
          "consent":true,"signupPath":"/herramientas","source":"recursos"}'
