@@ -1,39 +1,72 @@
 /**
  * Vercel Web Analytics inside the /blog zone (26-nov-2026).
  *
- * The Vercel host serves the analytics script and its event endpoint at the
- * ROOT of the domain: `/<hash>/script.js`, `/<hash>/view`, `/<hash>/event`
- * (`<hash>` is `NEXT_PUBLIC_VERCEL_OBSERVABILITY_BASEPATH`, set by Vercel at
- * build time; `/_vercel/insights` when it is not set). On ianexora.com the
- * root belongs to NBI-WEB, which only forwards `/blog/*` to this project, so
- * those root paths returned NBI-WEB's 404 and no visit was counted.
+ * The Vercel host serves the analytics script and its endpoints at the ROOT
+ * of the domain (`/_vercel/insights/…`, or `/<hash>/…` with the hash Vercel
+ * puts in the client bundle). On ianexora.com the root belongs to NBI-WEB,
+ * which only forwards `/blog/*` to this project, so those requests got
+ * NBI-WEB's 404 and no visit was counted.
  *
- * Fix: the <Analytics> component loads the script and sends the events under
- * the base path (`/blog/<hash>/…`), which NBI-WEB forwards here, and
- * next.config.ts rewrites that path to the root one on this project's own
- * Vercel host (ORIGEN_VERCEL). It has to be an absolute URL: Next refuses a
- * rewrite out of the base path to a relative destination, and the root
- * `/<hash>` path is answered by Vercel's edge, not by this app. `base` is the zone's base path (BASE_PATH, src/config/base-path.ts);
- * it is passed in so next.config.ts can load this file without path aliases.
- * NBI-WEB itself has no Vercel Analytics and its pages never load
- * this script, so nothing is counted twice and ianexora.com's own pages stay
- * cookie-free and under their own CSP.
+ * Fix, in two parts:
+ * 1. Script and EVERY endpoint (view, event, session, and the generic one)
+ *    go through `/blog/_m/…`, which NBI-WEB forwards here; next.config.ts
+ *    rewrites that to `/_vercel/insights/…` on this project's own Vercel host
+ *    (ORIGEN_VERCEL). All of them are set explicitly because the client
+ *    config Vercel inlines at build time brings its own root `viewEndpoint`
+ *    and would win over `endpoint`. The path is fixed, not the build hash,
+ *    so the server-rendered props and the rewrite can never disagree. The
+ *    rewrite must be an absolute URL: Next refuses a relative destination
+ *    outside the base path, and `/_vercel/insights` is answered by Vercel's
+ *    edge, not by this app.
+ * 2. `usePathname()` has no base path, so the page URL sent was
+ *    `ianexora.com/glosario` instead of `ianexora.com/blog/glosario`;
+ *    `urlEnZona` puts the base path back (in `beforeSend`).
+ *
+ * `base` is the zone's base path (BASE_PATH, src/config/base-path.ts); it is
+ * passed in so next.config.ts can load this file without path aliases.
+ * NBI-WEB has no Vercel Analytics and its pages never load this script, so
+ * nothing is counted twice and ianexora.com's own pages stay cookie-free and
+ * under their own CSP.
  */
-/** This project's production host on Vercel; it serves `/<hash>/…` itself. Same one NBI-WEB forwards /blog to. */
+
+/** This project's production host on Vercel; it serves `/_vercel/insights/…` itself. Same one NBI-WEB forwards /blog to. */
 export const ORIGEN_VERCEL = "https://kata-ivanovych-blog.vercel.app";
 
-export function raizAnalytics(env: Record<string, string | undefined> = process.env): string {
-  const raiz = (env.NEXT_PUBLIC_VERCEL_OBSERVABILITY_BASEPATH ?? "").trim().replace(/\/+$/, "");
-  if (!raiz) return "/_vercel/insights";
-  return raiz.startsWith("/") ? raiz : `/${raiz}`;
+/** The zone's own path for analytics, under the base path. */
+export const RUTA_ANALYTICS = "/_m";
+
+/** Props for `<Analytics>`: script and all endpoints inside the zone. */
+export function propsAnalytics(base: string) {
+  const raiz = `${base}${RUTA_ANALYTICS}`;
+  return {
+    scriptSrc: `${raiz}/script.js`,
+    endpoint: raiz,
+    viewEndpoint: `${raiz}/view`,
+    eventEndpoint: `${raiz}/event`,
+    sessionEndpoint: `${raiz}/session`,
+  };
 }
 
-/** Props for `<Analytics>`: script and endpoint inside the zone. */
-export function propsAnalytics(base: string, raiz: string = raizAnalytics()): { scriptSrc: string; endpoint: string } {
-  return { scriptSrc: `${base}${raiz}/script.js`, endpoint: `${base}${raiz}` };
+/** The rewrite that takes `/blog/_m/…` to `/_vercel/insights/…` on the Vercel host, which serves it. */
+export function rewritesAnalytics(base: string, origen: string = ORIGEN_VERCEL) {
+  return [
+    {
+      source: `${base}${RUTA_ANALYTICS}/:path*`,
+      destination: `${origen}/_vercel/insights/:path*`,
+      basePath: false as const,
+    },
+  ];
 }
 
-/** The rewrite that takes `/blog/<hash>/…` to the root path on the Vercel host, which serves it. */
-export function rewritesAnalytics(base: string, raiz: string = raizAnalytics(), origen: string = ORIGEN_VERCEL) {
-  return [{ source: `${base}${raiz}/:path*`, destination: `${origen}${raiz}/:path*`, basePath: false as const }];
+/** Puts the base path back into the page URL the analytics script reports. */
+export function urlEnZona(url: string, base: string): string {
+  let u: URL;
+  try {
+    u = new URL(url);
+  } catch {
+    return url;
+  }
+  if (u.pathname === base || u.pathname.startsWith(`${base}/`)) return url;
+  u.pathname = `${base}${u.pathname === "/" ? "" : u.pathname}`;
+  return u.toString();
 }
