@@ -102,8 +102,8 @@ const SKILL_COMUN = {
 const ACTIVO_COMUN = {
   tipo: "skill",
   // The tag in config/catalogo.ts without its "v" (tests/catalogo.test.ts).
-  version: "2.1.0",
-  publicado: "2026-10-15",
+  version: "2.1.1",
+  publicado: "2026-11-16",
   licencia: "MIT",
 } satisfies Partial<Activo>;
 
