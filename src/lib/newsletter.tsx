@@ -5,7 +5,7 @@ import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/admin";
 import { enlaceDeCorreo } from "@/lib/correo";
 import { textoDeEdicion, textosDeEdicion } from "@/lib/edicion";
 import { siteConfig } from "@/config/site";
-import { collectCursorPages } from "@/lib/cursor-pages";
+import { destinatariosConfirmadosNbi } from "@/lib/destinatarios-nbi";
 import { NewsletterError } from "@/lib/newsletter-error";
 import { aceptadosDelLote } from "@/lib/resend-lote";
 import { pendientes } from "@/lib/semanal";
@@ -16,9 +16,6 @@ export { NewsletterError } from "@/lib/newsletter-error";
 const BATCH_SIZE = 100;
 /** Resend allows 5 requests/second; 250ms between batches stays under it. */
 const BATCH_INTERVAL_MS = 250;
-/** Stay below Supabase's default REST row cap and page by the primary key. */
-const RECIPIENT_PAGE_SIZE = 500;
-
 export type NewsletterIssue = (typeof newsletters)[number];
 
 export type SendResult = {
@@ -105,6 +102,9 @@ export async function sendTestIssue(issueId: string): Promise<{ issue: string; t
 /**
  * Send one issue to every confirmed subscriber.
  *
+ * Only the NBI list. `kataivanovych` and `club` are a different consent and
+ * are not loaded (`destinatariosConfirmadosNbi`), including on a dry run.
+ *
  * Why a loop of our own instead of a Resend audience: the list — the PII — stays
  * in our EU Postgres, and Resend only ever sees the addresses it is delivering
  * to right now. That is the whole reason the subscriber table exists here.
@@ -156,32 +156,7 @@ export async function sendIssue(
   }
 
   const asOf = new Date().toISOString();
-  const recipientRows = await collectCursorPages(RECIPIENT_PAGE_SIZE, async (afterId) => {
-    let query = supabase
-      .from("subscribers")
-      .select("id, email, unsubscribe_token")
-      .eq("status", "confirmed")
-      .lte("confirmed_at", asOf)
-      .not("unsubscribe_token", "is", null)
-      .order("id", { ascending: true })
-      .limit(RECIPIENT_PAGE_SIZE);
-    if (afterId) query = query.gt("id", afterId);
-
-    const { data, error } = await query;
-    if (error) {
-      throw new NewsletterError(`No se pudo leer la lista: ${error.message}`, 500);
-    }
-    return (data ?? []) as {
-      id: string;
-      email: string | null;
-      unsubscribe_token: string | null;
-    }[];
-  });
-
-  const list = recipientRows.filter(
-    (r): r is typeof r & { email: string; unsubscribe_token: string } =>
-      typeof r.email === "string" && typeof r.unsubscribe_token === "string",
-  );
+  const list = await destinatariosConfirmadosNbi(supabase, asOf);
 
   if (dryRun) {
     return { issue: issueId, recipients: list.length, sent: 0, failed: 0, dryRun: true };
