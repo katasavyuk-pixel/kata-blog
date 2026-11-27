@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/admin";
 import { verifyDownloadSignature } from "@/lib/signed-links";
 import { urlPublica } from "@/lib/url-publica";
+import { buscarSuscriptorNbi } from "@/lib/suscriptor-nbi";
 
 export const runtime = "nodejs";
 
@@ -44,11 +45,9 @@ export async function GET(request: NextRequest) {
 
     let confirmed = false;
     if (email) {
-      const { data: sub } = await supabase
-        .from("subscribers")
-        .select("status")
-        .eq("email", email)
-        .maybeSingle();
+      // The NBI gift looks at the NBI list only. The same address on the
+      // personal blog is a different consent and does not unlock this file.
+      const sub = await buscarSuscriptorNbi(supabase, email);
       confirmed = sub?.status === "confirmed";
     }
     if (!confirmed) {

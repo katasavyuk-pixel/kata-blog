@@ -12,6 +12,7 @@
 
 import type { createAdminClient } from "@/lib/supabase/admin";
 import { COST_MAGNET_SLUG } from "@/lib/cost-model";
+import { LISTA_NBI } from "@/lib/listas";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
@@ -68,10 +69,12 @@ export async function getFunnel(
   supabase: AdminClient,
   now = new Date(),
 ): Promise<Funnel> {
+  const columnas = "created_at, status, source, signup_path, unsubscribed_at";
   const [subsRes, magnetRes, stepsRes] = await Promise.all([
     supabase
       .from("subscribers")
-      .select("created_at, status, source, signup_path, unsubscribed_at")
+      .select(columnas)
+      .eq("list", LISTA_NBI)
       .order("created_at", { ascending: false })
       .limit(ROW_CAP),
     supabase
@@ -82,7 +85,17 @@ export async function getFunnel(
     supabase.from("scheduled_emails").select("email_key, scheduled_at").limit(ROW_CAP),
   ]);
 
-  const subs = subsRes.data ?? [];
+  // Before migration 0006 `list` is not a column. The panel still has to open;
+  // every row that exists then is the NBI list.
+  const subs = subsRes.error
+    ? ((
+        await supabase
+          .from("subscribers")
+          .select(columnas)
+          .order("created_at", { ascending: false })
+          .limit(ROW_CAP)
+      ).data ?? [])
+    : (subsRes.data ?? []);
   const magnets = magnetRes.data ?? [];
   const steps = stepsRes.data ?? [];
 
@@ -114,11 +127,21 @@ export async function getFunnel(
   // one comparison fetches just the addresses it needs.
   let confirmadasDeCalculadora = 0;
   if (magnetEmails.size > 0) {
-    const { data } = await supabase
+    const conListaMagnet = await supabase
       .from("subscribers")
       .select("email, status")
+      .eq("list", LISTA_NBI)
       .in("email", [...magnetEmails])
       .limit(ROW_CAP);
+    const data = conListaMagnet.error
+      ? (
+          await supabase
+            .from("subscribers")
+            .select("email, status")
+            .in("email", [...magnetEmails])
+            .limit(ROW_CAP)
+        ).data
+      : conListaMagnet.data;
     confirmadasDeCalculadora = (data ?? []).filter(
       (s) => s.status === "confirmed" || s.status === "unsubscribed",
     ).length;

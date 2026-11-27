@@ -1,10 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { createAdminClient, isSupabaseConfigured } from "@/lib/supabase/admin";
-import { hashToken, generateToken } from "@/lib/tokens";
 import { scheduleWelcomeSequence } from "@/lib/welcome-sequence";
 import { urlPublica } from "@/lib/url-publica";
 import { BASE_PATH } from "@/config/base-path";
+import { confirmarPorToken } from "@/lib/confirmar-suscriptor";
 
 export const runtime = "nodejs";
 
@@ -20,77 +20,27 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createAdminClient();
-  const { data: sub } = await supabase
-    .from("subscribers")
-    .select("id, email, status, confirm_expires_at")
-    .eq("confirm_token_hash", hashToken(token))
-    .maybeSingle();
-
-  if (
-    !sub ||
-    sub.status === "unsubscribed" ||
-    !sub.confirm_expires_at ||
-    new Date(sub.confirm_expires_at).getTime() <= Date.now()
-  ) {
-    return NextResponse.redirect(urlPublica("/gracias?error=expired"));
-  }
-
-  const unsubscribeToken = generateToken();
-  const { error: confirmError } = await supabase
-    .from("subscribers")
-    .update({
-      status: "confirmed",
-      confirmed_at: new Date().toISOString(),
-      confirm_token_hash: null,
-      confirm_expires_at: null,
-      unsubscribe_token: unsubscribeToken,
-    })
-    .eq("id", sub.id);
-
-  // Checked, because continuing past a failed write is worse than stopping.
-  //
-  // The update carries the unsubscribe token. If it does not land, the three
-  // sequence emails below still go out — each one advertising a
-  // List-Unsubscribe token that is in nobody's database. One-click unsubscribe
-  // then updates zero rows and reports success, and /baja tells the reader they
-  // will get no more email while the sequence keeps arriving. That is an RFC
-  // 8058 breach with no signal anywhere, produced by a `.update()` whose result
-  // nobody read.
-  if (confirmError) {
-    console.error("[confirm] update failed:", confirmError);
-    return NextResponse.redirect(urlPublica("/gracias?error=guardado"));
-  }
-
-  // Soft, session-less marker so a just-confirmed visitor can download lead magnets
-  // (free-with-email gating; real access control for paid content arrives in Fase 3).
-  (await cookies()).set("nbi_subscriber", sub.email, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 30,
-    // Only the blog's paths: ianexora.com outside /blog is NBI-WEB, which
-    // promises no cookies at all (26-nov-2026 migration).
-    path: BASE_PATH,
-  });
-
-  // Onboarding sequence (now / +48h / +96h) via Resend scheduledAt.
-  //
-  // The first step is sent immediately from in here, which is why there is no
-  // longer a separate "welcome" email: that one went out without a
-  // List-Unsubscribe header or a visible unsubscribe link, so the very first
-  // email a subscriber received was the only one that broke RFC 8058.
-  //
-  // Best-effort: skips itself while `scheduled_emails` is missing, and never
-  // breaks this redirect.
-  await scheduleWelcomeSequence(supabase, {
-    id: sub.id,
-    email: sub.email,
-    unsubscribeToken,
+  const resultado = await confirmarPorToken(supabase, {
+    token,
     resource,
+    // NBI only. Personal lists confirm without a row in `scheduled_emails`.
+    programarSecuencia: (sub) => scheduleWelcomeSequence(supabase, sub),
   });
 
-  const dest = resource
-    ? `/gracias?descarga=${encodeURIComponent(resource)}`
-    : "/gracias?confirmed=1";
-  return NextResponse.redirect(urlPublica(dest));
+  // Soft, session-less marker so a just-confirmed NBI visitor can download lead
+  // magnets. Personal-list confirms do not get it: the cookie is what the
+  // marketplace treats as "already subscribed", and that gate is NBI's.
+  if (resultado.cookieEmail) {
+    (await cookies()).set("nbi_subscriber", resultado.cookieEmail, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 30,
+      // Only the blog's paths: ianexora.com outside /blog is NBI-WEB, which
+      // promises no cookies at all (26-nov-2026 migration).
+      path: BASE_PATH,
+    });
+  }
+
+  return NextResponse.redirect(resultado.location);
 }

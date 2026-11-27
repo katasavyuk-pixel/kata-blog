@@ -1,6 +1,7 @@
 import { sequenceEmails } from "#site/content";
 import { NewsletterEmail } from "@/emails/newsletter";
 import { getResend, FROM, REPLY_TO, isEmailConfigured } from "@/lib/email";
+import { buscarSuscriptorNbi } from "@/lib/suscriptor-nbi";
 import type { createAdminClient } from "@/lib/supabase/admin";
 import { siteConfig } from "@/config/site";
 import { estilarHtml } from "@/lib/correo";
@@ -407,11 +408,7 @@ export async function sendSequencePreview(
   // this is the one thing about the preview that is not representative.
   let aviso: string | undefined;
   if (ctx.downloadUrl) {
-    const { data } = await supabase
-      .from("subscribers")
-      .select("status")
-      .eq("email", input.email)
-      .maybeSingle();
+    const data = await buscarSuscriptorNbi(supabase, input.email);
     if (data?.status !== "confirmed") {
       aviso =
         `${input.email} no es un suscriptor confirmado, así que el botón de descarga ` +

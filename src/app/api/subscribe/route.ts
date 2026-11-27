@@ -11,6 +11,7 @@ import { ASUNTOS } from "@/config/asuntos";
 import { siteConfig } from "@/config/site";
 import { recordSubmission } from "@/lib/lead-magnets";
 import { sendResourceDelivery } from "@/lib/welcome-sequence";
+import { buscarSuscriptorNbi, guardarPendienteNbi } from "@/lib/suscriptor-nbi";
 
 export const runtime = "nodejs";
 
@@ -91,11 +92,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const { data: existing } = await supabase
-    .from("subscribers")
-    .select("id, status, unsubscribe_token")
-    .eq("email", body.email)
-    .maybeSingle();
+  const existing = await buscarSuscriptorNbi(supabase, body.email);
 
   // Already confirmed → don't resend the opt-in; respond generically
   // (anti-enumeration). But don't go quiet either.
@@ -126,29 +123,22 @@ export async function POST(request: NextRequest) {
 
   const row = {
     email: body.email,
-    status: "pending",
+    status: "pending" as const,
     confirm_token_hash: hashToken(token),
     confirm_expires_at: expiresAt,
     consent_ip: ip === "unknown" ? null : ip,
+    consent_at: new Date().toISOString(),
     source,
     locale: siteConfig.locale,
+    signup_path: body.signupPath ?? null,
   };
 
-  // `signup_path` arrives with migration 0005, which is applied by hand. Deploys
-  // and migrations are not atomic here, so between the two an upsert naming that
-  // column errors — and since the result was never checked, we would happily
-  // send a confirmation email carrying a token that was never stored. The reader
-  // clicks it and gets "enlace no válido", for a subscription that never
-  // existed. Retry without the column rather than lose the signup.
-  let { error } = await supabase
-    .from("subscribers")
-    .upsert({ ...row, signup_path: body.signupPath ?? null }, { onConflict: "email" });
-
-  if (error) {
-    ({ error } = await supabase
-      .from("subscribers")
-      .upsert(row, { onConflict: "email" }));
-  }
+  // `list` arrives with migration 0006 and `signup_path` with 0005, both applied
+  // by hand. The helper retries without the columns that are not there yet, and
+  // checks the error: a confirmation email must not carry a token that was never
+  // stored. The conflict key is (email, list) so this write cannot land on the
+  // personal list, and a personal signup cannot land here.
+  const { error } = await guardarPendienteNbi(supabase, row);
 
   if (error) {
     console.error("[subscribe] upsert failed:", error);
