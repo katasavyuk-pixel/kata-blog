@@ -2,7 +2,9 @@
  * Kata's LinkedIn posts shown on the site (2026-10-15: «publicaciones de
  * LinkedIn, sí, pero que no sea con vídeo vertical»). Extended on 2026-11-23
  * with posts from 2026-10-17 to 2026-11-23, taken from Buffer's record of his
- * profile. Shown as cards in the site's own style, never the LinkedIn iframe:
+ * profile. Extended again on 2026-11-27 with posts from 2026-11-24 to
+ * 2026-11-26, also from Buffer's record of his profile. Shown as cards in
+ * the site's own style, never the LinkedIn iframe:
  * the embed sets LinkedIn's cookies before anyone clicks, and it cannot take
  * the brand's type or colour.
  *
@@ -29,6 +31,34 @@ export type PublicacionLinkedIn = {
 };
 
 export const PUBLICACIONES_LINKEDIN: readonly PublicacionLinkedIn[] = [
+  {
+    urn: "share",
+    id: "7531635500596776961",
+    fecha: "2026-11-26",
+    extracto:
+      "Casi siempre que alguien me pregunta «¿qué IA uso?», la respuesta útil es otra pregunta: ¿qué proceso quieres arreglar? El error que más veo es empezar por la herramienta. Mi opinión: la primera automatización no tiene que ser la más espectacular. Tiene que ser la que puedas describir sin ambigüedad, medir unas semanas y corregir si falla.",
+  },
+  {
+    urn: "share",
+    id: "7531393983353245697",
+    fecha: "2026-11-25",
+    extracto:
+      "¿ChatGPT nombra tu negocio cuando alguien le pide una recomendación? Casi nadie lo mira. Y si lo miras una vez, al mes siguiente ya no te acuerdas de qué preguntaste. Por eso he preparado una skill gratuita para medirlo cada mes. Ojo: una respuesta suelta no dice nada. Lo que cuenta es la tendencia.",
+  },
+  {
+    urn: "share",
+    id: "7531273057097777153",
+    fecha: "2026-11-25",
+    extracto:
+      "Cuando alguien me dice «la IA ya me lo hace bien», siempre hago la misma pregunta: ¿con qué umbral? Montar una automatización con IA es fácil. Lo difícil es responder con datos a la pregunta incómoda: ¿funciona de verdad? Mi opinión: sin ese número no hay sistema, hay una corazonada.",
+  },
+  {
+    urn: "share",
+    id: "7530910748298887168",
+    fecha: "2026-11-24",
+    extracto:
+      "Tu equipo ya usa IA para trabajar. La pregunta es con qué datos. Haz la prueba: pregunta quién usa ChatGPT, Claude o Gemini en el trabajo. Sin juzgar. Lo normal es que alguien resuma correos de clientes con su cuenta personal… y que nadie haya decidido si eso se puede. Mi opinión: prohibirlo no sirve.",
+  },
   {
     urn: "share",
     id: "7530548389550202882",
